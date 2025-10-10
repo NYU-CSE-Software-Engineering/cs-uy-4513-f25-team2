@@ -49,6 +49,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem 'rspec-rails', '~> 8.0'
+  gem 'capybara',    '~> 3.40'
+  gem 'cucumber-rails', '~> 4.0', require: false
+  gem 'cucumber',    '~> 10.1'
+  gem 'selenium-webdriver', '~> 4.25'
+  gem 'database_cleaner-active_record', '~> 2.0'
 end
 
 group :development do
