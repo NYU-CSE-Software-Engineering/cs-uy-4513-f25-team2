@@ -54,7 +54,7 @@ group :development, :test do
   gem 'capybara',    '~> 3.40'
   gem 'cucumber-rails', '~> 4.0', require: false
   gem 'cucumber',    '~> 10.1'
-  gem 'selenium-webdriver', '~> 4.25'
+  gem 'selenium-webdriver', '~> 4.36'
   gem 'database_cleaner-active_record', '~> 2.0'
 end
 
