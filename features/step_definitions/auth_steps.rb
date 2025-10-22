@@ -14,21 +14,12 @@ Then("I should see a message {string}") do |message|
   expect(page).to have_content(message)
 end
 
+Then("I should see an error message {string}") do |message|
+  expect(page).to have_content(message)
+end
+
 Then("I should be redirected to login page") do
   expect(current_path).to eq(new_login_path)
-end
-
-Then("I should see an error message indicating a password is required") do
-  expect(page).to have_content("Password can't be blank")
-end
-
-Then("I should see an error message indicating an email is required") do
-  expect(page).to have_content("Email can't be blank")
-end
-
-Then("I should see an error message indicating an email is required and a password is required") do
-  expect(page).to have_content("Email can't be blank")
-  expect(page).to have_content("Password can't be blank")
 end
 
 Given("I am on the login page") do

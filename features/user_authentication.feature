@@ -15,19 +15,19 @@ Feature: User Authentication/User Identity
         Given I am on the sign-up page
         When I fill in "Email" with "example@gmail.com"
         And I press "Sign up"
-        Then I should see an error message indicating a password is required
+        And I should see an error message "password is required"
 
     Scenario: User fails to sign up with no email
         Given I am on the sign-up page
         When I fill in "Password" with "password"
         And I press "Sign up"
-        Then I should see an error message indicating an email is required
+        Then I should see an error message "email is required"
 
-    Scenario: User fails to signsup with no email and no password
+    Scenario: User fails to sign up with no email and no password
         Given I am on the sign-up page
         And I press "Sign up"
-        Then I should see an error message indicating an email is required
-        And I should see an error message indicating a password is required
+        Then I should see an error message "email is required"
+        And I should see an error message "password is required"
 
     Scenario: User logins in with valid credentials
         Given I am on the login page
@@ -43,7 +43,7 @@ Feature: User Authentication/User Identity
         When I fill in "Email" with "example@gmail.com"
         And I fill in "Password" with "incorrectpassword"
         And I press "Log in"
-        Then I should see an error message indicating email or password is incorrect
+        Then I should see an error message "Invalid email or password"
 
     Scenario: Logged-in user logs out
         Given I am logged in as "example@gmail.com"
