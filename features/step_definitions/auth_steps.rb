@@ -27,7 +27,7 @@ Given("I am on the login page") do
 end
 
 Given("an account exists for {string} with password {string}") do |email, password|
-  User.create!(email: email, password: password)
+  Learner.create!(email: email, password: password)
 end
 
 Then("I should be redirected to the dashboard page") do
@@ -39,7 +39,7 @@ Then("I should see an error message indicating email or password is incorrect") 
 end
 
 Given("I am logged in as {string}") do |email|
-  user = User.find_by(email: email) || User.create!(email: email, password: "password")
+  learner = Learner.find_by(email: email) || Learner.create!(email: email, password: "password")
   visit new_login_path
   fill_in "Email", with: user.email
   fill_in "Password", with: "password"
