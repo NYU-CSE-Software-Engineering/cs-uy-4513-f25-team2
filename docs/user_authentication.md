@@ -1,7 +1,7 @@
 # Feature: User Authentication (login, signup, logout)
 
 ## User Story:
-As a learner or tutor, I want to create an account, log in, and log out, so that I can access the features of the app in the correct role
+As a learner, I want to create an account, log in, and log out, so that I can access the features of the app in the correct role
 
 ## Acceptance Criterion:
 1. The user can sign up and create a new account with a valid email and password
@@ -12,12 +12,11 @@ As a learner or tutor, I want to create an account, log in, and log out, so that
 
 ## MVC Components:
 ### Models
-- `Tutor(tutor_id, first_name, last_name, ...)`
 - `Learner(learner_id, first_name, last_name, …)`
 
 ### Views
 - `users/new.html.erb` - Signup Page
-- `sessions/new.html.erb` - Login Page
+- `login/new.html.erb` - Login Page
 - `dashboards/show.html.erb` - Dashboard
 
 ### Controllers
