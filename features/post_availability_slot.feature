@@ -4,13 +4,16 @@ Feature: Tutor posts a new availability slot
   So that I can allow others to sign up
 
   Background:
-    Given I am signed in and verified tutor
+    Given I am signed in and verified tutor,
+	And the following slot exists:
+	| start_time       | end_time         | capacity| subject|
+	| 2025-10-15T11:00Z| 2025-10-15T11:59Z| 1       | Math   |
 
   @happy
   Scenario: Tutor posts an availability slot with valid information
     And I am on new slot page,
     When I fill in "Start Time" with "2025-10-15T10:00Z"
-    And I fill in "End Time" with "2025-10-15T11:00Z"
+    And I fill in "End Time" with "2025-10-15T10:59Z"
     And I fill in "Capacity" with "1"
     And I fill in "Subject" with "Math"
     And I press "Create new availability slot"
@@ -35,11 +38,12 @@ Feature: Tutor posts a new availability slot
     And I fill in "Capacity" with "1"
     And I fill in "Subject" with "Math"
     And I press "Create new availability slot"
-    Then I should see an error message that there is a time conflict
+    And I have an existing slot that overlaps
+	Then I should see an error message that there is a time conflict
 
   @delete
   Scenario: Tutor wants to delete existing availability slot
     And I am on the slot's show page
     When I press on "Delete"
     Then I should be on tutor's slots page
-    And I should see the message "Slot successfully deleted"
+    And I should see the message that slot is deleted
