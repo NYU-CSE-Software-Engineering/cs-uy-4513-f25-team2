@@ -66,12 +66,6 @@ end
 Given("I am on the Tutor Feedback page") do
   visit tutor_feedbacks_path
 end
-  if page_name == 'Tutor Feedback'
-    visit tutor_feedbacks_path
-  else
-    raise "Unknown page #{page_name}"
-  end
-end
 
 When('I view my feedback list') do
   visit tutor_feedbacks_path
@@ -84,10 +78,6 @@ When('I filter feedback by subject {string}') do |subject_name|
   if page.has_button?('Apply Filters')
     click_button 'Apply Filters'
   end
-end
-
-Then('I should see {string}') do |text|
-  expect(page).to have_content(text)
 end
 
 Then('I should not see {string}') do |text|
