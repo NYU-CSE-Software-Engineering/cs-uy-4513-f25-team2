@@ -2,4 +2,4 @@
 
 - [Booking Session](./booking_session.md)
 - [User Authentication](./user_authentication.md)
-- [Post Availability Slot](./post_availability_slot.md)
+- _(add your feature docs below as you create them.)_
