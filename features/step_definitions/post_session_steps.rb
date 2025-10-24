@@ -1,8 +1,18 @@
-Given('I am a signed in user and tutor') do
-  @current_learner ||= Tutor.find_or_create_by!(email: "mia.patel@example.com") do |t|
-    t.password   = "password123"
-    t.first_name = "Mia"
-    t.last_name  = "Patel"
+Given('I am a signed-in learner') do
+  email    = "mia-patel@example.com"
+  password = "password123"
+
+  @current_learner ||= Learner.find_or_create_by!(email: email) do |l|
+    l.password   = password
+    l.first_name = "Mia"
+    l.last_name  = "Patel"
+  end
+
+end 
+
+Given ('a signed-in tutor') do
+  @current_tutor ||= Tutor.find_or_create_by!(email: @current_learner.email) do |t|
+    t.learner = learner
   end
 end
 
