@@ -2,11 +2,19 @@ require 'time'
 require 'securerandom'
 
 Given('I am a signed-in user') do
-  @current_learner ||= Learner.find_or_create_by!(email: "mia.patel@example.com") do |l|
-    l.password   = "password123"
+  email    = "mia-patel@example.com"
+  password = "password123"
+
+  @current_learner ||= Learner.find_or_create_by!(email: email) do |l|
+    l.password   = password
     l.first_name = "Mia"
     l.last_name  = "Patel"
   end
+
+  visit new_login_path
+  fill_in 'Email', with: email
+  fill_in 'Password', with: password
+  click_button 'Log in'
 end
 
 Given('I am on the "Find a Session" page') do
