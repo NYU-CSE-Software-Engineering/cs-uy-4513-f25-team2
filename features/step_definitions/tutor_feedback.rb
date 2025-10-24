@@ -63,7 +63,9 @@ Given('the following feedback exists:') do |table|
   end
 end
 
-Given('I am on the {string} page') do |page_name|
+Given("I am on the Tutor Feedback page") do
+  visit tutor_feedbacks_path
+end
   if page_name == 'Tutor Feedback'
     visit tutor_feedbacks_path
   else
