@@ -14,7 +14,7 @@ I want to **post sessions**
 
 ## MVC Outline
 ### Models
-- A **Tutor model** with `learner:references', 'bio:text', 'photo_url:string', 'rating_avg:decimal', and 'rating_count:int' attributes.
+- A **Tutor model** with `learner:references' attribute.
 - A **Subject model** with `name:string` attribute.
 - A **Session model** with 'tutor:references', 'subject:references', 'start_at:datetime', 'end_at:datetime', 'capacity:integer', 'status:string', and 'meeting_link:text'
 
