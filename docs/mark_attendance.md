@@ -11,7 +11,10 @@ As a **Tutor**, I want to **mark a learner's attendance for a tutoring session**
 
 ## MVC Outline
 ### Models
-- `Learner(id, email, password, first_name, last_name)`
+- A **Learner model** with `first_name:string` and `last_name:string` attributes.
+- A **Tutor model** with `learner:references` attribute.
+- A **Session model** with `tutor:references`, `start_at:datetime`, and `end_at:datetime` attributes.
+- A **SessionAttendee model** with `session:references`, `learner:references`, `attended:boolean`, and `cancelled:boolean` attributes.
 - `Tutor(id, learner_id, bio, photo_url, rating_avg, rating_count)`
 - `Session(id, tutor_id, subject_id, start_at, end_at, capacity, status, meeting_link)`
 - `SessionAttendee(id, session_id, learner_id, attended, feedback_submitted, cancelled, ...)`
