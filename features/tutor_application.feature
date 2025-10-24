@@ -7,20 +7,20 @@ Feature: Tutor Application
 
   @button
   Scenario: Learner goes to the settings page
-    Given I am a signed-in Learner
+    Given I am a signed-in learner
     When I visit the Settings page
     Then I should see the "Apply to be a tutor" button
 
   @apply
   Scenario: Learner goes to the application page
-    Given I am a signed-in Learner
+    Given I am a signed-in learner
     When I visit the Settings page
     And I click the "Apply to be a tutor" button
     Then I should see the tutor application page
 
   @submit
   Scenario: Learner submits an application
-    Given I am a signed-in Learner
+    Given I am a signed-in learner
     And I visit the tutor application page
     And I enter reason "I want to teach"
     When I click the "Submit Application" button
@@ -28,7 +28,7 @@ Feature: Tutor Application
 
   @already_tutor  
   Scenario: Learner who is already a tutor
-    Given I am a signed-in Learner
+    Given I am a signed-in learner
     And I am a Tutor
     When I visit the Settings page
     Then I should not see the "Apply to be a tutor" button
@@ -36,7 +36,7 @@ Feature: Tutor Application
 
   @pending
   Scenario: Learner with a pending application
-    Given I am a signed-in Learner
+    Given I am a signed-in learner
     And I have a pending application
     When I visit the Settings page
     Then I should not see the "Apply to be a tutor" button
@@ -45,5 +45,5 @@ Feature: Tutor Application
   @approved  
   Scenario: Admin approves a learner’s application
     Given an admin has approved my application
-    When I sign-in as a Learner
+    When I sign-in as a learner
     Then I should see the "Book A Session" button

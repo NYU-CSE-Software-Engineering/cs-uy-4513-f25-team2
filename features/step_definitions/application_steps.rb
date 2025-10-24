@@ -1,17 +1,3 @@
-
-Given('I am a signed-in Learner') do
-  @current_learner ||= Learner.find_or_create_by!(email: "mia.patel@example.com") do |l|
-    l.password   = "password123"
-    l.first_name = "Mia"
-    l.last_name  = "Patel"
-  end
-  
-  visit login_path
-  fill_in 'Email', with: @current_learner.email
-  fill_in 'Password', with: @current_learner.password
-  click_button 'Log in'
-end
-
 Given('I am a Tutor') do
   @current_tutor ||= Tutor.find_or_create_by!(email: @current_learner.email) do |t|
     t.bio          = nil
@@ -83,7 +69,7 @@ Given('an admin has approved my application') do
   TutorApplication.find_by(learner: @current_learner)&.destroy
 end
 
-When('I sign-in as a Learner') do
+When('I sign-in as a learner') do
   visit login_path
   fill_in 'Email', with: @current_learner.email
   fill_in 'Password', with: @current_learner.password
