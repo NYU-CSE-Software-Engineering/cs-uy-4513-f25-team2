@@ -1,6 +1,6 @@
 # features/step_definitions/feedback_steps.rb
 /
-Given("I am a signed-in learner") do
+Given("I am a logged-in learner") do
   @learner = Learner.create!(
     email: "learner@example.com",
     password: "password123"
@@ -17,14 +17,14 @@ Given("I have completed a tutoring session with {string}") do |tutor_name|
 end
 
 Given("I have a completed session with {string} where I was marked present") do |tutor_name|
-  step %{I am a signed-in learner}
+  step %{I am a logged-in learner}
   @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
   @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
   SessionsAttendee.create!(session: @session, learner: @learner, attended: true)
 end
 
 Given("I have a completed session with {string} where I was marked absent") do |tutor_name|
-  step %{I am a signed-in learner}
+  step %{I am a logged-in learner}
   @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
   @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
   SessionsAttendee.create!(session: @session, learner: @learner, attended: false)
