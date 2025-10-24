@@ -5,7 +5,7 @@ Feature: Search posted sessions by subject/time range and book one
 
   @happy
   Scenario: Successful booking from cross-tutor search
-    Given I am a signed-in user
+    Given I am a signed-in learner
     And the subject "Calculus" exists
     And the following tutors and sessions exist:
       | tutor_name      | subject  | session_start          | session_end            | capacity |
@@ -23,7 +23,7 @@ Feature: Search posted sessions by subject/time range and book one
 
   @duplicate
   Scenario: Prevent double-booking of the same session
-    Given I am a signed-in user
+    Given I am a signed-in learner
     And the subject "Calculus" exists
     And the following tutors and sessions exist:
       | tutor_name      | subject  | session_start          | session_end            | capacity |
@@ -39,7 +39,7 @@ Feature: Search posted sessions by subject/time range and book one
 
   @capacity
   Scenario: Reject booking when session is full
-    Given I am a signed-in user
+    Given I am a signed-in learner
     And the subject "Calculus" exists
     And the following tutors and sessions exist:
       | tutor_name      | subject  | session_start          | session_end            | capacity |
@@ -55,7 +55,7 @@ Feature: Search posted sessions by subject/time range and book one
 
   @conflict
   Scenario: Reject booking when session overlaps another upcoming session (different tutors)
-    Given I am a signed-in user
+    Given I am a signed-in learner
     And the subject "Calculus" exists
     And the following tutors and sessions exist:
       | tutor_name      | subject  | session_start          | session_end            | capacity |
