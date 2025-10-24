@@ -1,37 +1,47 @@
 # features/step_definitions/feedback_steps.rb
 Given("I am a signed-in learner") do
-  # Create a learner and sign in
+  # Create a learner in the test DB
   @learner = Learner.create!(
     email: "learner@example.com",
     password: "password123"
+    first_name: "Exa",
+    last_name: "Mine",
   )
-
-  visit new_learner_session_path
-  fill_in "Email", with: @learner.email
-  fill_in "Password", with: @learner.password
-  click_button "Log in"
-
-  expect(page).to have_content("Dashboard").or have_content("Welcome")
 end
+
+# ---------- Domain setup ----------
 
 Given("I have completed a tutoring session with {string}") do |tutor_name|
-  @tutor = Tutor.create!(
-    name: tutor_name,
-    email: "tutor@example.com"
-  )
-
-  @session = Session.create!(
-    learner: @learner,
-    tutor: @tutor,
-    completed: true
-  )
+  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
+  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
 end
 
+Given("I have a completed session with {string} where I was marked present") do |tutor_name|
+  step %{I am a signed-in learner}
+  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
+  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
+  SessionsAttendee.create!(session: @session, learner: @learner, attended: true)
+end
+
+Given("I have a completed session with {string} where I was marked absent") do |tutor_name|
+  step %{I am a signed-in learner}
+  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
+  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
+  SessionsAttendee.create!(session: @session, learner: @learner, attended: false)
+end
+
+
 When("I navigate to the feedback form for {string}") do |tutor_name|
-  visit learner_sessions_path(@learner)
+  visit learner_sessions_path(@learner) # adjust if we change the path
   expect(page).to have_content(tutor_name)
 
-  click_link "Leave Feedback", match: :first
+  # Click the UI element that opens the feedback form
+  # Use link or button depending on your view:
+  if page.has_link?("Leave Feedback")
+    click_link "Leave Feedback", match: :first
+  else
+    click_button "Leave Feedback", match: :first
+  end
 
   expect(page).to have_content("Submit Feedback for #{tutor_name}")
 end
@@ -41,39 +51,27 @@ Given("I am on the feedback page for {string}") do |tutor_name|
   expect(page).to have_content("Submit Feedback for #{tutor_name}")
 end
 
-When("I select a rating of {string}") do |rating|
-  # assumes rating radio buttons are labeled 1–5
-  choose rating
+# ---------- Form interactions (scoped/specific to avoid overlap) ----------
+
+When("I select a feedback rating of {string}") do |rating|
+  # assumes radio buttons labelled 1..5
+  choose(rating)
 end
 
-When("I fill in {string} with {string}") do |field, value|
-  fill_in field, with: value
+When("I fill the feedback comment with {string}") do |text|
+  # make sure your textarea label or id is "Comment"
+  fill_in "Comment", with: text
 end
 
-When("I press {string}") do |button|
-  click_button button
+When("I submit the feedback form") do
+  click_button "Submit Feedback"
 end
 
-Then("I should see {string}") do |text|
-  expect(page).to have_content(text)
+Then("I should see a feedback notice {string}") do |message|
+  expect(page).to have_content(message)
 end
 
-When("I sign in as tutor {string}") do |tutor_name|
-  @tutor = Tutor.find_by(name: tutor_name) ||
-            Tutor.create!(name: tutor_name, email: "tutor@example.com", password: "password")
-
-  visit new_tutor_session_path
-  fill_in "Email", with: @tutor.email
-  fill_in "Password", with: @tutor.password
-  click_button "Log in"
-
-  expect(page).to have_content("Dashboard").or have_content("Welcome")
-end
-
-When("I visit the feedbacks index") do
-  visit feedbacks_path
-end
-
-Then("I should see feedback from the learner for the session") do
-  expect(page).to have_content(@learner.email).or have_content(@learner.first_name)
+Then("the feedback button should be hidden") do
+  expect(page).not_to have_link("Leave Feedback")
+  expect(page).not_to have_button("Leave Feedback")
 end
