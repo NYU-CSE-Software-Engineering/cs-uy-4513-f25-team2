@@ -22,7 +22,7 @@ Feature: Learner submits feedback
 
 
 Scenario: Learner marked present can leave feedback
-  Given I am a signed-in learner
+  Given I am a logged-in learner
   And I have a completed session with "tutor" where I was marked present
   When I navigate to the feedback form for "tutor"
   And I select a rating of "5"
@@ -31,7 +31,7 @@ Scenario: Learner marked present can leave feedback
   Then I should see "Thank you for your feedback!"
 
 Scenario: Learner not marked present cannot leave feedback
-  Given I am a signed-in learner
+  Given I am a logged-in learner
   And I have a completed session with "tutor" where I was marked absent
   When I visit the session page for "tutor"
   Then I should not see "Leave Feedback"
