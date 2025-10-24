@@ -5,7 +5,7 @@ Feature: Tutor views feedback received from learners
     so that I can evaluate my teaching performance and improve future sessions
 
     Background:
-        Given I am a signed-in tutor
+        Given I am a logged-in tutor
         And the following learners exist:
         | email               | password    | first_name | last_name |
         | janedoe@example.com | password123 | Jane       | Doe       |
