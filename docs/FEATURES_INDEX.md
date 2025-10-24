@@ -7,4 +7,4 @@
 - [Tutor Application](./tutor_application.md)
 - [Marking Attendance](./mark_attendance.md)
 - [Post Session](./post_session.md)
-- [Tutor Feedback]](./tutor_feedback.md)
+- [Tutor Feedback](./tutor_feedback.md)
