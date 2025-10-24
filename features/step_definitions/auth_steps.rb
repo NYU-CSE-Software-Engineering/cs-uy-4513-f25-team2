@@ -30,8 +30,8 @@ Given("an account exists for {string} with password {string}") do |email, passwo
   Learner.create!(email: email, password: password)
 end
 
-Then("I should be redirected to the dashboard page") do
-  expect(current_path).to eq(dashboard_path)
+Then("I should be redirected to the home page") do
+  expect(current_path).to eq(home_path)
 end
 
 Then("I should see an error message indicating email or password is incorrect") do
@@ -44,7 +44,7 @@ Given("I am logged in as {string}") do |email|
   fill_in "Email", with: user.email
   fill_in "Password", with: "password"
   click_button "Log in"
-  expect(page).to have_current_path(dashboard_path)
+  expect(page).to have_current_path(home_path)
 end
 
 Then("I should be redirected to the login page") do

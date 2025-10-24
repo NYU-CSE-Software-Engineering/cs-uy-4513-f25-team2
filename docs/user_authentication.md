@@ -5,22 +5,21 @@ As a learner, I want to create an account, log in, and log out, so that I can ac
 
 ## Acceptance Criterion:
 1. The user can sign up and create a new account with a valid email and password
-2. The user cannot sign up without an email or password
-3. A registered user can log in with valid credentials and will be redirected to their dashboard
+2. The user cannot sign up without an email or password or if they sign up with an email that is already in use
+3. A registered user can log in with valid credentials and will be redirected to their home page
 4. An error is displayed if login credentials are invalid
 5. A logged-in user can log out and be redirected to the login page
 
 ## MVC Components:
 ### Models
-- `Learner(learner_id, first_name, last_name, …)`
+- `Learner(learner_id, first_name, last_name, email, password)`
 
 ### Views
 - `users/new.html.erb` - Signup Page
 - `login/new.html.erb` - Login Page
-- `dashboards/show.html.erb` - Dashboard
+- `home/show.html.erb` - Dashboard
 
 ### Controllers
 - `SignupsController#new, create` - displays signup form, creates new account
-- `LoginsController#new, create, delete` - displays login form, authenticates credentials + redirects to dashboard, logs out user + redirect to login page
-- `DashboardsController# show` - displays user’s dashboard
-
+- `LoginsController#new` - displays login form
+- `HomeController# show` - displays user’s home page
