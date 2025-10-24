@@ -12,14 +12,14 @@ As a learner, I want to create an account, log in, and log out, so that I can ac
 
 ## MVC Components:
 ### Models
-- `Learner(learner_id, first_name, last_name, email, password)`
+- A **Learner model** with `email:string`, `password:string`, `first_name:string`, and `last_name:string` attributes.
 
 ### Views
-- `users/new.html.erb` - Signup Page
-- `login/new.html.erb` - Login Page
-- `home/show.html.erb` - Dashboard
+- `users/new.html.erb` - Signup Page with a email form and a password form
+- `login/new.html.erb` - Login Page with an email form and a password form
+- `home/show.html.erb` - Home Page that includes a logout button
 
 ### Controllers
 - `SignupsController#new, create` - displays signup form, creates new account
 - `LoginsController#new` - displays login form
-- `HomeController# show` - displays user’s home page
+- `HomeController#show` - displays user’s home page
