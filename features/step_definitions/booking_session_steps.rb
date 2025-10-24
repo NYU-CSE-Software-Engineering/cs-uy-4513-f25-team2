@@ -1,7 +1,7 @@
 require 'time'
 require 'securerandom'
 
-Given('I am a signed-in user') do
+Given('I am a signed-in learner') do
   email    = "mia-patel@example.com"
   password = "password123"
 
