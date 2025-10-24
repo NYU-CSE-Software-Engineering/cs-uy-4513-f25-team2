@@ -16,12 +16,12 @@ I want to **post availability slots**
 ### Models
 - A **Tutor model** with `learner:references', 'bio:text', 'photo_url:string', 'rating_avg:decimal', and 'rating_count:int' attributes.
 - A **Subject model** with `name:string` attribute.
-- An **AvailabilitySlot model** with `tutor_id:integer`, `start_at:datetime`, `end_at:datetime`, and `capacity:integer` attributes.
+- A **Session model** with 'tutor:references', 'subject:references', 'start_at:datetime', 'end_at:datetime', 'capacity:integer', 'status:string', and 'meeting_link:text'
 
 ### Controllers
-- An **AvailabilitySlotController** with 'create', 'delete', and 'show' actions.
+- An **SessionController** with 'create', 'delete', and 'show' actions.
 
 ### Views
-- An **availabilityslots/new.html.erb** with fields for a new tutoring availability slot
-- An **availabilityslots/show.html.erb`** with display of availability slot
+- An **sessions/new.html.erb** with fields for a new tutoring availability slot
+- An **sessions/show.html.erb`** with display of availability slot
 - A **tutors/show.html.erb** with display for all availability slots
