@@ -1,6 +1,6 @@
 # features/step_definitions/feedback_steps.rb
+/
 Given("I am a signed-in learner") do
-  # Create a learner in the test DB
   @learner = Learner.create!(
     email: "learner@example.com",
     password: "password123"
@@ -8,7 +8,7 @@ Given("I am a signed-in learner") do
     last_name: "Mine",
   )
 end
-
+/
 # ---------- Domain setup ----------
 
 Given("I have completed a tutoring session with {string}") do |tutor_name|
