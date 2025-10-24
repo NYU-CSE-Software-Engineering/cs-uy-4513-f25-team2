@@ -6,13 +6,6 @@ Given('I am a signed-in tutor') do
   end
 end
 
-Given('the subject {string} exists') do |subject_name|
-  Subject.find_or_create_by!(name: subject_name) do |s|
-    s.code = subject_name.parameterize.upcase.first(6)
-    s.description = "#{subject_name} subject"
-  end
-end
-
 Given('the following learner exists:') do |table|
   table.hashes.each do |row|
     Learner.find_or_create_by!(first_name: row['first_name'], last_name: row['last_name']) do |l|
@@ -89,14 +82,6 @@ Then('the learner\'s attendance for the session should be set to {string}') do |
   attended = (bool == 'true')
   current_attendee = SessionAttendee.find_by!(session: @current_session, learner: @current_learner)
   expect(current_attendee.attended).to eq(attended)
-end
-
-Then('I should not see the {string} (option|button)') do |label, type|
-  if type == "option"
-    expect(page).not_to have_field(label)
-  elsif type == "button"
-    expect(page).not_to have_button(label)
-  end
 end
 
 Then('I should not see the {string} option') do |radio|
