@@ -1,6 +1,7 @@
 # Team Feature Index
 
 - [Booking Session](./booking_session.md)
+- [User Authentication](./user_authentication.md)
 - _(add your feature docs below as you create them.)_
 
 - [Tutor Application](./tutor_application.md)
