@@ -4,7 +4,7 @@ Feature: Learner submits feedback
   So that I can share my experience with my tutor to help others
 
   Background:
-    Given I am a signed-in learner
+    Given I am a logged-in learner
     And I have completed a tutoring session with "tutor"
 
   Scenario: Submit valid feedback (happy path)
