@@ -1,4 +1,3 @@
-# features/step_definitions/tutor_feedback_steps.rb
 require 'time'
 
 Given('I am a logged-in tutor') do
@@ -63,7 +62,7 @@ Given('the following feedback exists:') do |table|
   end
 end
 
-Given("I am on the Tutor Feedback page") do
+Given('I am on the Tutor Feedback page') do
   visit tutor_feedbacks_path
 end
 
@@ -72,12 +71,8 @@ When('I view my feedback list') do
 end
 
 When('I filter feedback by subject {string}') do |subject_name|
-  if page.has_select?('Subject')
-    select subject_name, from: 'Subject'
-  end
-  if page.has_button?('Apply Filters')
-    click_button 'Apply Filters'
-  end
+  select subject_name, from: 'Subject' if page.has_select?('Subject')
+  click_button 'Apply Filters' if page.has_button?('Apply Filters')
 end
 
 Given('I am a tutor with no feedback yet') do
@@ -147,4 +142,12 @@ end
 
 Then('I should see pagination controls') do
   expect(page).to have_css('.pagination')
+end
+
+Then('I should see text {string}') do |text|
+  expect(page).to have_content(text)
+end
+
+Then('I should not see text {string}') do |text|
+  expect(page).not_to have_content(text)
 end

@@ -1,4 +1,3 @@
-
 Feature: Tutor views feedback received from learners
     As a Tutor
     I want to view all ratings and comments I have received from learners
@@ -22,30 +21,29 @@ Feature: Tutor views feedback received from learners
         | session   | learner_email        | score | comment                     |
         | Calculus  | janedoe@example.com  | 5     | Very clear explanations!    |
         | Chemistry | johndoe@example.com  | 4     | Helpful but a bit too fast. |
-        And I am on the "Tutor Feedback" page
+        And I am on the Tutor Feedback page
 
     Scenario: View all feedback received
         When I view my feedback list
-        Then I should see "Very clear explanations!"
-        And I should see "Helpful but a bit too fast."
-        And I should see "Average Rating: 4.5"
-        And I should see "Total Reviews: 2"
+        Then I should see text "Very clear explanations!"
+        And I should see text "Helpful but a bit too fast."
+        And I should see text "Average Rating: 4.5"
+        And I should see text "Total Reviews: 2"
 
     Scenario: View feedback filtered by subject
         When I filter feedback by subject "Calculus"
         Then I should see only 1 feedback items displayed
-        And I should see "Very clear explanations!"
-
+        And I should see text "Very clear explanations!"
 
     Scenario: View feedback with no results
         Given I am a tutor with no feedback yet
         When I visit the Tutor Feedback page
-        Then I should see "No feedback yet"
+        Then I should see text "No feedback yet"
 
     Scenario: Prevent viewing another tutor’s feedback
         Given another tutor exists
         When I try to access that tutor’s feedback page
-        Then I should see the message "Access denied"
+        Then I should see text "Access denied"
 
     Scenario: View feedback pagination
         Given I have more than 10 feedback entries
