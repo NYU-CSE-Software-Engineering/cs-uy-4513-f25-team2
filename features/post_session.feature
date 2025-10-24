@@ -4,8 +4,7 @@ Feature: Tutor posts a new session
   So that I can allow others to sign up
 
   Background:
-    Given I am a signed-in learner
-    And a signed-in tutor
+    Given I am a signed-in tutor
 	And the following session exists:
 	| start_time       | end_time         | capacity| subject|
 	| 2026-10-15T11:00Z| 2026-10-15T11:59Z| 1       | Math   |

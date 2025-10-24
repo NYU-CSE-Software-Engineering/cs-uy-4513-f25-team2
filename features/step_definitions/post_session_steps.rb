@@ -1,20 +1,4 @@
-Given('I am a signed-in learner') do
-  email    = "mia-patel@example.com"
-  password = "password123"
 
-  @current_learner ||= Learner.find_or_create_by!(email: email) do |l|
-    l.password   = password
-    l.first_name = "Mia"
-    l.last_name  = "Patel"
-  end
-
-end 
-
-Given ('a signed-in tutor') do
-  @current_tutor ||= Tutor.find_or_create_by!(email: @current_learner.email) do |t|
-    t.learner = learner
-  end
-end
 
 Given('I am on new session page,') do
   visit new_tutor_session_path
