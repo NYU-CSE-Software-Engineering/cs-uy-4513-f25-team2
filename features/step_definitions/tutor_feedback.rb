@@ -80,10 +80,6 @@ When('I filter feedback by subject {string}') do |subject_name|
   end
 end
 
-Then('I should not see {string}') do |text|
-  expect(page).not_to have_content(text)
-end
-
 Given('I am a tutor with no feedback yet') do
   @learner = Learner.create!(
     first_name: 'Empty',

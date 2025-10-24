@@ -33,8 +33,9 @@ Feature: Tutor views feedback received from learners
 
     Scenario: View feedback filtered by subject
         When I filter feedback by subject "Calculus"
-        Then I should see "Very clear explanations!"
-        And I should not see "Helpful but a bit too fast."
+        Then I should see only 1 feedback items displayed
+        And I should see "Very clear explanations!"
+
 
     Scenario: View feedback with no results
         Given I am a tutor with no feedback yet
