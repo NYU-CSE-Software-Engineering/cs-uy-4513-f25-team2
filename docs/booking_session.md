@@ -1,30 +1,57 @@
-# Feature: Learner books a tutor’s posted availability slot
+<<<<<<< HEAD
+# Feature: Learner finds an available slot by Subject + Time Range and books it
 
-## User Story (Connextra)
-As a **Learner**
-So that **I can attend an online tutoring session**
-I want to **book a tutor’s posted availability slot** (1:1 or group)
+## User Story
+As a **Learner (Tutee)**, I want to **search tutors’ posted availability by subject and time range and book one slot** so that **I can attend an online tutoring session at a convenient time**.
 
-## Acceptance Criteria (SMART)
-1. **Happy path:** From Tutor Catalog, I view a tutor’s profile, see posted slots, select a slot with remaining capacity, and book it. I see a confirmation showing **meeting link** and session details.
-2. **No double-booking:** If I already booked the same slot, the second attempt is rejected with a clear message.
-3. **Capacity enforced:** If the slot is full, booking is rejected with a clear “slot full” message.
-4. **Time conflict:** If the slot overlaps another of my upcoming sessions, booking is rejected with a “time conflict” message.
-5. **Auditability:** A successful booking stores a Session with `tutor_id`, `subject_id`, `availability_slot_id`, `start_at`, `end_at`, and a **meeting_link**.
+## Acceptance Criteria
+1. **Happy path:** After I sign in and search by subject and time range, I see matching slots; choosing one and confirming shows “Booking confirmed” and a meeting link.
+2. **No double-booking:** If I try to book the same slot twice, I see “You are already booked for that slot.”
+3. **Capacity enforced:** If a slot is full, I see “This slot is full.”
+4. **Time conflict:** If my chosen slot overlaps another upcoming session of mine, I see “This slot conflicts with another session.”
+5. **Auditability:** A successful booking creates a `Session` linked to the chosen availability slot, tutor, and subject, with `start_at`, `end_at`, and a meeting link.
+=======
+# Feature: Learner finds a posted session by Subject + Time Range and books it
+
+## User Story
+As a **Learner (Tutee)**, I want to **search tutors’ posted sessions by subject and time range and book one** so that **I can attend an online tutoring session at a convenient time**.
+
+## Acceptance Criteria
+1. **Happy path:** After I sign in and search by subject and time range, I see matching sessions; choosing one and confirming shows “Booking confirmed” and a meeting link.
+2. **No double-booking:** If I try to book the same session twice, I see “You are already booked for that session.”
+3. **Capacity enforced:** If a session is full, I see “This session is full.”
+4. **Time conflict:** If my chosen session overlaps another upcoming session of mine, I see “This session conflicts with another session.”
+5. **Auditability:** A successful booking creates a `SessionAttendee` linking me (learner) to the chosen session, and the session has a meeting link.
+>>>>>>> main
 
 ## MVC Outline
 ### Models
-- `Tutor(id, first_name, last_name, ...)`
-- `Subject(id, code, name, ...)`
-- `AvailabilitySlot(id, tutor_id, start_at, end_at, capacity, recurrence_rule)`
-- `Session(id, tutor_id, subject_id, availability_slot_id, start_at, end_at, meeting_link, status, capacity)`
-- `SessionsAttendee(id, session_id, learner_id, joined_at, attended, feedback_submitted, cancelled_at)`
-
-### Controllers
-- `TutorsController#index, show` – list/browse tutors, show availability
-- `SessionsController#create` – create/join session respecting capacity & duplicates; `#show` – confirmation
+- A **Learner model** with `email:string`, `password:string`, `first_name:string`, and `last_name:string` attributes.
+<<<<<<< HEAD
+- A **Tutor model** with `first_name:string`, `last_name:string`, and `email:string` attributes.
+- A **Subject model** with `name:string` attribute.
+- A **Teach model** with `tutor_id:integer` and `subject_id:integer` attributes (table name `teaches`).
+- An **AvailabilitySlot model** with `tutor_id:integer`, `start_at:datetime`, `end_at:datetime`, and `capacity:integer` attributes.
+- A **Session model** with `tutor_id:integer`, `subject_id:integer`, `availability_slot_id:integer`, `start_at:datetime`, `end_at:datetime`, `meeting_link:string`, and `capacity:integer` attributes.
+- A **SessionsAttendee model** with `session_id:integer`, `learner_id:integer`, and `joined_at:datetime` attributes.
+=======
+- A **Tutor model** with `learner:references` attribute (to display the tutor’s name via the linked learner).
+- A **Subject model** with `name:string` attribute.
+- A **Teach model** with `tutor_id:integer` and `subject_id:integer` attributes.
+- A **Session model** with `tutor_id:integer`, `subject_id:integer`, `start_at:datetime`, `end_at:datetime`, `capacity:integer`, and `meeting_link:text` attributes.
+- A **SessionAttendee model** with `session_id:integer` and `learner_id:integer` attributes.
+>>>>>>> main
 
 ### Views
-- `tutors/index.html.erb` – catalog
-- `tutors/show.html.erb` – profile & slots
-- `sessions/show.html.erb` – confirmation
+- A **home/index.html.erb view** with a link to begin searching.
+- A **sessions/search.html.erb view** with a form.
+<<<<<<< HEAD
+- A **sessions/results.html.erb view** with a list of matching slots and a select button per slot.
+=======
+- A **sessions/results.html.erb view** with a list of matching sessions and a select button per session.
+>>>>>>> main
+- A **sessions/confirm.html.erb view** with a confirm button.
+
+### Controllers
+- A **HomeController** with `index` action.
+- A **SessionsController** with `search`, `results`, and `confirm` actions.
