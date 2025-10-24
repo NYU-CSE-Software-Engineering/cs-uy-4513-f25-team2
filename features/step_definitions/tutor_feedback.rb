@@ -1,7 +1,7 @@
 # features/step_definitions/tutor_feedback_steps.rb
 require 'time'
 
-Given('I am a signed-in tutor') do
+Given('I am a logged-in tutor') do
   @learner = Learner.create!(
     first_name: 'Test',
     last_name:  'Tutor',
