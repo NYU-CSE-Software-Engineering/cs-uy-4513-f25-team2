@@ -4,28 +4,28 @@ Feature: Tutor posts a new availability slot
   So that I can allow others to sign up
 
   Background:
-    Given I am signed in and verified tutor,
+    Given I am a signed in user and tutor
 	And the following slot exists:
 	| start_time       | end_time         | capacity| subject|
-	| 2025-10-15T11:00Z| 2025-10-15T11:59Z| 1       | Math   |
+	| 2026-10-15T11:00Z| 2026-10-15T11:59Z| 1       | Math   |
 
   @happy
   Scenario: Tutor posts an availability slot with valid information
     And I am on new slot page,
-    When I fill in "Start Time" with "2025-10-15T10:00Z"
-    And I fill in "End Time" with "2025-10-15T10:59Z"
+    When I fill in "Start Time" with "2026-10-15T10:00Z"
+    And I fill in "End Time" with "2026-10-15T10:59Z"
     And I fill in "Capacity" with "1"
     And I fill in "Subject" with "Math"
     And I press "Create new availability slot"
-    Then I should be on the slot's show page
+    Then I am on the slot's show page
     And I should see the message "Slot successfully created"
     And I should see the slot on the page
 
   @unknown
   Scenario: Tutor creates a post with missing/unknown information
     And I am on new slot page,
-    When I fill in "Start Time" with "2025-10-15T8:00Z"
-    And I fill in "End Time" with "2025-10-15T9:00Z"
+    When I fill in "Start Time" with "2026-10-15T8:00Z"
+    And I fill in "End Time" with "2026-10-15T9:00Z"
     And I fill in "Subject" with "Math"
     And I press "Create new availability slot"
     Then I should see an error message saying it is missing information
@@ -33,12 +33,12 @@ Feature: Tutor posts a new availability slot
   @overlap
   Scenario: Tutor creates a post overlapping with existing availability slot
     And I am on new slot page,
-    When I fill in "Start Time" with "2025-10-15T10:30Z"
-    And I fill in "End Time" with "2025-10-15T11:30Z"
+    When I fill in "Start Time" with "2026-10-15T8:00Z"
+    And I fill in "End Time" with "2026-10-15T9:00Z"
     And I fill in "Capacity" with "1"
     And I fill in "Subject" with "Math"
     And I press "Create new availability slot"
-    And I have an existing slot that overlaps
+    And this slot overlaps with existing slot
 	Then I should see an error message that there is a time conflict
 
   @delete

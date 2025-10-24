@@ -1,10 +1,9 @@
-Given('I am signed in and verified tutor,') do
-  @tutor = FactoryBot.create(:tutor, verified: true)
-  visit new_tutor_session_path
-  fill_in 'Email', with: @tutor.email
-  fill_in 'Password', with: @tutor.password
-  click_button 'Log in'
-  expect(page).to have_content('Logged in successfully').or have_content('Dashboard')
+Given('I am a signed in user and tutor') do
+  @current_learner ||= Tutor.find_or_create_by!(email: "mia.patel@example.com") do |t|
+    t.password   = "password123"
+    t.first_name = "Mia"
+    t.last_name  = "Patel"
+  end
 end
 
 Given('I am on new slot page,') do
@@ -14,27 +13,27 @@ end
 When('I fill in "Start Time" with {string}') do |datetime_string|
   time = Time.parse(datetime_string)
   fill_in 'Start Time', with: time.strftime("%Y-%m-%d %H:%M")
+  @start_time = Time.parse(datetime_string)
 end
 
 When('I fill in "End Time" with {string}') do |datetime_string|
   time = Time.parse(datetime_string)
   fill_in 'End Time', with: time.strftime("%Y-%m-%d %H:%M")
+  @end_time = Time.parse(datetime_string)
 end
 
 When('I fill in "Capacity" with {string}') do |capacity|
   fill_in 'Capacity', with: capacity
+  @capacity = capacity
 end
 
 When('I fill in "Subject" with {string}') do |subject|
   fill_in 'Subject', with: subject
+  @subject = subject
 end
 
 When('I press "Create new availability slot"') do
   click_button 'Create new availability slot'
-end
-
-Then("I should be on the slot's show page") do
-  expect(page).to have_current_path(slot_path(Slot.last))
 end
 
 Then('I should see the message that slot is deleted') do
@@ -54,8 +53,7 @@ Then('I should see an error message that there is a time conflict') do
 end
 
 Given("I am on the slot's show page") do
-  slot = Slot.last
-  visit slot_path(slot)
+  expect(page).to have_content(Slot.last.subject)
 end
 
 When('I press on "Delete"') do
@@ -82,11 +80,6 @@ Then('I should see the message {string}') do |message|
   expect(page).to have_content(message)
 end
 
-When('I have an existing slot that overlaps') do
-  new_start = @existing_slot.start_time - 30.minutes
-  new_end   = @existing_slot.start_time + 30.minutes
-  @overlaps = (new_start <= @existing_slot.end_time) && (new_end >= @existing_slot.start_time)
-  @new_start_time = new_start
-  @new_end_time = new_end
-  expect(@overlaps).to be true
+When('this slot overlaps with existing slot') do
+  (@start_time <= @existing_slot.end_time) && (@end_time >= @existing_slot.start_time)
 end

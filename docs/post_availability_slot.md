@@ -14,14 +14,14 @@ I want to **post availability slots**
 
 ## MVC Outline
 ### Models
-- `Tutor(id, first_name, last_name, ..., subject, sessions)`
-- `Subject(id, code, name, ...)`
-- `Session(id, tutor_id, subject_id, availability_slot_id, start_at, end_at, meeting_link, status, capacity)`
+- A **Tutor model** with `learner:references', 'bio:text', 'photo_url:string', 'rating_avg:decimal', and 'rating_count:int' attributes.
+- A **Subject model** with `name:string` attribute.
+- An **AvailabilitySlot model** with `tutor_id:integer`, `start_at:datetime`, `end_at:datetime`, and `capacity:integer` attributes.
 
 ### Controllers
-- `SessionsController#create, delete, show` – create a new session, delete an existing session, show created sessions
+- An **AvailabilitySlotController** with 'create', 'delete', and 'show' actions.
 
 ### Views
-- `sessions/new.html.erb` – make a new tutoring availability slot
-- `session/show.html.erb` – show an availability slot
-- `tutors/show.html.erb` – show availability slots in tutor’s profile
+- An **availabilityslots/new.html.erb** with fields for a new tutoring availability slot
+- An **availabilityslots/show.html.erb`** with display of availability slot
+- A **tutors/show.html.erb** with display for all availability slots
