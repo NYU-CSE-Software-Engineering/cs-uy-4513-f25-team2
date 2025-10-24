@@ -2,7 +2,7 @@ Feature: Learner submits feedback
   As a Learner
   I want to submit feedback about my tutoring session
   So that I can share my experience with my tutor to help others
-  
+
   Background:
     Given I am a signed-in learner
     And I have completed a tutoring session with "Andrew"
@@ -24,3 +24,20 @@ Feature: Learner submits feedback
     When I sign in as tutor "Andrew"
     And I visit the feedbacks index
     Then I should see feedback from the learner for the session
+
+
+Scenario: Learner marked present can leave feedback
+  Given I am a signed-in learner
+  And I have a completed session with "Andrew" where I was marked present
+  When I navigate to the feedback form for "Andrew"
+  And I select a rating of "5"
+  And I fill in "Comment" with "Very helpful!"
+  And I press "Submit Feedback"
+  Then I should see "Thank you for your feedback!"
+
+Scenario: Learner not marked present cannot leave feedback
+  Given I am a signed-in learner
+  And I have a completed session with "Andrew" where I was marked absent
+  When I visit the session page for "Andrew"
+  Then I should not see "Leave Feedback"
+  And I should see "You were not marked present for this session"
