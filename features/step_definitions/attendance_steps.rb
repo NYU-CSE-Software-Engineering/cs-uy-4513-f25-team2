@@ -1,11 +1,18 @@
 Given('I am a signed-in tutor') do
-  email    = "mia-patel@example.com"
-  password = "password123"
+  email    = 'mia.patel@example.com'
+  password = 'password123'
 
-  @current_learner = Learner.find_or_create_by!(email: email) do |l|
+  learner = Learner.find_or_create_by!(email: email) do |l|
     l.password   = password
-    l.first_name = "Mia"
-    l.last_name  = "Patel"
+    l.first_name = 'Mia'
+    l.last_name  = 'Patel'
+  end
+
+  tutor = Tutor.find_or_create_by!(learner: learner) do |t|
+    t.bio          = nil
+    t.photo_url    = nil
+    t.rating_avg   = 0
+    t.rating_count = 0
   end
 
   visit new_login_path
@@ -13,12 +20,8 @@ Given('I am a signed-in tutor') do
   fill_in 'Password', with: password
   click_button 'Log in'
 
-  @current_tutor = Tutor.find_or_create_by!(email: @current_learner.email) do |t|
-    t.bio          = nil
-    t.photo_url    = nil
-    t.rating_avg   = 0
-    t.rating_count = 0
-  end
+  @current_learner = learner
+  @current_tutor   = tutor
 end
 
 Given('the following learner exists:') do |table|
