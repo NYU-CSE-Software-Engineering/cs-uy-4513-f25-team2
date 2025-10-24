@@ -6,8 +6,8 @@ Given('I am a signed in user and tutor') do
   end
 end
 
-Given('I am on new slot page,') do
-  visit new_tutor_slot_path
+Given('I am on new session page,') do
+  visit new_tutor_session_path
 end
 
 When('I fill in "Start Time" with {string}') do |datetime_string|
@@ -32,16 +32,16 @@ When('I fill in "Subject" with {string}') do |subject|
   @subject = subject
 end
 
-When('I press "Create new availability slot"') do
-  click_button 'Create new availability slot'
+When('I press "Create new session"') do
+  click_button 'Create new session'
 end
 
-Then('I should see the message that slot is deleted') do
-  expect(page).to have_content("Slot deleted")
+Then('I should see the message that session is deleted') do
+  expect(page).to have_content("Session deleted")
 end
 
-Then('I should see the slot on the page') do
-  expect(page).to have_content(Slot.last.subject)
+Then('I should see the session on the page') do
+  expect(page).to have_content(Session.last.subject)
 end
 
 Then('I should see an error message saying it is missing information') do
@@ -52,21 +52,21 @@ Then('I should see an error message that there is a time conflict') do
   expect(page).to have_content("Time conflict")
 end
 
-Given("I am on the slot's show page") do
-  expect(page).to have_content(Slot.last.subject)
+Given("I am on the session's show page") do
+  expect(page).to have_content(Session.last.subject)
 end
 
 When('I press on "Delete"') do
   click_link 'Delete'
 end
 
-Then("I should be on tutor's slots page") do
-  expect(page).to have_current_path(tutor_slots_path)
+Then("I should be on tutor's session's page") do
+  expect(page).to have_current_path(tutor_sessions_path)
 end
 
-Given('the following slot exists:') do |table|
+Given('the following session exists:') do |table|
   table.hashes.each do |row|
-    @existing_slot = AvailabilitySlot.create!(
+    @existing_session = Session.create!(
       start_time: Time.parse(row['start_time']),
       end_time: Time.parse(row['end_time']),
       capacity: row['capacity'],
@@ -80,6 +80,6 @@ Then('I should see the message {string}') do |message|
   expect(page).to have_content(message)
 end
 
-When('this slot overlaps with existing slot') do
-  (@start_time <= @existing_slot.end_time) && (@end_time >= @existing_slot.start_time)
+When('this session overlaps with existing session') do
+  (@start_time <= @existing_session.end_time) && (@end_time >= @existing_session.start_time)
 end
