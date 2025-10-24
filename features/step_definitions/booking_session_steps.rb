@@ -34,7 +34,6 @@ Given('the following tutors and slots exist:') do |table|
       t.password = "password123"
       t.bio = nil
       t.qualifications = nil
-      t.approval_status = 'approved'
       t.photo_url = nil
       t.rating_avg = 0
       t.rating_count = 0
@@ -84,7 +83,6 @@ Given('I am learner {string} who has an existing session with tutor {string} fro
   tutor  = Tutor.find_or_create_by!(first_name: tnames[0..-2].join(' ').presence || tnames.first, last_name: tnames.last) do |t|
     t.email = "#{tnames[0].downcase}.#{tnames[-1].downcase}@example.com"
     t.password = "password123"
-    t.approval_status = 'approved'
   end
 
   Teach.find_or_create_by!(tutor: tutor, subject: subj)
