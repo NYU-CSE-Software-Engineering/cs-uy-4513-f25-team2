@@ -6,21 +6,21 @@ So that **I can access tutor privileges, like reserving a room and booking a ses
 I want to **apply to be a tutor**
 
 ## Acceptance Criteria (SMART)
-1. **Happy path:** From the Settings page, I view the option to apply to be a tutor, submit my application, and see a confirmation message.  
-2. **Already a tutor:** If I am already a tutor, the option to apply is hidden.  
-3. **Pending review:** If my application is pending, the option is replaced with a “Pending review” message.
+1. **Happy path:** From the Settings page, I view the option to apply to be a tutor, go to an Application page, fill out an application, submit my application, and see a confirmation message.  
+2. **Already a tutor:** From the Settings page, if I am already a tutor, the option to apply is hidden.  
+3. **Pending review:** From the Settings page, if my application is pending, the option to apply is replaced with a “Pending review” message.
 4. **Admin approval:** When an admin approves my application, I am now a Tutor.  
 5. **Admin rejection:** When an admin rejects my application, I stay a learner.
 
 ## MVC Outline
 ### Models
-- `Tutor(id, first_name, last_name, ...)`
-- `Pending_Application(id, reason, recommendation ...)`
-- `Learner(id, first_name, last_name, ...)`
-
-### Controllers
-- `ApplicationsController#create, approve, deny, status` – creates an record in the pending_applications table, approval removes a record from pending_applications table and adds one to the tutors table and emails the learner, denial removes a record from pending_applications table and emails the learner, status returns if the user has a record in the pending_applications
+- A **Learner model** with `email:string`, `password:string`, `first_name:string`, and `last_name:string` attributes.
+- A **Tutor model** with `first_name:string`, `last_name:string`, and `email:string` attributes.
+- A **TutorApplication model** with `id`, `learner_id`, `reason`, and `status` attributes.
 
 ### Views
-- `tutors/application.html.erb` – page/component to fill out application form and give confirmation that you applied. Or will inform you that you have a pending application
-- `settings.html.erb` – page that will conditionally render a button to apply for being a tutor
+- A **tutors/application.html.erb view** with a form to submit your reason for applying.
+- A **settings.html.erb view** that will conditionally render a button to apply for being a tutor or a "pending review" message.
+
+### Controllers
+- An **ApplicationsController** with `create`, `approve`, `deny`, and `status` actions.
