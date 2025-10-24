@@ -1,29 +1,23 @@
-Given('I am a signed-in Learner') do
-  @current_learner = Learner.find_or_create_by!(email: "mia.patel@example.com") do |l|
-    l.password   = "password123"
+Given('I am a signed-in tutor') do
+  email    = "mia-patel@example.com"
+  password = "password123"
+
+  @current_learner = Learner.find_or_create_by!(email: email) do |l|
+    l.password   = password
     l.first_name = "Mia"
     l.last_name  = "Patel"
   end
 
-  visit login_path
-  fill_in 'Email', with: @current_learner.email
-  fill_in 'Password', with: @current_learner.password
+  visit new_login_path
+  fill_in 'Email', with: email
+  fill_in 'Password', with: password
   click_button 'Log in'
-end
 
-Given('I am a Tutor') do
-  @current_tutor = Tutor.find_or_create_by!(email: @current_learner.email) do |l|
+  @current_tutor = Tutor.find_or_create_by!(email: @current_learner.email) do |t|
     t.bio          = nil
     t.photo_url    = nil
     t.rating_avg   = 0
     t.rating_count = 0
-  end
-end
-
-Given('the subject {string} exists') do |subject_name|
-  Subject.find_or_create_by!(name: subject_name) do |s|
-    s.code = subject_name.parameterize.upcase.first(6)
-    s.description = "#{subject_name} subject"
   end
 end
 
@@ -95,10 +89,6 @@ When('I save the attendance') do
   click_button 'Save'
 end
 
-Then('I should see the message {string}') do |message|
-  expect(page).to have_content(message)
-end
-
 Then('the learner\'s attendance for the session should be set to {string}') do |bool|
   attended = (bool == 'true')
   current_attendee = SessionAttendee.find_by!(session: @current_session, learner: @current_learner)
@@ -107,8 +97,4 @@ end
 
 Then('I should not see the {string} option') do |radio|
     expect(page).not_to have_field(radio)
-end
-
-Then('I should not see the {string} button') do |button|
-    expect(page).not_to have_button(button)
 end
