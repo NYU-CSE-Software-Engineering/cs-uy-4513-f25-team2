@@ -13,4 +13,8 @@ Rails.application.routes.draw do
   # root "posts#index"
   root "home#index"
   resources :tutors, only: [:index, :show]
+
+  get  "/search",  to: "sessions#search",  as: :slot_search
+  post "/results", to: "sessions#results", as: :slot_results
+  post "/confirm", to: "sessions#confirm", as: :slot_confirm
 end
