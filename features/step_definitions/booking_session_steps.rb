@@ -36,7 +36,7 @@ Given('the following tutors and sessions exist:') do |table|
     names = row['tutor_name'].to_s.strip.split
     first = names[0..-2].join(' ').presence || names.first
     last  = names.last
-    tutor_learner = Learner.find_or_create_by!(email: "#{first.downcase.gsub(/\s+/,'_')}.#{last.downcase}@example.com") do |l|
+    tutor_learner = Learner.find_or_create_by!(email: "#{first.downcase.gsub(/\s+/, '_')}.#{last.downcase}@example.com") do |l|
       l.password   = "password123"
       l.first_name = first
       l.last_name  = last
@@ -59,7 +59,7 @@ Given('the following tutors and sessions exist:') do |table|
 end
 
 Given('I am learner {string} with no upcoming sessions') do |learner_name|
-  first, last = (learner_name.split(' ', 2) + [nil]).take(2)
+  first, last = (learner_name.split(' ', 2) + [ nil ]).take(2)
   email = "#{learner_name.parameterize}@example.com"
   @current_learner = Learner.find_or_create_by!(email: email) do |l|
     l.password   = "password123"
@@ -70,7 +70,7 @@ end
 
 Given('I am learner {string} who has an existing session with tutor {string} from {string} to {string} in {string}') do |learner_name, tutor_name, start_iso, end_iso, subject_name|
   # Ensure learner
-  first, last = (learner_name.split(' ', 2) + [nil]).take(2)
+  first, last = (learner_name.split(' ', 2) + [ nil ]).take(2)
   email = "#{learner_name.parameterize}@example.com"
   @current_learner = Learner.find_or_create_by!(email: email) do |l|
     l.password   = "password123"
@@ -88,7 +88,7 @@ Given('I am learner {string} who has an existing session with tutor {string} fro
   tnames = tutor_name.split
   tfirst = tnames[0..-2].join(' ').presence || tnames.first
   tlast  = tnames.last
-  tutor_learner = Learner.find_or_create_by!(email: "#{tfirst.downcase.gsub(/\s+/,'_')}.#{tlast.downcase}@example.com") do |l|
+  tutor_learner = Learner.find_or_create_by!(email: "#{tfirst.downcase.gsub(/\s+/, '_')}.#{tlast.downcase}@example.com") do |l|
     l.password   = "password123"
     l.first_name = tfirst
     l.last_name  = tlast
