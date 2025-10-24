@@ -1,8 +1,29 @@
-Given('I am a signed-in tutor') do
-  @current_learner ||= Tutor.find_or_create_by!(email: "mia.patel@example.com") do |t|
-    t.password   = "password123"
-    t.first_name = "Mia"
-    t.last_name  = "Patel"
+Given('I am a signed-in Learner') do
+  @current_learner = Learner.find_or_create_by!(email: "mia.patel@example.com") do |l|
+    l.password   = "password123"
+    l.first_name = "Mia"
+    l.last_name  = "Patel"
+  end
+
+  visit login_path
+  fill_in 'Email', with: @current_learner.email
+  fill_in 'Password', with: @current_learner.password
+  click_button 'Log in'
+end
+
+Given('I am a Tutor') do
+  @current_tutor = Tutor.find_or_create_by!(email: @current_learner.email) do |l|
+    t.bio          = nil
+    t.photo_url    = nil
+    t.rating_avg   = 0
+    t.rating_count = 0
+  end
+end
+
+Given('the subject {string} exists') do |subject_name|
+  Subject.find_or_create_by!(name: subject_name) do |s|
+    s.code = subject_name.parameterize.upcase.first(6)
+    s.description = "#{subject_name} subject"
   end
 end
 

@@ -4,7 +4,8 @@ Feature: Tutor marks a learner's attendance for a tutoring session
     so that the learner and I can both keep track of their session attendance
     
     Background:
-        Given I am a signed-in tutor
+        Given I am a signed-in Learner
+        And I am a Tutor
         And the following learner exists:
         | email               | password    | first_name | last_name |
         | janedoe@example.com | password123 | Jane       | Doe       |
