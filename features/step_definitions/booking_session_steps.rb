@@ -1,18 +1,6 @@
 require 'time'
 require 'securerandom'
 
-<<<<<<< HEAD
-Given('I am a signed-in user') do
-  @current_learner ||= Learner.find_or_create_by!(email: "mia.patel@example.com") do |l|
-    l.password   = "password123"
-    l.first_name = "Mia"
-    l.last_name  = "Patel"
-  end
-end
-
-Given('I am on the "Find a Session" page') do
-  visit slot_search_path
-=======
 Given('I am a signed-in learner') do
   email    = "mia-patel@example.com"
   password = "password123"
@@ -31,7 +19,6 @@ end
 
 Given('I am on the "Find a Session" page') do
   visit session_search_path
->>>>>>> main
   expect(page).to have_content("Find a Session")
 end
 
@@ -42,40 +29,14 @@ Given('the subject {string} exists') do |subject_name|
   end
 end
 
-<<<<<<< HEAD
-Given('the following tutors and slots exist:') do |table|
-=======
 Given('the following tutors and sessions exist:') do |table|
->>>>>>> main
   table.hashes.each do |row|
     subj = Subject.find_by!(name: row['subject'])
 
     names = row['tutor_name'].to_s.strip.split
     first = names[0..-2].join(' ').presence || names.first
     last  = names.last
-<<<<<<< HEAD
-
-    tutor = Tutor.find_or_create_by!(first_name: first, last_name: last) do |t|
-      t.email = "#{first.downcase.gsub(/\s+/,'_')}.#{last.downcase}@example.com"
-      t.password = "password123"
-      t.bio = nil
-      t.qualifications = nil
-      t.photo_url = nil
-      t.rating_avg = 0
-      t.rating_count = 0
-    end
-
-    Teach.find_or_create_by!(tutor: tutor, subject: subj)
-
-    AvailabilitySlot.find_or_create_by!(
-      tutor: tutor,
-      start_at: Time.iso8601(row['slot_start']),
-      end_at:   Time.iso8601(row['slot_end'])
-    ) do |slot|
-      slot.capacity = row['capacity'].to_i
-      slot.recurrence_rule = nil
-=======
-    tutor_learner = Learner.find_or_create_by!(email: "#{first.downcase.gsub(/\s+/,'_')}.#{last.downcase}@example.com") do |l|
+    tutor_learner = Learner.find_or_create_by!(email: "#{first.downcase.gsub(/\s+/, '_')}.#{last.downcase}@example.com") do |l|
       l.password   = "password123"
       l.first_name = first
       l.last_name  = last
@@ -93,13 +54,12 @@ Given('the following tutors and sessions exist:') do |table|
       s.capacity     = row['capacity'].to_i
       s.status       = 'scheduled'
       s.meeting_link = "https://example.org/meet/#{SecureRandom.hex(3)}"
->>>>>>> main
     end
   end
 end
 
 Given('I am learner {string} with no upcoming sessions') do |learner_name|
-  first, last = (learner_name.split(' ', 2) + [nil]).take(2)
+  first, last = (learner_name.split(' ', 2) + [ nil ]).take(2)
   email = "#{learner_name.parameterize}@example.com"
   @current_learner = Learner.find_or_create_by!(email: email) do |l|
     l.password   = "password123"
@@ -110,7 +70,7 @@ end
 
 Given('I am learner {string} who has an existing session with tutor {string} from {string} to {string} in {string}') do |learner_name, tutor_name, start_iso, end_iso, subject_name|
   # Ensure learner
-  first, last = (learner_name.split(' ', 2) + [nil]).take(2)
+  first, last = (learner_name.split(' ', 2) + [ nil ]).take(2)
   email = "#{learner_name.parameterize}@example.com"
   @current_learner = Learner.find_or_create_by!(email: email) do |l|
     l.password   = "password123"
@@ -126,41 +86,9 @@ Given('I am learner {string} who has an existing session with tutor {string} fro
 
   # Ensure tutor
   tnames = tutor_name.split
-<<<<<<< HEAD
-  tutor  = Tutor.find_or_create_by!(first_name: tnames[0..-2].join(' ').presence || tnames.first, last_name: tnames.last) do |t|
-    t.email = "#{tnames[0].downcase}.#{tnames[-1].downcase}@example.com"
-    t.password = "password123"
-  end
-
-  Teach.find_or_create_by!(tutor: tutor, subject: subj)
-
-  # Ensure slot matching the existing session
-  start_t = Time.iso8601(start_iso)
-  end_t   = Time.iso8601(end_iso)
-  slot = AvailabilitySlot.find_or_create_by!(tutor: tutor, start_at: start_t, end_at: end_t) do |as|
-    as.capacity = 10
-    as.recurrence_rule = nil
-  end
-
-  # Ensure session & attendee row
-  session = Session.find_or_create_by!(availability_slot: slot) do |s|
-    s.tutor        = tutor
-    s.subject      = subj
-    s.start_at     = slot.start_at
-    s.end_at       = slot.end_at
-    s.status       = 'scheduled'
-    s.capacity     = slot.capacity
-    s.meeting_link = "https://example.org/meet/#{SecureRandom.hex(3)}"
-  end
-
-  SessionsAttendee.find_or_create_by!(session: session, learner: @current_learner) do |sa|
-    sa.joined_at = Time.now.utc
-    sa.attended  = false
-    sa.feedback_submitted = false
-=======
   tfirst = tnames[0..-2].join(' ').presence || tnames.first
   tlast  = tnames.last
-  tutor_learner = Learner.find_or_create_by!(email: "#{tfirst.downcase.gsub(/\s+/,'_')}.#{tlast.downcase}@example.com") do |l|
+  tutor_learner = Learner.find_or_create_by!(email: "#{tfirst.downcase.gsub(/\s+/, '_')}.#{tlast.downcase}@example.com") do |l|
     l.password   = "password123"
     l.first_name = tfirst
     l.last_name  = tlast
@@ -182,7 +110,6 @@ Given('I am learner {string} who has an existing session with tutor {string} fro
     sa.attended            = false
     sa.feedback_submitted  = false
     sa.cancelled           = false
->>>>>>> main
   end
 end
 
@@ -200,11 +127,7 @@ When('I run the search') do
   expect(page).to have_content("Search Results")
 end
 
-<<<<<<< HEAD
-When('I select the slot for tutor {string} from {string} to {string}') do |tutor_name, start_iso, end_iso|
-=======
 When('I select the session for tutor {string} from {string} to {string}') do |tutor_name, start_iso, end_iso|
->>>>>>> main
   label = "Select #{tutor_name} #{Time.iso8601(start_iso).utc.iso8601}–#{Time.iso8601(end_iso).utc.iso8601}"
   expect(page).to have_button(label)
   click_button(label)

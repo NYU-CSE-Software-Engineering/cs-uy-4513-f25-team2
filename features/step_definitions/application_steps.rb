@@ -43,10 +43,6 @@ Then('I should not see the {string} message') do |string|
     expect(page).not_to have_content(string)
 end
 
-Then('I should see {string}') do |string|
-  expect(page).to have_content(string)
-end
-
 Given('I have a pending application') do
     learner = Learner.find_by(email:  @current_learner.email)
     TutorApplication.find_or_create_by!(learner: learner, reason: 'Testing reason')
