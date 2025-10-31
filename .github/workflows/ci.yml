@@ -43,7 +43,7 @@ jobs:
         run: bundle install --jobs 4 --retry 3
 
       - name: Prepare database
-        run: bin/rails db:prepare
+        run: bin/rails db:setup
 
       - name: Run RSpec
         run: bundle exec rspec
