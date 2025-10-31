@@ -51,12 +51,12 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem 'rspec-rails', '~> 8.0'
-  gem 'capybara',    '~> 3.40'
+  gem 'capybara', '~> 3.40'
   gem 'cucumber-rails', '~> 4.0', require: false
-  gem 'cucumber',    '~> 10.1'
-  gem 'selenium-webdriver', '~> 4.25'
-  gem 'database_cleaner-active_record', '~> 2.0'
-  gem 'dotenv-rails'
+  gem 'cucumber', '~> 10.1'
+  gem 'selenium-webdriver', '~> 4.38'
+  gem 'database_cleaner-active_record', '~> 2.2'
+  gem 'dotenv-rails', '~> 3.1'
 end
 
 group :development do
