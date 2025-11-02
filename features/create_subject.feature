@@ -16,7 +16,7 @@ Feature: Admin adds a new subject
 
   @sad_missing_code
   Scenario: Fail to create subject when code is missing
-    Given I am an admin
+    Given I am a signed-in admin
     When I visit the "New Subject" page
     And I fill "Name" with "Physics"
     And I leave "Code" blank
@@ -25,7 +25,7 @@ Feature: Admin adds a new subject
 
   @sad_duplicate_code
   Scenario: Fail to create subject when code is duplicate
-    Given I am an admin
+    Given I am a signed-in admin
     And a subject already exists with name "Calculus" and code "MATH101"
     When I visit the "New Subject" page
     And I fill "Name" with "Linear Algebra"
