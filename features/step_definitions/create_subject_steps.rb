@@ -12,7 +12,7 @@ Given('a subject already exists with name {string} and code {string}') do |name,
 end
 
 When('I visit the "New Subject" page') do
-  visit new_admin_subject_path
+  visit new_subject_path
 end
 
 When('I fill {string} with {string}') do |label, value|
