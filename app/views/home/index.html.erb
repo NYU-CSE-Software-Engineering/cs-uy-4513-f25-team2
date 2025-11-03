@@ -1,0 +1,19 @@
+<h1>Home</h1>
+<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
+<% if flash[:alert]  %><p><%= flash[:alert]  %></p><% end %>
+
+<% if current_admin %>
+  <p>Signed in as Admin: <%= current_admin.email %></p>
+  <p><%= link_to 'Add New Subject', new_subject_path %></p>
+<% elsif current_learner %>
+  <p>Signed in as Learner: <%= current_learner.email %></p>
+<% else %>
+  <p>You are not signed in.</p>
+<% end %>
+
+<% if current_admin || current_learner %>
+  <%= button_to 'Log out', logout_path, method: :delete %>
+<% else %>
+  <p><%= link_to 'Log in', new_login_path %></p>
+  <p><%= link_to 'Sign up', new_learner_path %></p>
+<% end %>

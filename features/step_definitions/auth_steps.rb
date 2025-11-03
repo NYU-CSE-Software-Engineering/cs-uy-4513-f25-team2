@@ -1,5 +1,5 @@
 Given("I am on the sign-up page") do
-  visit new_signup_path
+  visit new_learner_path
 end
 
 When("I fill in {string} with {string}") do |field, value|
@@ -41,7 +41,7 @@ end
 Given("I am logged in as {string}") do |email|
   learner = Learner.find_by(email: email) || Learner.create!(email: email, password: "password")
   visit new_login_path
-  fill_in "Email", with: user.email
+  fill_in "Email", with: learner.email
   fill_in "Password", with: "password"
   click_button "Log in"
   expect(page).to have_current_path(home_path)

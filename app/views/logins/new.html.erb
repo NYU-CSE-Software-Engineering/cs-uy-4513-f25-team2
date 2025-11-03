@@ -1,0 +1,19 @@
+<h1>Log in</h1>
+
+<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
+<% if flash[:alert]  %><p><%= flash[:alert]  %></p><% end %>
+
+<%= form_with url: login_path, local: true do %>
+  <div>
+    <%= label_tag :email, 'Email' %>
+    <%= text_field_tag :email %>
+  </div>
+
+  <div>
+    <%= label_tag :password, 'Password' %>
+    <%= password_field_tag :password %>
+  </div>
+
+  <%= submit_tag 'Log in' %>
+  <%= button_tag 'Sign up', type: 'submit', formmethod: 'post', formaction: learners_path %>
+<% end %>
