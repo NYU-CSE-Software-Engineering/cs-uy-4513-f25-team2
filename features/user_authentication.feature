@@ -15,19 +15,19 @@ Feature: User Authentication/User Identity
         Given I am on the sign-up page
         When I fill in "Email" with "example@gmail.com"
         And I press "Sign up"
-        And I should see an error message "password is required"
+        And I should see an error message "Password is required"
 
     Scenario: User fails to sign up with no email
         Given I am on the sign-up page
         When I fill in "Password" with "password"
         And I press "Sign up"
-        Then I should see an error message "email is required"
+        Then I should see an error message "Email is required"
 
     Scenario: User fails to sign up with no email and no password
         Given I am on the sign-up page
         And I press "Sign up"
-        Then I should see an error message "email is required"
-        And I should see an error message "password is required"
+        Then I should see an error message "Email is required"
+        And I should see an error message "Password is required"
 
     Scenario: User fails to sign up with an email taken by another user
         Given I am on the login page
