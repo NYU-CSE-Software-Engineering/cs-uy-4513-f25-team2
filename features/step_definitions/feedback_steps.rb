@@ -1,15 +1,12 @@
 # features/step_definitions/feedback_steps.rb
-/
 Given("I am a logged-in learner") do
   @learner = Learner.create!(
     email: "learner@example.com",
-    password: "password123"
+    password: "password123",
     first_name: "Exa",
-    last_name: "Mine",
+    last_name: "Mine"
   )
 end
-/
-# ---------- Domain setup ----------
 
 Given("I have completed a tutoring session with {string}") do |tutor_name|
   @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
@@ -74,4 +71,16 @@ end
 Then("the feedback button should be hidden") do
   expect(page).not_to have_link("Leave Feedback")
   expect(page).not_to have_button("Leave Feedback")
+end
+
+When("I select a rating of {string}") do |rating|
+  choose(rating)
+end
+
+When('I visit the session page for {string}') do |string|
+  pending
+end
+
+Then("I should not see {string}") do |text|
+  expect(page).not_to have_content(text)
 end
