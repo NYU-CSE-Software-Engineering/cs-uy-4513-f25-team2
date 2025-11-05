@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Learner, type: :model do
   context 'validations' do
-    it 'requires email' do
+    it 'is invalid without an email' do
       l = Learner.new(password: 'password')
       expect(l).not_to be_valid
-      expect(l.errors[:name]).to include("can't be blank")
+      expect(l.errors[:email]).to include("can't be blank")
     end
   end
 end
