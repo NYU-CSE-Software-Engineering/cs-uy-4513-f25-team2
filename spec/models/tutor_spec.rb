@@ -22,5 +22,11 @@ RSpec.describe Tutor, type: :model do
         expect(t1.errors[:rating_avg]).to be_present
         expect(t2.errors[:rating_avg]).to be_present
     end
+
+    it 'requires rating_count to be an integer' do
+        t = Tutor.new(tutor_name: 'Jane Doe', rating_count: 'rating')
+        expect(t).not_to be_valid
+        expect(t.errors[:rating_count]).to include("is not an integer")
+    end
   end
 end
