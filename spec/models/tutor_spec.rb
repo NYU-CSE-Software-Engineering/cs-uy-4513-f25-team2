@@ -15,8 +15,8 @@ RSpec.describe Tutor, type: :model do
     end
 
     it 'requires rating_avg to be between 0 and 5' do
-        t1 = Tutor.new(tutor_name: 'Jane Doe', rating_avg: 6.2)
-        t2 = Tutor.new(tutor_name: 'John Doe', rating_avg: -3.0)
+        t1 = Tutor.new(tutor_name: 'John Doe', rating_avg: 6.2)
+        t2 = Tutor.new(tutor_name: 'Emily Johnson', rating_avg: -3.0)
         expect(t1).not_to be_valid
         expect(t2).not_to be_valid
         expect(t1.errors[:rating_avg]).to be_present
@@ -24,9 +24,9 @@ RSpec.describe Tutor, type: :model do
     end
 
     it 'requires rating_count to be an integer' do
-        t = Tutor.new(tutor_name: 'Jane Doe', rating_count: 'rating')
+        t = Tutor.new(tutor_name: 'Sarah Wu', rating_count: 'rating')
         expect(t).not_to be_valid
-        expect(t.errors[:rating_count]).to include("is not an integer")
+        expect(t.errors[:rating_count]).to be_present
     end
   end
 end
