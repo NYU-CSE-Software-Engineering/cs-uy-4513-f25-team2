@@ -28,5 +28,11 @@ RSpec.describe Tutor, type: :model do
         expect(t).not_to be_valid
         expect(t.errors[:rating_count]).to be_present
     end
+
+    it 'requires rating_count to be non-negative' do
+        t = Tutor.new(tutor_name: 'Michael Chen', rating_count: -5)
+        expect(t).not_to be_valid
+        expect(t.errors[:rating_count]).to be_present
+    end
   end
 end
