@@ -6,11 +6,11 @@ So I can see their information
 Background:
 Given I am a signed-in learner
 And the following tutors exist:
-      | tutor_name       | bio     | rating_avg | rating_count | subjects                                           | 
-      | Emily Johnson  |           | 4.7             | 13                | Calculus, Biology                             |
-      | Sarah Wu         | Hi.      |4.5              | 5                  |                                                         |
-      | Michael Chen   | Hello. |4.1              | 45                | Statistics, Chemistry, Programming |
-      | John Doe          | Hey.   |                   |                     | Physics                                            |
+      | tutor_name       | bio     | rating_avg | rating_count | subjects                           | 
+      | Emily Johnson    |         | 4.7        | 13           | Calculus, Biology                  |
+      | Sarah Wu         | Hi.     | 4.5        | 5            |                                    |
+      | Michael Chen     | Hello.  | 4.1        | 45           | Statistics, Chemistry, Programming |
+      | John Doe         | Hey.    |            |              | Physics                            |
 
 @happy
 Scenario: Successfully views tutor profile
