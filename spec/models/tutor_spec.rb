@@ -9,9 +9,9 @@ RSpec.describe Tutor, type: :model do
     end
 
     it 'requires rating_avg to be a number' do
-        t = Tutor.new(tutor_name: 'Jane Doe', rating_avg: '4.5')
+        t = Tutor.new(tutor_name: 'Jane Doe', rating_avg: 'rating')
         expect(t).not_to be_valid
-        expect(t.errors[:rating_avg]).to include("must be a number")
+        expect(t.errors[:rating_avg]).to include("is not a number")
     end
   end
 end
