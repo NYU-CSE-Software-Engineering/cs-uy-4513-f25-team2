@@ -1,4 +1,6 @@
 class Tutor < ApplicationRecord
+    belongs_to :learner
+    
     validates :tutor_name, presence: true
     validates :rating_avg, numericality: { 
         allow_nil: true,
