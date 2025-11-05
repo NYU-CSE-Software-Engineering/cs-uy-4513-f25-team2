@@ -16,7 +16,7 @@ When('I press on {string}') do |string|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Then('I am on the tutor's profile page') do
+Then("I am on the tutor's profile page") do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
