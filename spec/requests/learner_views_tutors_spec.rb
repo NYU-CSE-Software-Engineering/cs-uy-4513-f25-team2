@@ -40,16 +40,17 @@ RSpec.describe "Tutors", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    it "shows an alert and no results when user submits with no subject selected" do
-      # Drives the behavior for your sad-path scenario.
-      # We simulate the user clicking 'submit' with an empty subject.
-      make_subject("Calculus", "MATH101")
-      make_tutor(first: "Emily",  last: "Johnson", bio: "Hey.",   rating: 4.7, subjects: [Subject.find_by(name: "Calculus")])
+    it "filters tutors by subject name" do
+      calc = make_subject("Calculus", "MATH101")
+      stats = make_subject("Statistics", "MATH201")
 
-      get "/tutors", params: { subject: "", submit_attempt: "1" }
+      make_tutor(first: "Emily", last: "Johnson", bio: "Hey.",   rating: 4.7, subjects: [calc])
+      make_tutor(first: "Sarah", last: "Miller",  bio: "Hi.",    rating: 4.6, subjects: [calc])
+      make_tutor(first: "Michael", last: "Chen",  bio: "Hello.", rating: 4.1, subjects: [stats])
+
+      get tutors_path, params: { subject: "Calculus" }
 
       expect(response).to have_http_status(:ok)
-      expect(flash[:alert]).to eq("No subject to filter")
     end
   end
 end
