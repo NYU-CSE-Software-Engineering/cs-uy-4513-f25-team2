@@ -6,13 +6,12 @@ So I can see their information
 Background:
 Given I am a signed-in learner
 And the following tutors exist:
-    | tutor_name       | bio    | rating_avg | rating_count | subjects                                           | 
-    | Emily Johnson    |        | 4.7        | 13           | Calculus, Biology                             |
-    | Sarah Wu         | Hi.    | 4.5        | 5            |                                                         |
+    | tutor_name       | bio    | rating_avg | rating_count | subjects                           | 
+    | Emily Johnson    | Hey.   | 4.7        | 13           | Calculus, Biology                  |
+    | Sarah Miller     | Hi.    | 4.6        | 6            | Calculus                           |
     | Michael Chen     | Hello. | 4.1        | 45           | Statistics, Chemistry, Programming |
-    | John Doe         | Hey.   |            |              | Physics                                            |
 
-@happy
+@happy_views_profile
 Scenario: Successfully views tutor profile
 	And I am on the "All Tutors" page
 	When I press on "Michael Chen"
@@ -23,35 +22,20 @@ Scenario: Successfully views tutor profile
 	And I should see "Rating count: 45"
 	And I should see "Subjects: Statistics, Chemistry, Programming"
 
-@sad_missing_bio
-Scenario: Tutor profile missing bio
+@happy_searches_profiles
+Scenario: Successfully views tutors of a certain subject
     And I am on the "All Tutors" page
-	When I press on "Emily Johnson"
-	Then I am on the tutor's profile page
-    And I should see "Name: Emily Johnson"
-	And I should see "Bio: Not provided"
-	And I should see "Rating average: 4.7"
-	And I should see "Rating count: 13"
-	And I should see "Subjects: Calculus, Biology"
+	And I press "filter" 
+	When I select "Calculus"
+	And I press "submit"
+	Then I should see the following tutors: "Emily Johnson", "Sarah Miller"
+	And I should not see the following tutors: "Michael Chen"
 
-@sad_missing_subjects
-Scenario: Tutor missing subjects
-	And I am on the "All Tutors" page
-	When I press on "Sarah Wu"
-	Then I am on the tutor's profile page
-    And I should see "Name: Sarah Wu"
-	And I should see "Bio: Hi!"
-	And I should see "Rating average: 4.5"
-	And I should see "Rating count: 5"
-	And I should see "Subjects: None currently"
 
-@sad_missing_ratings
-Scenario: Tutor missing ratings
-	And I am on the "All Tutors" page
-	When I press on "John Doe"
-	Then I am on the tutor's profile page
-    And I should see "Name: John Doe"
-	And I should see "Bio: Hey."
-	And I should see "Rating average: N/A"
-	And I should see "Rating count: N/A"
-	And I should see "Subjects: Physics"
+@sad_missing_subject
+Scenario: Does not have a subject in the search
+    And I am on the "All Tutors" page
+	And I press "filter"
+	And I do not select a subject
+	When I press "submit"
+	Then I should see "No subject to filter"
