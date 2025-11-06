@@ -35,5 +35,16 @@ RSpec.describe Teach, type: :model do
             expect(dup_teach_valid1).to be_valid
             expect(dup_teach_valid2).to be_valid
         end
+
+        context 'associations' do
+            it 'belongs to a tutor and a subject' do
+                l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+                t = Tutor.create!(learner: l)
+                s1 = Subject.create!(name: 'Calculus', code: 'MATH101')
+                teach = Teach.new(tutor: t, subject: s1)
+                expect(teach.tutor.learner.email).to eq('jane_doe@example.com')
+                expect(teach.subject.name).to eq('Calculus')
+            end
+        end
     end
 end

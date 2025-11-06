@@ -51,5 +51,27 @@ RSpec.describe Tutor, type: :model do
             expect(t).not_to be_valid
             expect(t.errors[:rating_count]).to include("must be greater than or equal to 0")
         end
+
+        context 'associations' do
+            it 'can have many teaches' do
+                l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+                t = Tutor.create!(learner: l)
+                subject1 = Subject.create!(name: 'Calculus', code: 'MATH101')
+                subject2 = Subject.create!(name: 'Linear Algebra', code: 'MATH103')
+                Teach.create!(tutor: t, subject: subject1)
+                Teach.create!(tutor: t, subject: subject2)
+                expect(t.teaches.count).to eq(2)
+            end
+      
+            it 'can have many subjects through teaches' do
+                l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+                t = Tutor.create!(learner: l)
+                subject1 = Subject.create!(name: 'Calculus', code: 'MATH101')
+                subject2 = Subject.create!(name: 'Linear Algebra', code: 'MATH103')
+                Teach.create!(tutor: t, subject: subject1)
+                Teach.create!(tutor: t, subject: subject2)
+                expect(t.subjects.map(&:name)).to include('Calculus', 'Linear Algebra')
+            end
+        end
     end
 end
