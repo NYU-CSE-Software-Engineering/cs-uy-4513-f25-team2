@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_06_020445) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_06_032708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_020445) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "teaches", force: :cascade do |t|
+    t.bigint "tutor_id", null: false
+    t.bigint "subject_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_teaches_on_subject_id"
+    t.index ["tutor_id"], name: "index_teaches_on_tutor_id"
+  end
+
   create_table "tutors", force: :cascade do |t|
     t.text "bio"
     t.decimal "rating_avg", precision: 3, scale: 2
@@ -50,5 +59,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_020445) do
     t.index ["learner_id"], name: "index_tutors_on_learner_id"
   end
 
+  add_foreign_key "teaches", "subjects"
+  add_foreign_key "teaches", "tutors"
   add_foreign_key "tutors", "learners"
 end
