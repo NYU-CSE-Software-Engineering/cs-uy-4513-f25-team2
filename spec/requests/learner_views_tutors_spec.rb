@@ -55,12 +55,13 @@ RSpec.describe "Tutors", type: :request do
       expect(assigns(:tutors)).not_to include(michael)
     end
   end
+
     describe "GET /tutors/:id" do
     it "shows a tutor profile with key details" do
       stats = make_subject("Statistics", "MATH201")
       tutor = make_tutor(first: "Michael", last: "Chen", bio: "Hello.", rating: 4.1, subjects: [stats])
 
-      get tutor_path(tutor)
+      get tutors_path(tutor)
 
       expect(response).to have_http_status(:ok)
     end

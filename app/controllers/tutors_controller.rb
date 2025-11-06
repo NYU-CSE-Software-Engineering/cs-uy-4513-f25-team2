@@ -7,4 +7,8 @@ class TutorsController < ApplicationController
       @tutors = Tutor.all
     end
   end
+
+  def show
+    @tutor = Tutor.find(params[:id])
+  end
 end
