@@ -7,5 +7,11 @@ RSpec.describe Learner, type: :model do
       expect(l).not_to be_valid
       expect(l.errors[:email]).to include("can't be blank")
     end
+
+    it 'is invalid without a password' do
+      l = Learner.new(email: "example@email.com")
+      expect(l).not_to be_valid
+      expect(l.errors[:password]).to include("can't be blank")
+    end
   end
 end
