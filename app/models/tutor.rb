@@ -9,5 +9,6 @@ class Tutor < ApplicationRecord
     validates :rating_count, numericality: { 
         allow_nil: true,
         only_integer: true,
+        greater_than_or_equal_to: 0
     }
 end
