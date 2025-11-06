@@ -49,6 +49,7 @@ RSpec.describe "Tutors", type: :request do
       get "/tutors", params: { subject: "", submit_attempt: "1" }
 
       expect(response).to have_http_status(:ok)
+      expect(flash[:alert]).to eq("No subject to filter")
     end
   end
 end
