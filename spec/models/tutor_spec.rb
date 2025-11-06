@@ -22,5 +22,16 @@ RSpec.describe Tutor, type: :model do
             expect(t).not_to be_valid
             expect(t.errors[:rating_avg]).to include("is not a number")
         end
+
+        it 'requires rating_avg to be between 0 and 5' do
+            l1 = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+            l2 = Learner.create!(email: 'john_smith@example.com', password: 'password123')
+            t1 = Tutor.new(learner: l1, rating_avg: -0.5)
+            t2 = Tutor.new(learner: l2, rating_avg: 7.2)
+            expect(t1).not_to be_valid
+            expect(t2).not_to be_valid
+            expect(t1.errors[:rating_avg]).to include("must be greater than or equal to 0")
+            expect(t2.errors[:rating_avg]).to include("must be less than or equal to 5")
+        end
     end
 end
