@@ -35,10 +35,14 @@ RSpec.describe Tutor, type: :model do
         end
 
         it 'requires rating_count to be an integer' do
-            l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
-            t = Tutor.new(learner: l, rating_count: 'rating')
-            expect(t).not_to be_valid
-            expect(t.errors[:rating_count]).to include("must be an integer")
+            l1 = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+            l2 = Learner.create!(email: 'john_smith@example.com', password: 'password123')
+            t1 = Tutor.new(learner: l1, rating_count: 'rating')
+            t2 = Tutor.new(learner: l2, rating_count: 9.42)
+            expect(t1).not_to be_valid
+            expect(t2).not_to be_valid
+            expect(t1.errors[:rating_count]).to include("is not a number")
+            expect(t2.errors[:rating_count]).to include("must be an integer")
         end
     end
 end
