@@ -1,5 +1,7 @@
 class Tutor < ApplicationRecord
     belongs_to :learner
+    has_many :teaches, dependent: :destroy
+    has_many :subjects, through: :teaches
     
     validates :learner, uniqueness: true
     validates :rating_avg, numericality: { 
