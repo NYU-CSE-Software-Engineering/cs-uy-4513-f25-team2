@@ -1,5 +1,4 @@
 class Learner < ApplicationRecord
-  validates :email,    presence: { message: 'is required' },
-                       uniqueness: { case_sensitive: false, message: 'has already been taken.' }
-  validates :password, presence: { message: 'is required' }
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
+  validates :password, presence: true
 end
