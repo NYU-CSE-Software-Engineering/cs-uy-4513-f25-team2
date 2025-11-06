@@ -44,13 +44,15 @@ RSpec.describe "Tutors", type: :request do
       calc = make_subject("Calculus", "MATH101")
       stats = make_subject("Statistics", "MATH201")
 
-      make_tutor(first: "Emily", last: "Johnson", bio: "Hey.",   rating: 4.7, subjects: [calc])
-      make_tutor(first: "Sarah", last: "Miller",  bio: "Hi.",    rating: 4.6, subjects: [calc])
-      make_tutor(first: "Michael", last: "Chen",  bio: "Hello.", rating: 4.1, subjects: [stats])
+      emily   = make_tutor(first: "Emily", last: "Johnson", bio: "Hey.",   rating: 4.7, subjects: [calc])
+      sarah   = make_tutor(first: "Sarah", last: "Miller",  bio: "Hi.",    rating: 4.6, subjects: [calc])
+      michael = make_tutor(first: "Michael", last: "Chen",  bio: "Hello.", rating: 4.1, subjects: [stats])
 
       get tutors_path, params: { subject: "Calculus" }
 
       expect(response).to have_http_status(:ok)
+      expect(assigns(:tutors)).to match_array([emily, sarah])
+      expect(assigns(:tutors)).not_to include(michael)
     end
   end
 end
