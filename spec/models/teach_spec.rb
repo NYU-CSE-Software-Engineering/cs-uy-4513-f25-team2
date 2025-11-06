@@ -31,7 +31,7 @@ RSpec.describe Teach, type: :model do
             dup_teach_valid2 = Teach.new(tutor: t2, subject: s1)
 
             expect(dup_teach_invalid).not_to be_valid
-            expect(dup_teach_invalid.errors[:tutor_id]).to include('has already been taken')
+            expect(dup_teach_invalid.errors[:tutor]).to include('has already been taken')
             expect(dup_teach_valid1).to be_valid
             expect(dup_teach_valid2).to be_valid
         end

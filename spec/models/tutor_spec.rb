@@ -13,7 +13,7 @@ RSpec.describe Tutor, type: :model do
             Tutor.create!(learner: l)
             dup_tutor = Tutor.new(learner: l)
             expect(dup_tutor).not_to be_valid
-            expect(dup_tutor.errors[:learner_id]).to include('has already been taken')
+            expect(dup_tutor.errors[:learner]).to include('has already been taken')
         end
 
         it 'requires rating_avg to be a number' do
