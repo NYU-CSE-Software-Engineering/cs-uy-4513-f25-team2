@@ -13,5 +13,12 @@ RSpec.describe Learner, type: :model do
       expect(l).not_to be_valid
       expect(l.errors[:password]).to include("can't be blank")
     end
+
+    it 'enforces case-insensitive unique email' do
+      Learner.create!(email: "learner@email.com", password: "password")
+      dup = Learner.new(email: "LEARNER@email.com", password: "pass")
+      expect(dup).not_to be_valid
+      expect(dup.errors[:email]).to include('has already been taken')
+    end
   end
 end
