@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "tutors/index"
-  get "tutors/show"
   # Home
   get  '/home', to: 'home#index', as: :home
   root to: 'home#index'
@@ -15,4 +13,8 @@ Rails.application.routes.draw do
 
   # Subjects
   resources :subjects, only: [:new, :create]
+
+  # Tutors
+  resources :tutors, only: [:index]
 end
+

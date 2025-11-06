@@ -1,7 +1,5 @@
 class TutorsController < ApplicationController
   def index
-  end
-
-  def show
+    @tutors = Tutor.includes(:subjects).all
   end
 end

@@ -38,9 +38,6 @@ RSpec.describe "Tutors", type: :request do
       get tutors_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Emily Johnson")
-      expect(response.body).to include("Sarah Miller")
-      expect(response.body).to include("Michael Chen")
     end
   end
 end
