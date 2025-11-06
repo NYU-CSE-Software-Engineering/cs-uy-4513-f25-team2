@@ -4,19 +4,37 @@ Given('the following tutors exist:') do |table|
     first = names[0..-2].join(' ').presence || names.first
     last  = names.last
     
+    # Create Tutor (Learner) instances
     tutor_learner = Learner.find_or_create_by!(email: "#{first.downcase}_#{last.downcase}@example.com") do |l|
       l.password   = "password123"
       l.first_name = first
       l.last_name  = last
     end
-    
-    Tutor.create!(
+
+    tutor = Tutor.create!(
       learner:      tutor_learner,
       bio:          row['bio'],
       rating_avg:   row['rating_avg'],
-      rating_count: row['rating_count'],
-      subjects:     row['subjects']
+      rating_count: row['rating_count']
     )
+
+    subject_codes = {
+      'Calculus' => 'MATH101',
+      'Statistics' => 'MATH201',
+      'Biology' => 'SCI101',
+      'Chemistry' => 'SCI201',
+      'Programming' => 'CS101'
+    }
+    
+    # Create necessary Subject and Teach instances
+    subjects = row['subjects'].to_s.split(',').map(&:strip)
+    subjects.each do |subject_name|
+      code = subject_codes[subject_name]
+      subject = Subject.find_or_create_by!(name: subject_name) do |s|
+        s.code = code
+      end
+      Teach.find_or_create_by!(tutor: tutor, subject: subject)
+    end
   end
 end
 
@@ -30,7 +48,11 @@ Given('I am on the {string} page') do |string|
 end
 
 When('I press on {string}') do |string|
-  click_link string
+  if page.has_link?(string)
+    click_link string
+  elsif page.has_button?(string)
+    click_button string
+  end
 end
 
 Then("I am on the tutor's profile page") do
@@ -42,7 +64,11 @@ Then('I should see {string}') do |string|
 end
 
 Given('I press {string}') do |string|
-  click_link string
+  if page.has_link?(string)
+    click_link string
+  elsif page.has_button?(string)
+    click_button string
+  end
 end
 
 When('I select {string}') do |subject|
