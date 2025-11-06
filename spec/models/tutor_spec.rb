@@ -44,5 +44,12 @@ RSpec.describe Tutor, type: :model do
             expect(t1.errors[:rating_count]).to include("is not a number")
             expect(t2.errors[:rating_count]).to include("must be an integer")
         end
+
+        it 'requires rating_count to be non-negative' do
+            l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+            t = Tutor.new(learner: l, rating_count: -5)
+            expect(t).not_to be_valid
+            expect(t.errors[:rating_count]).to include("must be greater than or equal to 0")
+        end
     end
 end
