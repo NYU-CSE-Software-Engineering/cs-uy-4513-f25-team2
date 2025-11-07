@@ -1,92 +1,62 @@
 Given('the following tutors exist:') do |table|
   table.hashes.each do |row|
     names = row['tutor_name'].to_s.strip.split
-    first = names[0..-2].join(' ').presence || names.first
+    first = (names[0..-2].join(' ').presence || names.first)
     last  = names.last
-    
-    # Create Tutor (Learner) instances
-    tutor_learner = Learner.find_or_create_by!(email: "#{first.downcase}_#{last.downcase}@example.com") do |l|
-      l.password   = "password123"
+
+    tutor_learner = Learner.find_or_create_by!(
+      email: "#{first.downcase.gsub(/\s+/, '_')}.#{last.downcase}@example.com"
+    ) do |l|
+      l.password   = 'password123'
       l.first_name = first
       l.last_name  = last
     end
 
-    tutor = Tutor.create!(
-      learner:      tutor_learner,
-      bio:          row['bio'],
-      rating_avg:   row['rating_avg'],
-      rating_count: row['rating_count']
-    )
+    tutor = Tutor.find_or_create_by!(learner: tutor_learner) do |t|
+      t.bio          = row['bio']
+      t.rating_avg   = row['rating_avg']
+      t.rating_count = row['rating_count']
+    end
 
-    subject_codes = {
-      'Calculus' => 'MATH101',
-      'Statistics' => 'MATH201',
-      'Biology' => 'SCI101',
-      'Chemistry' => 'SCI201',
-      'Programming' => 'CS101'
-    }
-    
-    # Create necessary Subject and Teach instances
-    subjects = row['subjects'].to_s.split(',').map(&:strip)
-    subjects.each do |subject_name|
-      code = subject_codes[subject_name]
+    row['subjects'].to_s.split(',').map(&:strip).each do |subject_name|
       subject = Subject.find_or_create_by!(name: subject_name) do |s|
-        s.code = code
+        s.code = subject_name.parameterize.upcase.first(6)
       end
       Teach.find_or_create_by!(tutor: tutor, subject: subject)
     end
   end
 end
 
-Given('I am on the {string} page') do |string|
-  # Add more paths as views are added/needed
-  path = case string
-  when "All Tutors"
-    tutors_path
-  end
-  visit path
+Given('I am on the "All Tutors" page') do
+  visit tutors_path
 end
 
-When('I press on {string}') do |string|
-  if page.has_link?(string)
-    click_link string
-  elsif page.has_button?(string)
-    click_button string
+When('I click on {string}') do |text|
+  if page.has_link?(text)
+    click_link text
+  elsif page.has_button?(text)
+    click_button text
+  else
+    raise "No link or button found with text: #{text}"
   end
 end
 
-Then("I am on the tutor's profile page") do
-  expect(page).to have_content('Name:')
+When('I filter tutors by subject {string}') do |subject_name|
+  visit tutors_path(subject: subject_name)
 end
 
-Then('I should see {string}') do |string|
-  expect(page).to have_content(string)
+When('I attempt to filter tutors without selecting a subject') do
+  visit tutors_path(subject: '')
 end
 
-Given('I press {string}') do |string|
-  if page.has_link?(string)
-    click_link string
-  elsif page.has_button?(string)
-    click_button string
+Then(/^I should see the following tutors: (.*)$/) do |csv|
+  csv.split(',').map { |s| s.strip.delete_prefix('"').delete_suffix('"') }.each do |name|
+    expect(page).to have_content(name)
   end
 end
 
-When('I select {string}') do |subject|
-  select subject, from: 'subject_filter'
-end
-
-Then(/^I should see the following tutors: (.*)$/) do |tutors|
-  tutors.split(',').map(&:strip).each do |tutor|
-    expect(page).to have_content(tutor)
+Then(/^I should not see the following tutors: (.*)$/) do |csv|
+  csv.split(',').map { |s| s.strip.delete_prefix('"').delete_suffix('"') }.each do |name|
+    expect(page).not_to have_content(name)
   end
-end
-
-Then(/^I should not see the following tutors: (.*)$/) do |tutors|
-  tutors.split(',').map(&:strip).each do |tutor|
-    expect(page).not_to have_content(tutor)
-  end
-end
-
-Given('I do not select a subject') do
-  # does not choose from dropdown
 end

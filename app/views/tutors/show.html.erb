@@ -1,2 +1,34 @@
-<h1>Tutors#show</h1>
-<p>Find me in app/views/tutors/show.html.erb</p>
+<% full_name = [@tutor.learner&.first_name, @tutor.learner&.last_name].compact.join(' ') %>
+
+<h1><%= full_name.presence || 'Tutor' %></h1>
+
+<% if @tutor.bio.present? || @tutor.rating_avg.present? || @tutor.rating_count.present? %>
+  <h2>Details</h2>
+  <ul class="tutor-details">
+    <% if @tutor.bio.present? %>
+      <li><strong>Bio:</strong> <%= @tutor.bio %></li>
+    <% end %>
+    <% if @tutor.rating_avg.present? %>
+      <li><strong>Rating:</strong> <%= @tutor.rating_avg %></li>
+    <% end %>
+    <% if @tutor.rating_count.present? %>
+      <li><strong>Rating count:</strong> <%= @tutor.rating_count %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% subjects =
+     if @tutor.respond_to?(:subjects)
+       @tutor.subjects
+     else
+       Teach.where(tutor_id: @tutor.id).includes(:subject).map(&:subject)
+     end %>
+
+<% if subjects.present? %>
+  <h2>Subjects</h2>
+  <ul>
+    <% subjects.each do |s| %>
+      <li><%= s.name %></li>
+    <% end %>
+  </ul>
+<% end %>
