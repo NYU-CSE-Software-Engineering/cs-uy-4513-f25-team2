@@ -15,6 +15,6 @@ Rails.application.routes.draw do
   resources :subjects, only: [:new, :create]
 
   # Tutors
-  resources :tutors, only: [:index]
+  resources :tutors, only: [:index, :show]
 end
 
