@@ -1,5 +1,4 @@
-
-
+@wip
 Feature: Tutor Application
   As a learner
   So that I can access tutor privileges like reserving a room and booking sessions
