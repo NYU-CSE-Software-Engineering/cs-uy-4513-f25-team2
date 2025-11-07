@@ -15,27 +15,27 @@ Feature: User Authentication/User Identity
         Given I am on the sign-up page
         When I fill in "Email" with "example@gmail.com"
         And I press "Sign up"
-        And I should see an error message "Password is required"
+        Then I should see an error message "Password can't be blank"
 
     Scenario: User fails to sign up with no email
         Given I am on the sign-up page
         When I fill in "Password" with "password"
         And I press "Sign up"
-        Then I should see an error message "Email is required"
+        Then I should see an error message "Email can't be blank"
 
     Scenario: User fails to sign up with no email and no password
         Given I am on the sign-up page
         And I press "Sign up"
-        Then I should see an error message "Email is required"
-        And I should see an error message "Password is required"
+        Then I should see an error message "Email can't be blank"
+        And I should see an error message "Password can't be blank"
 
     Scenario: User fails to sign up with an email taken by another user
-        Given I am on the login page
+        Given I am on the sign-up page
         And an account exists for "example@gmail.com" with password "password"
         When I fill in "Email" with "example@gmail.com"
         And I fill in "Password" with "password"
         And I press "Sign up"
-        Then I should see an error message "Email has already been taken."
+        Then I should see an error message "Email has already been taken"
 
     Scenario: User logins in with valid credentials
         Given I am on the login page

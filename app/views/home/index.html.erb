@@ -7,6 +7,7 @@
   <p><%= link_to 'Add New Subject', new_subject_path %></p>
 <% elsif current_learner %>
   <p>Signed in as Learner: <%= current_learner.email %></p>
+  <p><%= link_to 'View Tutors', tutors_path %></p>
 <% else %>
   <p>You are not signed in.</p>
 <% end %>
