@@ -1,8 +1,13 @@
 class TutorsController < ApplicationController
   def index
-    if params[:subject].present?
+    if(params[:subject].present?)
       subject = Subject.find_by(name: params[:subject])
-      @tutors = subject ? subject.tutors : Tutor.none
+      if subject
+        @tutors = subject.tutors
+      else
+        flash.now[:alert] = "No subject to filter"
+        @tutors = []
+      end
     else
       @tutors = Tutor.all
     end
