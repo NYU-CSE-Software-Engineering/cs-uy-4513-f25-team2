@@ -75,13 +75,21 @@ RSpec.describe SessionAttendee, type: :model do
     it 'is invalid when learner has a conflicting session (overlapping times)' do
       # Book learner1 for session1 (10:00-11:00)
       SessionAttendee.create!(tutor_session: session1, learner: learner1)
-      
+
       # Try to book same learner for conflicting_session (10:30-11:30)
       conflicting_attendee = SessionAttendee.new(tutor_session: conflicting_session, learner: learner1)
-      
+
       expect(conflicting_attendee).not_to be_valid
       expect(conflicting_attendee.errors[:base]).to include("This session conflicts with another session")
     end
+  end
 
+  context 'associations' do
+    it 'belongs to a tutor_session and a learner' do
+        attendee = SessionAttendee.new(tutor_session: session1, learner: learner1)
+        expect(attendee.tutor_session.start_at).to eq(Time.zone.parse('2026-03-10T10:00:00Z'))
+        expect(attendee.tutor_session.end_at).to eq(Time.zone.parse('2026-03-10T11:00:00Z'))
+        expect(attendee.learner.email).to eq('learner1@example.com')
+    end
   end
 end
