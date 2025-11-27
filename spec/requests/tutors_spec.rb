@@ -56,7 +56,7 @@ RSpec.describe "Tutors", type: :request do
     end
   end
 
-    describe "GET /tutors/:id" do
+  describe "GET /tutors/:id" do
     it "shows a tutor profile with key details" do
       stats = make_subject("Statistics", "MATH201")
       tutor = make_tutor(first: "Michael", last: "Chen", bio: "Hello.", rating: 4.1, subjects: [stats])
