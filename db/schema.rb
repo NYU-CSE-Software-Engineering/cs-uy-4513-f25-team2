@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_06_032708) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_26_225924) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_032708) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "session_attendees", force: :cascade do |t|
+    t.bigint "tutor_session_id", null: false
+    t.bigint "learner_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["learner_id"], name: "index_session_attendees_on_learner_id"
+    t.index ["tutor_session_id"], name: "index_session_attendees_on_tutor_session_id"
+  end
+
   create_table "subjects", force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
@@ -49,6 +58,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_032708) do
     t.index ["tutor_id"], name: "index_teaches_on_tutor_id"
   end
 
+  create_table "tutor_sessions", force: :cascade do |t|
+    t.bigint "tutor_id", null: false
+    t.bigint "subject_id", null: false
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.integer "capacity"
+    t.string "status"
+    t.string "meeting_link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_id"], name: "index_tutor_sessions_on_subject_id"
+    t.index ["tutor_id"], name: "index_tutor_sessions_on_tutor_id"
+  end
+
   create_table "tutors", force: :cascade do |t|
     t.text "bio"
     t.decimal "rating_avg", precision: 3, scale: 2
@@ -59,7 +82,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_032708) do
     t.index ["learner_id"], name: "index_tutors_on_learner_id"
   end
 
+  add_foreign_key "session_attendees", "learners"
+  add_foreign_key "session_attendees", "tutor_sessions"
   add_foreign_key "teaches", "subjects"
   add_foreign_key "teaches", "tutors"
+  add_foreign_key "tutor_sessions", "subjects"
+  add_foreign_key "tutor_sessions", "tutors"
   add_foreign_key "tutors", "learners"
 end
