@@ -86,5 +86,16 @@ RSpec.describe TutorSession, type: :model do
       expect(s.errors[:capacity]).to include("must be greater than 0")
     end
 
+    it 'is invalid with an end_at time beforee start_at time' do
+      s = TutorSession.new(
+        tutor: tutor_record,
+        subject: subject_record,
+        start_at: 2.hour.from_now,
+        end_at: 1.hours.from_now,
+        capacity: 2
+      )
+      expect(s).not_to be_valid
+      expect(s.errors[:end_at]).to include("must be after start time")
+    end
   end
 end
