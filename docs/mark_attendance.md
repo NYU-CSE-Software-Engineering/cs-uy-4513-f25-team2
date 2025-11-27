@@ -13,7 +13,7 @@ As a **Tutor**, I want to **mark a learner's attendance for a tutoring session**
 ### Models
 - A **Learner model** with `first_name:string` and `last_name:string` attributes.
 - A **Tutor model** with `learner:references` attribute.
-- A **Session model** with `tutor:references`, `start_at:datetime`, and `end_at:datetime` attributes.
+- A **TutorSession model** with `tutor:references`, `start_at:datetime`, and `end_at:datetime` attributes.
 - A **SessionAttendee model** with `session:references`, `learner:references`, `attended:boolean`, and `cancelled:boolean` attributes.
 
 ### Views

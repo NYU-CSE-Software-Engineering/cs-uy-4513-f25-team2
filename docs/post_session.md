@@ -17,7 +17,7 @@ I want to **post sessions**
 - A **Tutor model** with `learner:references' attribute.
 - A **Learner model** with 'email:string', 'password:string', 'first_name:string', and 'last_name:string' attributes.
 - A **Subject model** with `name:string` attribute.
-- A **Session model** with 'tutor:references', 'subject:references', 'start_at:datetime', 'end_at:datetime', 'capacity:integer', 'status:string', and 'meeting_link:text'
+- A **TutorSession model** with 'tutor:references', 'subject:references', 'start_at:datetime', 'end_at:datetime', 'capacity:integer', 'status:string', and 'meeting_link:text'
 
 ### Controllers
 - An **SessionController** with 'create', 'delete', and 'show' actions.

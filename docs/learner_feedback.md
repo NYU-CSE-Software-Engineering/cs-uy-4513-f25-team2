@@ -20,7 +20,7 @@ So that I can **share my experience with my tutor to help others**.
 - `Tutor(id, first_name, last_name, ...)`
 - `Learner(id, first_name, last_name, ...)`
 - `Feedback(id, session_id, learner_id, ...)`
-- `Session((id, tutor_id, subject_id, ...)`
+- `TutorSession((id, tutor_id, subject_id, ...)`
 - `SessionsAttendee(id, session_id, learner_id, joined_at, attended, feedback_submitted, cancelled_at)`
 
 
