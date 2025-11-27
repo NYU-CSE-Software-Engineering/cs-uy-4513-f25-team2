@@ -26,7 +26,7 @@ RSpec.describe TutorSession, type: :model do
         end_at: 2.hours.from_now,
         capacity: 3
       )
-      expect(s).not_to be be_valid
+      expect(s).not_to be_valid
       expect(s.errors[:subject]).to include("can't be blank")
     end
   end
