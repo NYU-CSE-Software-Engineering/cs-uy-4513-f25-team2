@@ -10,6 +10,7 @@ Feature: User Authentication / Identity
     Given I am on the sign-up page
     When I fill in "Email" with "example@gmail.com"
     And I fill in "Password" with "password"
+    And I fill in "Confirm Password" with "password" 
     And I press "Sign up"
     Then I should see a message "Account Created!"
     And I should be redirected to login page
