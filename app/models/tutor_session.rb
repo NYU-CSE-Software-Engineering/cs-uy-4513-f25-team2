@@ -7,4 +7,5 @@ class TutorSession < ApplicationRecord
   validates :start_at, presence: true
   validates :end_at, presence: true
   validates :capacity, presence: true, numericality: {greater_than: 0}
+  validates :status, presence: true
 end
