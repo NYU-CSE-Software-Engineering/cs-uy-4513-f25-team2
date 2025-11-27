@@ -5,11 +5,11 @@ class LoginsController < ApplicationController
     email    = params[:email].to_s.strip
     password = params[:password].to_s
 
-    if (admin = Admin.find_by('lower(email)=lower(?)', email)) && admin.password == password
+    if (admin = Admin.find_by('lower(email)=lower(?)', email))&.authenticate(password)
       reset_session
       session[:admin_id] = admin.id
       redirect_to home_path
-    elsif (learner = Learner.find_by('lower(email)=lower(?)', email)) && learner.password == password
+    elsif (learner = Learner.find_by('lower(email)=lower(?)', email))&.authenticate(password)
       reset_session
       session[:learner_id] = learner.id
       redirect_to home_path
