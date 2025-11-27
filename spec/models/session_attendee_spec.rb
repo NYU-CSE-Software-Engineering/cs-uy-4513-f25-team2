@@ -72,5 +72,16 @@ RSpec.describe SessionAttendee, type: :model do
       expect(dupe).not_to be_valid
       expect(dupe.errors[:learner_id]).to include("is already booked for this session")
     end
+    it 'is invalid when learner has a conflicting session (overlapping times)' do
+      # Book learner1 for session1 (10:00-11:00)
+      SessionAttendee.create!(tutor_session: session1, learner: learner1)
+      
+      # Try to book same learner for conflicting_session (10:30-11:30)
+      conflicting_attendee = SessionAttendee.new(tutor_session: conflicting_session, learner: learner1)
+      
+      expect(conflicting_attendee).not_to be_valid
+      expect(conflicting_attendee.errors[:base]).to include("This session conflicts with another session")
+    end
+
   end
 end
