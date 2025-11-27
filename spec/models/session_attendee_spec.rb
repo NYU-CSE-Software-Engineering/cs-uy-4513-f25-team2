@@ -48,11 +48,11 @@ RSpec.describe SessionAttendee, type: :model do
     it 'is invalid without tutor_session' do
       attendee = SessionAttendee.new(learner: learner1)
       expect(attendee).not_to be_valid
-      expect(attendee.errors[:tutorsession]).to include("can't be blank")
+      expect(attendee.errors[:tutor_session]).to include("can't be blank")
     end
 
     it 'is invalid without learner' do
-      attendee = SessionAttendee.new(tutorsession: session1)
+      attendee = SessionAttendee.new(tutor_session: session1)
       expect(attendee).not_to be_valid
       expect(attendee.errors[:learner]).to include("can't be blank")
     end
