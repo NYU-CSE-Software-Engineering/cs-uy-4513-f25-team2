@@ -10,7 +10,6 @@ Given('I am a signed-in tutor') do
 
   tutor = Tutor.find_or_create_by!(learner: learner) do |t|
     t.bio          = nil
-    t.photo_url    = nil
     t.rating_avg   = 0
     t.rating_count = 0
   end
@@ -24,22 +23,14 @@ Given('I am a signed-in tutor') do
   @current_tutor   = tutor
 end
 
-Given('the following learner exists:') do |table|
-  table.hashes.each do |row|
-    Learner.find_or_create_by!(first_name: row['first_name'], last_name: row['last_name']) do |l|
-      l.email = row['email']
-      l.password = row['password']
-    end
-  end
-end
-
-Given('the following session exists:') do |table|
+# Temporary step definition (to be deleted later)
+Given('the following tutor session exists:') do |table|
   table.hashes.each do |row|
     subj = Subject.find_by!(name: row['subject'])
-    tutor = Tutor.find_by!(first_name: 'Mia', last_name: 'Patel')
-    tutee = Learner.find_by!(first_name: 'Jane', last_name: 'Doe')
+    tutor = Tutor.find_by!(learner: @current_learner)
+    # tutee = Learner.find_by!(first_name: 'Jane', last_name: 'Doe')
 
-    @current_session = Session.find_or_create_by!(
+    @current_session = TutorSession.find_or_create_by!(
       tutor: tutor,
       subject: subj,
       start_at: Time.iso8601(row['start_at']),
@@ -47,23 +38,22 @@ Given('the following session exists:') do |table|
     ) do |s|
       s.capacity = row['capacity'].to_i
       s.status = row['status']
-      s.meeting_link = row['meeting_link']
     end
 
-    SessionAttendee.find_or_create_by!(
-      session: @current_session,
-      learner: tutee
-    ) do |a|
-      a.attended = nil
-      a.feedback_submitted = false
-      a.cancelled = false
-    end
+    # SessionAttendee.find_or_create_by!(
+    #   tutor_session: @current_session,
+    #   learner: tutee
+    # ) do |a|
+    #   a.attended = nil
+    #   a.feedback_submitted = false
+    #   a.cancelled = false
+    # end
   end
 end
 
 Given('I am on the "Session Details" page for the session at {string}') do |start_time|
   start_at = Time.iso8601(start_time)
-  session = Session.find_by!(start_at: start_at)
+  session = TutorSession.find_by!(start_at: start_at)
   visit session_path(session)
 end
 
