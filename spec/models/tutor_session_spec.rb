@@ -30,7 +30,7 @@ RSpec.describe TutorSession, type: :model do
       expect(s.errors[:subject]).to include("can't be blank")
     end
 
-    it 'is invalid without start_at' do
+    it 'is invalid without start_at time' do
       s = TutorSession.new(
         tutor: tutor_record,
         subject: subject_record,
@@ -41,7 +41,7 @@ RSpec.describe TutorSession, type: :model do
       expect(s.errors[:start_at]).to include("can't be blank")
     end
 
-    it 'is invalid without end_at' do
+    it 'is invalid without end_at time' do
       s = TutorSession.new(
         tutor: tutor_record,
         subject: subject_record,
@@ -51,5 +51,18 @@ RSpec.describe TutorSession, type: :model do
       expect(s).not_to be_valid
       expect(s.errors[:end_at]).to include("can't be blank")
     end
+
+    it 'is invalid with a negative or 0 capacity' do
+      s = TutorSession.new(
+        tutor: tutor_record,
+        subject: subject_record,
+        start_at: 1.hour.from_now,
+        end_at: 2.hours.from_now,
+        capacity: -1
+      )
+      expect(s).not_to be_valid
+      expect(s.errors[:capacity]).to include("must be greater than 0")
+    end
+
   end
 end
