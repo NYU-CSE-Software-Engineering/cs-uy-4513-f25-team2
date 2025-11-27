@@ -65,6 +65,7 @@ RSpec.describe SessionAttendee, type: :model do
       expect(attendee3).not_to be_valid
       expect(attendee3.errors[:base]).to include("This session is full")
     end
+
     it 'is invalid when learner is already booked for the same session (double booking)' do
       SessionAttendee.create!(tutor_session: session1, learner: learner1)
       dupe = SessionAttendee.new(tutor_session: session1, learner: learner1)
