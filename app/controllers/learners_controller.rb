@@ -4,15 +4,19 @@ class LearnersController < ApplicationController
   end
 
   def create
-    email    = params.dig(:learner, :email)    || params[:email]
-    password = params.dig(:learner, :password) || params[:password]
-    @learner = Learner.new(email: email.to_s.strip, password: password.to_s)
+    @learner = Learner.new(learner_params)
 
     if @learner.save
       redirect_to new_login_path, notice: 'Account Created!'
     else
       @errors = @learner.errors.full_messages
-      render :new, status: :unprocessable_content # 422
+      render :new, status: :unprocessable_content
     end
+  end
+
+  private
+
+  def learner_params
+    params.require(:learner).permit(:email, :password, :password_confirmation)
   end
 end

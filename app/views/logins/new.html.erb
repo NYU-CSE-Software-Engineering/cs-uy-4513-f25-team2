@@ -15,5 +15,6 @@
   </div>
 
   <%= submit_tag 'Log in' %>
-  <%= button_tag 'Sign up', type: 'submit', formmethod: 'post', formaction: learners_path %>
 <% end %>
+
+<p>New here? <%= link_to 'Create an account', new_learner_path %></p>

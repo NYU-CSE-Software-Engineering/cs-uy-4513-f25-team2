@@ -1,5 +1,13 @@
+Given("I am on the home page") do
+  visit home_path
+end
+
 Given("I am on the sign-up page") do
   visit new_learner_path
+end
+
+Given("I am on the login page") do
+  visit new_login_path
 end
 
 When("I fill in {string} with {string}") do |field, value|
@@ -19,35 +27,26 @@ Then("I should see an error message {string}") do |message|
 end
 
 Then("I should be redirected to login page") do
-  expect(current_path).to eq(new_login_path)
-end
-
-Given("I am on the login page") do
-  visit new_login_path
-end
-
-Given("an account exists for {string} with password {string}") do |email, password|
-  Learner.create!(email: email, password: password)
+  expect(page).to have_current_path(new_login_path)
 end
 
 Then("I should be redirected to the home page") do
-  expect(current_path).to eq(home_path)
+  expect(page).to have_current_path(home_path)
 end
 
-Then("I should see an error message indicating email or password is incorrect") do
-  expect(page).to have_content("Invalid email or password")
+Given("an account exists for {string} with password {string}") do |email, password|
+  Learner.find_or_create_by!(email: email) { |l| l.password = password }
 end
 
 Given("I am logged in as {string}") do |email|
-  learner = Learner.find_by(email: email) || Learner.create!(email: email, password: "password")
+  Learner.find_or_create_by!(email: email) { |l| l.password = "password" }
   visit new_login_path
-  fill_in "Email", with: learner.email
+  fill_in "Email", with: email
   fill_in "Password", with: "password"
   click_button "Log in"
   expect(page).to have_current_path(home_path)
 end
 
 Then("I should be redirected to the login page") do
-  expect(current_path).to eq(new_login_path)
+  expect(page).to have_current_path(new_login_path)
 end
-
