@@ -1,24 +1,24 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Learner, type: :model do
-  context 'validations' do
-    it 'is invalid without an email' do
-      l = Learner.new(password: "password")
-      expect(l).not_to be_valid
-      expect(l.errors[:email]).to include("can't be blank")
+  describe "validations" do
+    it "is invalid without email" do
+      learner = Learner.new(password: "secret")
+      expect(learner).not_to be_valid
+      expect(learner.errors[:email]).to include("can't be blank")
     end
 
-    it 'is invalid without a password' do
-      l = Learner.new(email: "example@email.com")
-      expect(l).not_to be_valid
-      expect(l.errors[:password]).to include("can't be blank")
+    it "is invalid without password" do
+      learner = Learner.new(email: "a@b.com")
+      expect(learner).not_to be_valid
+      expect(learner.errors[:password]).to include("can't be blank")
     end
 
-    it 'enforces case-insensitive unique email' do
-      Learner.create!(email: "learner@email.com", password: "password")
-      dup = Learner.new(email: "LEARNER@email.com", password: "pass")
+    it "requires email to be unique case-insensitively" do
+      Learner.create!(email: "user@site.com", password: "x")
+      dup = Learner.new(email: "USER@site.com", password: "y")
       expect(dup).not_to be_valid
-      expect(dup.errors[:email]).to include('has already been taken')
+      expect(dup.errors[:email]).to include("has already been taken")
     end
   end
 end

@@ -16,7 +16,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_032708) do
 
   create_table "admins", force: :cascade do |t|
     t.string "email", null: false
-    t.string "password", null: false
+    t.string "password_digest", null: false
     t.string "first_name"
     t.string "last_name"
     t.datetime "created_at", null: false
@@ -25,7 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_06_032708) do
 
   create_table "learners", force: :cascade do |t|
     t.string "email", null: false
-    t.string "password", null: false
+    t.string "password_digest", null: false
     t.string "first_name"
     t.string "last_name"
     t.datetime "created_at", null: false
