@@ -56,8 +56,14 @@ RSpec.describe SessionAttendee, type: :model do
       expect(attendee).not_to be_valid
       expect(attendee.errors[:learner]).to include("can't be blank")
     end
-  end
 
-  context 'associations' do
+    it 'is invalid when session is at full capacity' do
+      attendee1 = SessionAttendee.create!(tutor_session: session1, learner: learner1)
+      attendee2 = SessionAttendee.create!(tutor_session: session1, learner: learner2)
+      # Session1 is already at fully capacity from attendee1 and attendee2
+      attendee3 = SessionAttendee.new(tutor_session: session1, learner: learner3)
+      expect(attendee3).not_to be_valid
+      expect(attendee3.errors[:base]).to include("This session is full")
+    end
   end
 end
