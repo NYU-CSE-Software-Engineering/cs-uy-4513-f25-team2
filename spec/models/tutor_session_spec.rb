@@ -97,5 +97,28 @@ RSpec.describe TutorSession, type: :model do
       expect(s).not_to be_valid
       expect(s.errors[:end_at]).to include("must be after start time")
     end
+
+    # extended for post_session
+    it 'is invalid if session overlaps with existing session for same tutor' do
+      # existing session
+      TutorSession.create!(
+        tutor: tutor_record,
+        subject: subject_record,
+        start_at: 1.hour.from_now,
+        end_at: 2.hours.from_now,
+        capacity: 1,
+        status: 'open'
+      )
+      # new session
+      s = TutorSession.new(
+        tutor: tutor_record,
+        subject: subject_record,
+        start_at: 1.5.hours.from_now,
+        end_at: 2.5.hours.from_now
+      )
+      expect(s).not_to be_valid
+      expect(s.errors[:start_at]).to include("must not overlap with existing session")
+    end
+
   end
 end
