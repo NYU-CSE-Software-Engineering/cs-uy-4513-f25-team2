@@ -9,7 +9,7 @@ Feature: Tutor marks a learner's attendance for a tutoring session
         | email               | password    | first_name | last_name |
         | janedoe@example.com | password123 | Jane       | Doe       |
         And the subject "Calculus" exists
-        And the following tutor session exists:
+        And the following session exists:
         | subject  | start_at             | end_at               | capacity | status    |
         | Calculus | 2025-10-24T12:00:00Z | 2025-10-24T12:59:59Z | 1        | Scheduled |
         And I am on the "Session Details" page for the session at "2025-10-24T12:00:00Z"

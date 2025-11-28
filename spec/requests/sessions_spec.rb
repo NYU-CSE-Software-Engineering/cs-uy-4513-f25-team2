@@ -107,11 +107,11 @@ RSpec.describe "Sessions", type: :request do
 
       context "when marking learner as present" do
         it "creates a SessionAttendee if the session does not have one" do
-          patch session_path(past_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: "true" 
-            } 
+          patch session_path(past_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: "true"
+            }
           }
           attendee = SessionAttendee.find_by!(tutor_session: past_session, learner: learner)
           expect(attendee.attended).to eq(true)
@@ -119,22 +119,22 @@ RSpec.describe "Sessions", type: :request do
 
         it "marks the SessionAttendee as attended" do
           make_session_attendee(tutor_session: past_session, learner: learner, attended: false)
-          patch session_path(past_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: "true" 
-            } 
+          patch session_path(past_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: "true"
+            }
           }
           attendee = SessionAttendee.find_by!(tutor_session: past_session, learner: learner)
           expect(attendee.attended).to eq(true)
         end
 
         it "re-renders with success message" do
-          patch session_path(past_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: "true" 
-            } 
+          patch session_path(past_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: "true"
+            }
           }
           expect(response).to redirect_to(session_path(past_session))
           follow_redirect!
@@ -144,11 +144,11 @@ RSpec.describe "Sessions", type: :request do
 
       context "marking learner as absent" do
         it "creates a SessionAttendee if the session does not have one" do
-          patch session_path(past_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: "false" 
-            } 
+          patch session_path(past_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: "false"
+            }
           }
           attendee = SessionAttendee.find_by!(tutor_session: past_session, learner: learner)
           expect(attendee.attended).to eq(false)
@@ -156,22 +156,22 @@ RSpec.describe "Sessions", type: :request do
 
         it "marks the SessionAttendee as not attended" do
           make_session_attendee(tutor_session: past_session, learner: learner, attended: true)
-          patch session_path(past_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: "false" 
-            } 
+          patch session_path(past_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: "false"
+            }
           }
           attendee = SessionAttendee.find_by!(tutor_session: past_session, learner: learner)
           expect(attendee.attended).to eq(false)
         end
 
         it "re-renders with a success message" do
-          patch session_path(past_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: "false" 
-            } 
+          patch session_path(past_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: "false"
+            }
           }
           expect(response).to redirect_to(session_path(past_session))
           follow_redirect!
@@ -181,11 +181,11 @@ RSpec.describe "Sessions", type: :request do
 
       context "when no attendance option is selected" do
         it "re-renders with an error message" do
-          patch session_path(past_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: nil 
-            } 
+          patch session_path(past_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: nil
+            }
           }
           expect(response).to have_http_status(:unprocessable_content)
           page_content = CGI.unescapeHTML(response.body)
@@ -195,11 +195,11 @@ RSpec.describe "Sessions", type: :request do
 
       context "when session has not yet occurred" do
         it "prevents marking attendance" do
-          patch session_path(future_session), params: { 
-            session_attendee: { 
-              learner_id: learner.id, 
-              attended: "true" 
-            } 
+          patch session_path(future_session), params: {
+            session_attendee: {
+              learner_id: learner.id,
+              attended: "true"
+            }
           }
           expect(response).not_to have_http_status(:ok)
         end
@@ -208,11 +208,11 @@ RSpec.describe "Sessions", type: :request do
 
     context "when not authenticated" do
       it "redirects to login page" do
-        patch session_path(past_session), params: { 
-          session_attendee: { 
-            learner_id: learner.id, 
-            attended: "true" 
-          } 
+        patch session_path(past_session), params: {
+          session_attendee: {
+            learner_id: learner.id,
+            attended: "true"
+          }
         }
         expect(response).to redirect_to(new_login_path)
       end
@@ -228,11 +228,11 @@ RSpec.describe "Sessions", type: :request do
       end
 
       it "prevents marking attendance for another tutor's session" do
-        patch session_path(past_session), params: { 
-          session_attendee: { 
-            learner_id: learner.id, 
-            attended: "true" 
-          } 
+        patch session_path(past_session), params: {
+          session_attendee: {
+            learner_id: learner.id,
+            attended: "true"
+          }
         }
         expect(response).not_to have_http_status(:ok)
       end

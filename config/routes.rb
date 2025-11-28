@@ -16,5 +16,8 @@ Rails.application.routes.draw do
 
   # Tutors
   resources :tutors, only: [:index, :show]
+
+  # Sessions
+  resources :sessions, only: [:show, :update]
 end
 
