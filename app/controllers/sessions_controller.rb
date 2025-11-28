@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   before_action :require_learner
-  before_action :current_session
+  before_action :current_session, only: [:show, :update, :confirm, :book]
   before_action :require_authorization, only: [:show, :update]
 
   def show; end
@@ -31,6 +31,36 @@ class SessionsController < ApplicationController
     else
       flash.now[:alert] = "Failed to save attendance."
       render :show, status: :unprocessable_content
+    end
+  end
+
+  def search; end
+
+  def results
+    subject_name = params[:subject]
+    @subject = Subject.find_by(name: subject_name)
+
+    if @subject.nil?
+      @sessions = []
+      return
+    end
+
+    @start_time = Time.iso8601(params[:start_at])
+    @end_time = Time.iso8601(params[:end_at])
+
+    @sessions = TutorSession
+      .where(subject_id: @subject.id)
+      .where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
+      .where(status: 'scheduled')
+      .order(:start_at)
+  end
+
+  def confirm; end
+
+  def book
+    if SessionAttendee.exists?(tutor_session: @tutor_session, learner: current_learner)
+      redirect_to confirm_session_path(@tutor_session), alert: "You are already booked for that session"
+      return
     end
   end
 
