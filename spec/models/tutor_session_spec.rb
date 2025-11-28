@@ -104,8 +104,8 @@ RSpec.describe TutorSession, type: :model do
       TutorSession.create!(
         tutor: tutor_record,
         subject: subject_record,
-        start_at: 1.hour.from_now,
-        end_at: 2.hours.from_now,
+        start_at: Time.zone.parse('2026-04-11T10:00:00Z'),
+        end_at: Time.zone.parse('2026-04-11T11:00:00Z'),
         capacity: 1,
         status: 'open'
       )
@@ -113,8 +113,9 @@ RSpec.describe TutorSession, type: :model do
       s = TutorSession.new(
         tutor: tutor_record,
         subject: subject_record,
-        start_at: 1.5.hours.from_now,
-        end_at: 2.5.hours.from_now
+        start_at: Time.zone.parse('2026-04-11T10:30:00Z'),
+        end_at: Time.zone.parse('2026-04-11T11:30:00Z'),
+        capacity: 1
       )
       expect(s).not_to be_valid
       expect(s.errors[:start_at]).to include("must not overlap with existing session")
