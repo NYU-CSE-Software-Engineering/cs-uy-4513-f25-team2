@@ -65,6 +65,102 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
+  describe "GET /sessions/results" do
+    let(:learner) { Learner.create!(email: "mia@example.com", password: "password123", first_name: "Mia", last_name: "Patel") }
+    let(:calculus) { make_subject("Calculus", "MATH101") }
+    let(:emily) { make_tutor(first: "Emily", last: "Johnson") }
+    let(:michael) { make_tutor(first: "Michael", last: "Chen") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "returns matching sessions within time range" do
+      session1 = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+        capacity: 3,
+        meeting_link: 'https://zoom.us/meeting1'
+      )
+
+      session2 = make_tutor_session(
+        tutor: michael,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T14:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T15:00:00Z'),
+        capacity: 2,
+        meeting_link: 'https://zoom.us/meeting2'
+      )
+
+      get results_sessions_path, params: {
+        subject: 'Calculus',
+        start_at: '2026-03-10T08:00:00Z',
+        end_at: '2026-03-10T20:00:00Z'
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:sessions)).to match_array([session1, session2])
+    end
+
+    it "filters out sessions outside time range" do
+      session_in_range = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+        capacity: 3
+      )
+
+      session_out_of_range = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-11T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-11T11:00:00Z'),
+        capacity: 2
+      )
+
+      get results_sessions_path, params: {
+        subject: 'Calculus',
+        start_at: '2026-03-10T08:00:00Z',
+        end_at: '2026-03-10T20:00:00Z'
+      }
+
+      expect(assigns(:sessions)).to include(session_in_range)
+      expect(assigns(:sessions)).not_to include(session_out_of_range)
+    end
+  end
+
+  describe "GET /sessions/:id/confirm" do
+    let(:learner) { Learner.create!(email: "mia@example.com", password: "password123", first_name: "Mia", last_name: "Patel") }
+    let(:calculus) { make_subject("Calculus", "MATH101") }
+    let(:emily) { make_tutor(first: "Emily", last: "Johnson") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "renders the confirmation page" do
+      session = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+        capacity: 3
+      )
+
+      get confirm_session_path(session)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Booking")
+      expect(assigns(:tutor_session)).to eq(session)
+    end
+  end
+
+
   # Marking Attendance Specs
   describe "GET /sessions/:id" do
     let(:subject) { make_subject("Calculus", "MATH101") }
