@@ -38,26 +38,27 @@ class SessionsController < ApplicationController
 
   def results
     subject_name = params[:subject]
-    @subject = Subject.find_by(name: subject_name)
+    @subject = Subject.where('LOWER(name) = ?', subject_name.to_s.downcase).first
 
     if @subject.nil?
       @sessions = []
       return
     end
 
-    @start_time = Time.zone.parse(params[:start_at])
-    @end_time = Time.zone.parse(params[:end_at]).end_of_minute
+    @start_time = Time.iso8601(params[:start_at])
+    @end_time = Time.iso8601(params[:end_at])
 
     @sessions = TutorSession
       .where(subject_id: @subject.id)
       .where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
-      .where(status: 'Scheduled')
+      .where(status: ['Scheduled', 'scheduled'])
       .order(:start_at)
   end
 
   def confirm; end
 
   def book
+    # Double booking
     if SessionAttendee.exists?(tutor_session: @tutor_session, learner: current_learner)
       redirect_to confirm_session_path(@tutor_session), alert: "You are already booked for that session"
       return
