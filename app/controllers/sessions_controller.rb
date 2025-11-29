@@ -45,13 +45,13 @@ class SessionsController < ApplicationController
       return
     end
 
-    @start_time = Time.iso8601(params[:start_at])
-    @end_time = Time.iso8601(params[:end_at])
+    @start_time = Time.zone.parse(params[:start_at])
+    @end_time = Time.zone.parse(params[:end_at]).end_of_minute
 
     @sessions = TutorSession
       .where(subject_id: @subject.id)
       .where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
-      .where(status: 'scheduled')
+      .where(status: 'Scheduled')
       .order(:start_at)
   end
 

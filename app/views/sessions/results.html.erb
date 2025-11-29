@@ -1,0 +1,17 @@
+<h1>Search Results</h1>
+
+<% if @sessions.any? %>
+  <% @sessions.each do |session| %>
+    <div>
+      <p><strong>Subject:</strong> <%= session.subject.name %></p>
+      <p><strong>Tutor:</strong> <%= session.tutor.learner.first_name %> <%= session.tutor.learner.last_name %></p>
+      <p><strong>Time:</strong> <%= session.start_at.utc.iso8601 %> - <%= session.end_at.utc.iso8601 %></p>
+      <p><strong>Capacity:</strong> <%= session.capacity %></p>
+      <%= button_to "Select #{session.tutor.learner.first_name} #{session.tutor.learner.last_name} #{session.start_at.utc.iso8601}—#{session.end_at.utc.iso8601}", 
+                    confirm_session_path(session), 
+                    method: :get %>
+    </div>
+  <% end %>
+<% else %>
+  <p>No sessions found</p>
+<% end %>

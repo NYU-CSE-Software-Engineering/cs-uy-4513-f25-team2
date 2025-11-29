@@ -27,12 +27,13 @@ RSpec.describe "Sessions", type: :request do
   end
 
   # Helper to create a TutorSession
-  def make_tutor_session(tutor:, subject:, start_at:, end_at:, capacity: 1, status: "Scheduled")
+  def make_tutor_session(tutor:, subject:, start_at:, end_at:, capacity: 1, status: "Scheduled", meeting_link: nil)
     TutorSession.find_or_create_by!(
       tutor: tutor,
       subject: subject,
       start_at: start_at,
-      end_at: end_at
+      end_at: end_at,
+      meeting_link: meeting_link
     ) do |s|
       s.capacity = capacity
       s.status = status
