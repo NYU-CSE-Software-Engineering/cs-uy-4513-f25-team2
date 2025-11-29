@@ -118,7 +118,7 @@ RSpec.describe TutorSession, type: :model do
         capacity: 1
       )
       expect(s).not_to be_valid
-      expect(s.errors[:start_at]).to include("must not overlap with existing session")
+      expect(s.errors[:start_at]).to include("Session overlaps with existing session")
     end
 
   end

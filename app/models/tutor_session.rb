@@ -27,9 +27,8 @@ class TutorSession < ApplicationRecord
       .where(tutor_id: tutor_id)
       .where.not(id: id)
       .where("start_at< ? AND end_at > ?", end_at, start_at)
-    
     if overlapping.exists?
-      errors.add(:start_at, "must not overlap with existing session")
+      errors.add(:start_at, "Session overlaps with existing session")
     end
   end
 end
