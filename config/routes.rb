@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   post   '/login',  to: 'logins#create', as: :login
   delete '/logout', to: 'logins#delete', as: :logout
 
+  # Sessions
+  resources :tutor_sessions, path: 'sessions', only: [:new, :create, :show]
+
   # Subjects
   resources :subjects, only: [:new, :create]
 
