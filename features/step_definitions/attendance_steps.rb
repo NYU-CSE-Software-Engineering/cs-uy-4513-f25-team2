@@ -33,33 +33,34 @@ Given('the following learner exists:') do |table|
   end
 end
 
-Given('the following session exists:') do |table|
-  table.hashes.each do |row|
-    subj = Subject.find_by!(name: row['subject'])
-    tutor = Tutor.find_by!(first_name: 'Mia', last_name: 'Patel')
-    tutee = Learner.find_by!(first_name: 'Jane', last_name: 'Doe')
-
-    @current_session = Session.find_or_create_by!(
-      tutor: tutor,
-      subject: subj,
-      start_at: Time.iso8601(row['start_at']),
-      end_at: Time.iso8601(row['end_at'])
-    ) do |s|
-      s.capacity = row['capacity'].to_i
-      s.status = row['status']
-      s.meeting_link = row['meeting_link']
-    end
-
-    SessionAttendee.find_or_create_by!(
-      session: @current_session,
-      learner: tutee
-    ) do |a|
-      a.attended = nil
-      a.feedback_submitted = false
-      a.cancelled = false
-    end
-  end
-end
+# ambiguity
+#Given('the following session exists:') do |table|
+#  table.hashes.each do |row|
+#    subj = Subject.find_by!(name: row['subject'])
+#    tutor = Tutor.find_by!(first_name: 'Mia', last_name: 'Patel')
+#    tutee = Learner.find_by!(first_name: 'Jane', last_name: 'Doe')
+#
+#    @current_session = Session.find_or_create_by!(
+#      tutor: tutor,
+#      subject: subj,
+#      start_at: Time.iso8601(row['start_at']),
+#      end_at: Time.iso8601(row['end_at'])
+#    ) do |s|
+#      s.capacity = row['capacity'].to_i
+#      s.status = row['status']
+#      s.meeting_link = row['meeting_link']
+#    end
+#
+#    SessionAttendee.find_or_create_by!(
+#      session: @current_session,
+#      learner: tutee
+#    ) do |a|
+#      a.attended = nil
+#      a.feedback_submitted = false
+#      a.cancelled = false
+#    end
+#  end
+#end
 
 Given('I am on the "Session Details" page for the session at {string}') do |start_time|
   start_at = Time.iso8601(start_time)
@@ -80,7 +81,7 @@ end
 
 Given('the session has not yet occurred') do
   # hardcode the "current time" for the sake of testing
-  @current_time = Time.iso8601("2025-10-20T12:00:00Z")
+  @current_time = Time.iso8601("2025-10-20T12:00")
   expect(@current_time).to be_less_than(@current_session.start_at)
 end
 

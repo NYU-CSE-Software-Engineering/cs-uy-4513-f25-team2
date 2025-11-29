@@ -1,0 +1,35 @@
+<h1>Create Tutor Session</h1>
+
+<% if @tutor_session && @tutor_session.errors.any? %>
+  <div id="errors">
+    <ul>
+      <% @tutor_session.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @tutor_session, url: tutor_sessions_path, local: true do |f| %>
+  <div>
+    <%= f.label :subject_id, 'Subject' %>
+    <%= f.collection_select :subject_id, Subject.all, :id, :name, prompt: "Select a subject" %>
+  </div>
+
+  <div>
+    <%= f.label :start_at, 'Start Time' %>
+    <%= f.text_field :start_at, placeholder: "YYYY-MM-DDTHH:MM:SSZ" %>
+  </div>
+
+  <div>
+    <%= f.label :end_at, 'End Time' %>
+    <%= f.text_field :end_at, placeholder: "YYYY-MM-DDTHH:MM:SSZ" %>
+  </div>
+
+  <div>
+    <%= f.label :capacity, 'Capacity' %>
+    <%= f.number_field :capacity %>
+  </div>
+
+  <%= f.submit 'Create new session' %>
+<% end %>
