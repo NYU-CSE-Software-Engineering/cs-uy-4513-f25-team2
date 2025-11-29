@@ -9,6 +9,9 @@
   <li><strong>Start:</strong> <%= @tutor_session.start_at %></li>
   <li><strong>End:</strong> <%= @tutor_session.end_at %></li>
   <li><strong>Status:</strong> <%= @tutor_session.status %></li>
+  <% if @tutor_session.meeting_link.present? %>
+    <li><strong>Meeting link:</strong> <%= link_to 'Join Session', @tutor_session.meeting_link, target: '_blank' %></li>
+  <% end %>
 </ul>
 
 <% if @tutor_session.start_at <= Time.current %>

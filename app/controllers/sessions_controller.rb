@@ -62,6 +62,18 @@ class SessionsController < ApplicationController
       redirect_to confirm_session_path(@tutor_session), alert: "You are already booked for that session"
       return
     end
+
+    @attendee = SessionAttendee.new(
+      tutor_session: @tutor_session,
+      learner: current_learner
+    )
+
+    if @attendee.save
+      redirect_to session_path(@tutor_session), notice: "Booking confirmed"
+    else
+      error_message = @attendee.errors.full_messages.first
+      redirect_to confirm_session_path(@tutor_session), alert: error_message
+    end
   end
 
   private
@@ -77,7 +89,12 @@ class SessionsController < ApplicationController
 
   def require_authorization
     current_tutor = Tutor.find_by(learner: current_learner)
-    return if current_tutor && @tutor_session.tutor == current_tutor
+    is_tutor = current_tutor && @tutor_session.tutor == current_tutor
+
+    is_attendee = SessionAttendee.exists?(tutor_session: @tutor_session, learner: current_learner)
+
+    return if is_tutor || is_attendee
+
     redirect_to new_login_path
   end
 end
