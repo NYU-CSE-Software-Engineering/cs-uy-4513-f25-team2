@@ -6,9 +6,9 @@ Feature: Tutor posts a new session
 
   Background:
     Given I am a signed-in tutor
-	And the following session exists:
-	| start_time       | end_time         | capacity| subject|
-	| 2026-10-15T11:00Z| 2026-10-15T11:59Z| 1       | Math   |
+    And the following session exists:
+    | start_at       | end_at             | capacity | subject | status    |
+    | 2026-10-15T11:00Z| 2026-10-15T11:59Z| 1        | Math    | Scheduled |
 
   @happy
   Scenario: Tutor posts an session with valid information

@@ -45,7 +45,7 @@ Given('the following tutors and sessions exist:') do |table|
 
     Teach.find_or_create_by!(tutor: tutor, subject: subj)
 
-    Session.find_or_create_by!(
+    TutorSession.find_or_create_by!(
       tutor: tutor,
       subject: subj,
       start_at: Time.iso8601(row['session_start']),
@@ -99,14 +99,14 @@ Given('I am learner {string} who has an existing session with tutor {string} fro
   # Ensure the existing session
   start_t = Time.iso8601(start_iso)
   end_t   = Time.iso8601(end_iso)
-  ses = Session.find_or_create_by!(tutor: tutor, subject: subj, start_at: start_t, end_at: end_t) do |s|
+  ses = TutorSession.find_or_create_by!(tutor: tutor, subject: subj, start_at: start_t, end_at: end_t) do |s|
     s.capacity     = 3
     s.status       = 'scheduled'
     s.meeting_link = "https://example.org/meet/#{SecureRandom.hex(3)}"
   end
 
   # Ensure the attendee row
-  SessionAttendee.find_or_create_by!(session: ses, learner: @current_learner) do |sa|
+  SessionAttendee.find_or_create_by!(tutor_session: ses, learner: @current_learner) do |sa|
     sa.attended            = false
     sa.feedback_submitted  = false
     sa.cancelled           = false

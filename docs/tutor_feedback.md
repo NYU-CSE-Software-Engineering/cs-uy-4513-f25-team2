@@ -19,7 +19,7 @@ As a **Tutor**, I want to **see all ratings and comments I’ve received from le
 - **Tutor** (`learner:references`, `bio:text`, `photo_url:string`, `rating_avg:decimal`, `rating_count:integer`)
   - `has_many :sessions`
   - `has_many :feedback`
-- **Session** (`tutor_id:integer`, `subject_id:integer`, `start_at:datetime`, `end_at:datetime`, `status:string`, `meeting_link:text`, `capacity:integer`)
+- **TutorSession** (`tutor_id:integer`, `subject_id:integer`, `start_at:datetime`, `end_at:datetime`, `status:string`, `meeting_link:text`, `capacity:integer`)
   - `belongs_to :tutor`
   - `belongs_to :subject`
   - `has_many :feedback`

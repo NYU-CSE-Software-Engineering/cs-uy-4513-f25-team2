@@ -16,7 +16,7 @@ As a **Learner (Tutee)**, I want to **search tutors’ posted sessions by subjec
 - A **Tutor model** with `learner:references` attribute (to display the tutor’s name via the linked learner).
 - A **Subject model** with `name:string` attribute.
 - A **Teach model** with `tutor_id:integer` and `subject_id:integer` attributes.
-- A **Session model** with `tutor_id:integer`, `subject_id:integer`, `start_at:datetime`, `end_at:datetime`, `capacity:integer`, and `meeting_link:text` attributes.
+- A **TutorSession model** with `tutor_id:integer`, `subject_id:integer`, `start_at:datetime`, `end_at:datetime`, `capacity:integer`, and `meeting_link:text` attributes.
 - A **SessionAttendee model** with `session_id:integer` and `learner_id:integer` attributes.
 
 ### Views

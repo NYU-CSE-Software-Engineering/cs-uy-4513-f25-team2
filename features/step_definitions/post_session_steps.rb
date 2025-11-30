@@ -60,14 +60,19 @@ end
 
 Given('the following session exists:') do |table|
   table.hashes.each do |row|
-    @existing_session = Session.create!(
-      start_time: Time.parse(row['start_time']),
-      end_time: Time.parse(row['end_time']),
-      capacity: row['capacity'],
-      subject: row['subject'],
-      tutor: @tutor || Tutor.first
-    )
-  end
+    subj = Subject.find_by!(name: row['subject'])
+    tutor = Tutor.find_by!(learner: @current_learner)
+
+    @current_session = TutorSession.find_or_create_by!(
+      tutor: tutor,
+      subject: subj,
+      start_at: Time.iso8601(row['start_at']),
+      end_at: Time.iso8601(row['end_at'])
+    ) do |s|
+      s.capacity = row['capacity'].to_i
+      s.status = row['status']
+    end
+  end  
 end
 
 Then('I should see the message {string}') do |message|
@@ -75,5 +80,5 @@ Then('I should see the message {string}') do |message|
 end
 
 When('this session overlaps with existing session') do
-  (@start_time <= @existing_session.end_time) && (@end_time >= @existing_session.start_time)
+  (@start_time <= @current_session.end_time) && (@end_time >= @current_session.start_time)
 end
