@@ -16,7 +16,7 @@ I want to **apply to be a tutor**
 ### Models
 - A **Learner model** with `email:string`, `password:string`, `first_name:string`, and `last_name:string` attributes.
 - A **Tutor model** with `first_name:string`, `last_name:string`, and `email:string` attributes.
-- A **TutorApplication model** with `id`, `learner_id`, `reason`, and `status` attributes.
+- A **TutorApplication model** with `id`, `learner_id`, `resume`, `reason`, and `status` attributes.
 
 ### Views
 - A **tutors/application.html.erb view** with a form to submit your reason for applying.
