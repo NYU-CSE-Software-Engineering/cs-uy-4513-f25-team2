@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   delete '/logout', to: 'logins#delete', as: :logout
 
   # Sessions
-  resources :tutor_sessions, path: 'sessions', only: [:new, :create, :show]
+  #resources :sessions, path: 'sessions', only: [:new, :create, :show]
 
   # Subjects
   resources :subjects, only: [:new, :create]
@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :tutors, only: [:index, :show]
 
   # Sessions
-  resources :sessions, only: [:show, :update] do
+  resources :sessions, only: [:new, :create, :show, :update] do
     collection do
       get :search
       get :results
