@@ -57,6 +57,8 @@ group :development, :test do
   gem 'selenium-webdriver', '~> 4.38'
   gem 'database_cleaner-active_record', '~> 2.2'
   gem 'dotenv-rails', '~> 3.1'
+  gem "fiddle"
+  gem "win32ole"
 end
 
 group :test do
