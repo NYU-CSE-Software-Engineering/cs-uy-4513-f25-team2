@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  helper_method :current_learner, :current_admin
+  helper_method :current_learner, :current_admin, :current_tutor
 
   private
 
@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
 
   def current_admin
     @current_admin ||= Admin.find_by(id: session[:admin_id])
+  end
+
+  def current_tutor
+    @current_tutor ||= Tutor.find_by(learner: current_learner) if current_learner
   end
 
   def require_admin

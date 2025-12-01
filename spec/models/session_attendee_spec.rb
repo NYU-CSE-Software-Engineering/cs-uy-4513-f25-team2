@@ -8,6 +8,8 @@ RSpec.describe SessionAttendee, type: :model do
   
   let(:tutor_learner) { Learner.create!(email: 'tutor@example.com', password: 'password123') }
   let(:tutor) { Tutor.create!(learner: tutor_learner) }
+  let(:tutor_learner1) { Learner.create!(email: 'tutor1@example.com', password: 'password123') }
+  let(:tutor1) { Tutor.create!(learner: tutor_learner1) }
   
   let(:subject_record) { Subject.create!(name: 'Calculus', code: 'MATH101') }
   
@@ -35,7 +37,7 @@ RSpec.describe SessionAttendee, type: :model do
 
   let(:conflicting_session) do
     TutorSession.create!(
-      tutor: tutor,
+      tutor: tutor1,
       subject: subject_record,
       start_at: Time.zone.parse('2026-03-10T10:30:00Z'),
       end_at: Time.zone.parse('2026-03-10T11:30:00Z'),
