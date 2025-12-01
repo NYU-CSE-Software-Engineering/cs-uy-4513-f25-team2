@@ -19,5 +19,17 @@ Rails.application.routes.draw do
 
   # Tutors
   resources :tutors, only: [:index, :show]
+
+  # Sessions
+  resources :sessions, only: [:show, :update] do
+    collection do
+      get :search
+      get :results
+    end
+    member do
+      get :confirm
+      post :book
+    end
+  end
 end
 

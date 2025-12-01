@@ -18,7 +18,7 @@ Given('I am a signed-in learner') do
 end
 
 Given('I am on the "Find a Session" page') do
-  visit session_search_path
+  visit search_sessions_path
   expect(page).to have_content("Find a Session")
 end
 
@@ -45,7 +45,7 @@ Given('the following tutors and sessions exist:') do |table|
 
     Teach.find_or_create_by!(tutor: tutor, subject: subj)
 
-    Session.find_or_create_by!(
+    session = TutorSession.find_or_create_by!(
       tutor: tutor,
       subject: subj,
       start_at: Time.iso8601(row['session_start']),
@@ -54,6 +54,19 @@ Given('the following tutors and sessions exist:') do |table|
       s.capacity     = row['capacity'].to_i
       s.status       = 'scheduled'
       s.meeting_link = "https://example.org/meet/#{SecureRandom.hex(3)}"
+    end
+
+    if row['capacity'].to_i == 1
+      dummy_learner = Learner.find_or_create_by!(email: "dummy@example.com") do |l|
+        l.password = "password123"
+        l.first_name = "Dummy"
+        l.last_name = "User"
+      end
+
+      SessionAttendee.find_or_create_by!(
+        tutor_session: session,
+        learner: dummy_learner
+      )
     end
   end
 end
@@ -99,14 +112,14 @@ Given('I am learner {string} who has an existing session with tutor {string} fro
   # Ensure the existing session
   start_t = Time.iso8601(start_iso)
   end_t   = Time.iso8601(end_iso)
-  ses = Session.find_or_create_by!(tutor: tutor, subject: subj, start_at: start_t, end_at: end_t) do |s|
+  ses = TutorSession.find_or_create_by!(tutor: tutor, subject: subj, start_at: start_t, end_at: end_t) do |s|
     s.capacity     = 3
     s.status       = 'scheduled'
     s.meeting_link = "https://example.org/meet/#{SecureRandom.hex(3)}"
   end
 
   # Ensure the attendee row
-  SessionAttendee.find_or_create_by!(session: ses, learner: @current_learner) do |sa|
+  SessionAttendee.find_or_create_by!(tutor_session: ses, learner: @current_learner) do |sa|
     sa.attended            = false
     sa.feedback_submitted  = false
     sa.cancelled           = false
@@ -127,8 +140,24 @@ When('I run the search') do
   expect(page).to have_content("Search Results")
 end
 
+# CHANGED TIME FORMATING FOR
+# When('I select the session for tutor {string} from {string} to {string}') do |tutor_name, start_iso, end_iso|
+  # label = "Select #{tutor_name} #{Time.iso8601(start_iso).utc.iso8601}-#{Time.iso8601(end_iso).utc.iso8601}"
+  # expect(page).to have_button(label)
+  # click_button(label)
+  # expect(page).to have_content("Booking")
+# end
+
 When('I select the session for tutor {string} from {string} to {string}') do |tutor_name, start_iso, end_iso|
-  label = "Select #{tutor_name} #{Time.iso8601(start_iso).utc.iso8601}–#{Time.iso8601(end_iso).utc.iso8601}"
+  start_time = Time.zone.parse(start_iso)
+  end_time = Time.zone.parse(end_iso)
+  start_str = start_time.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
+  end_str = end_time.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
+  label = "Select #{tutor_name} #{start_str}-#{end_str}"
+  #Debugging
+  # puts "Expected Button Label: #{label}"
+  # puts page.all('button').map(&:text)
+  # puts page.body
   expect(page).to have_button(label)
   click_button(label)
   expect(page).to have_content("Booking")

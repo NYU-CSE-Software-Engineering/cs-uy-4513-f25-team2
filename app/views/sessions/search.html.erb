@@ -1,0 +1,20 @@
+<h1>Find a Session</h1>
+
+<%= form_with url: results_sessions_path, method: :get, local: true do |f| %>
+  <div>
+    <%= f.label :subject, "Subject" %>
+    <%= f.text_field :subject %>
+  </div>
+  
+  <div>
+    <%= f.label :start_at, "Start Time" %>
+    <%= f.text_field :start_at %>
+  </div>
+  
+  <div>
+    <%= f.label :end_at, "End Time" %>
+    <%= f.text_field :end_at %>
+  </div>
+  
+  <%= f.submit "Search" %>
+<% end %>

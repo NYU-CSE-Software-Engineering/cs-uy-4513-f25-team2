@@ -35,6 +35,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_212343) do
   create_table "session_attendees", force: :cascade do |t|
     t.bigint "tutor_session_id", null: false
     t.bigint "learner_id", null: false
+    t.boolean "attended"
+    t.boolean "feedback_submitted", default: false
+    t.boolean "cancelled", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["learner_id"], name: "index_session_attendees_on_learner_id"

@@ -1,0 +1,40 @@
+<h1>Session Details</h1>
+
+<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
+<% if flash[:alert] %><p><%= flash[:alert] %></p><% end %>
+
+<h2>Session Information</h2>
+<ul>
+  <li><strong>Subject:</strong> <%= @tutor_session.subject.name %></li>
+  <li><strong>Start:</strong> <%= @tutor_session.start_at %></li>
+  <li><strong>End:</strong> <%= @tutor_session.end_at %></li>
+  <li><strong>Status:</strong> <%= @tutor_session.status %></li>
+  <% if @tutor_session.meeting_link.present? %>
+    <li><strong>Meeting link:</strong> <%= link_to 'Join Session', @tutor_session.meeting_link, target: '_blank' %></li>
+  <% end %>
+</ul>
+
+<% if @tutor_session.start_at <= Time.current %>
+  <h2>Mark Attendance</h2>
+  <% learners = @tutor_session.learners %>
+  <% learners.each do |learner| %>
+    <%= form_with url: session_path(@tutor_session), method: :patch, local: true do %>
+      <div>
+        <p><strong>Learner:</strong> <%= learner.first_name+' '+learner.last_name %></p>
+        <%= hidden_field_tag 'session_attendee[learner_id]', learner.id %>
+        
+        <div>
+          <%= radio_button_tag 'session_attendee[attended]', 'true', false, id: "attended_true_#{learner.id}" %>
+          <%= label_tag "attended_true_#{learner.id}", 'Present' %>
+        </div>
+        
+        <div>
+          <%= radio_button_tag 'session_attendee[attended]', 'false', false, id: "attended_false_#{learner.id}" %>
+          <%= label_tag "attended_false_#{learner.id}", 'Absent' %>
+        </div>
+        
+        <%= submit_tag 'Save' %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
