@@ -154,7 +154,7 @@ When('I select the session for tutor {string} from {string} to {string}') do |tu
   start_str = start_time.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
   end_str = end_time.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
   label = "Select #{tutor_name} #{start_str}-#{end_str}"
-  #Debugging
+  # Debugging
   # puts "Expected Button Label: #{label}"
   # puts page.all('button').map(&:text)
   # puts page.body

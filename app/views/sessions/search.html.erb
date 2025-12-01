@@ -8,12 +8,12 @@
   
   <div>
     <%= f.label :start_at, "Start Time" %>
-    <%= f.text_field :start_at %>
+    <%= f.datetime_local_field :start_at %>
   </div>
   
   <div>
     <%= f.label :end_at, "End Time" %>
-    <%= f.text_field :end_at %>
+    <%= f.datetime_local_field :end_at %>
   </div>
   
   <%= f.submit "Search" %>
