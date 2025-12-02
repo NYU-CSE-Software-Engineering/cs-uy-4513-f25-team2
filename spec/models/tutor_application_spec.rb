@@ -13,5 +13,18 @@ RSpec.describe TutorApplication, type: :model do
       expect(app).not_to be_valid
       expect(app.errors[:status]).to include("can't be blank")
     end
+
+    it "is valid when status is pending or approved" do
+      app = TutorApplication.new(status: "pending", reason: "I love teaching")
+      expect(app).to be_valid
+
+      app = TutorApplication.new(status: "approved", reason: "I love teaching")
+      expect(app).to be_valid
+
+      app = TutorApplication.new(status: "denied", reason: "I love teaching")
+      expect(app).not_to be_valid
+      app.valid?
+      expect(app.errors[:status]).to include("is not included in the list")
+    end
   end
 end
