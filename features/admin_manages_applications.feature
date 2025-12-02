@@ -1,3 +1,4 @@
+@wip
 Feature: Admin approves or rejects tutor applications
     As an admin
     I want to approve or reject a submitted tutor application

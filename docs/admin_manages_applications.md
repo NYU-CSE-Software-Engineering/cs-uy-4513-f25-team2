@@ -4,20 +4,17 @@
 As an **Admin**, I want to **approve or reject a submitted tutor application** so that **I can manage the active list of tutors**.
 
 ## Acceptance Criteria
-1. **Happy path**: If I approve a tutor application, I 
-2. **Reject application**: If I reject a tutor application,
-
-# TODO BELOW
+1. **Happy path**: If I approve a tutor application, I see an "Application approved" message, the pending application is no longer present on the page, and the learner is now a tutor
+2. **Reject application**: If I reject a tutor application, I see an "Application rejected" message, the pending application is no longer present on the page, and the learner is not a tutor
+3. **No selection**: If I press "Confirm" without selecting an approval option, I see a "No option selected." error message
+4. **No pending applications**: If there are no pending applications, I see a "There are no pending applications to review." message
 
 ## MVC Outline
 ### Models
-- An **Admin model** with `first_name:string` and `last_name:string` attributes.
-- A **Tutor model** with `learner:references` attribute.
-- A **TutorSession model** with `tutor:references`, `start_at:datetime`, and `end_at:datetime` attributes.
-- A **SessionAttendee model** with `session:references`, `learner:references`, `attended:boolean`, and `cancelled:boolean` attributes.
+- A **TutorApplication model** with `learner:references`, `reason:string` and `status:string` attributes.
 
 ### Views
-- A **sessions/show.html.erb** that shows the details of a session (including the attendance function).
+- A **applications/pending.html.erb** that shows a list of all pending tutor applications (including the approve/deny function for each).
 
 ### Controllers
-- A **SessionsController** with the `show` action.
+- An **ApplicationsController** with the `pending` action.
