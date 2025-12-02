@@ -37,5 +37,5 @@ Rails.application.routes.draw do
   end
 
   # Tutor Applications
-  resources :tutor_applications, only: [ :new ]
+  resources :tutor_applications, only: [ :new, :create ]
 end
