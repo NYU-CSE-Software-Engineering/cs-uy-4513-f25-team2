@@ -15,13 +15,20 @@ RSpec.describe TutorApplication, type: :model do
     end
 
     it "is valid when status is pending or approved" do
-      app = TutorApplication.new(status: "pending", reason: "I love teaching")
+      learner = Learner.create!(
+        email: "test@example.com",
+        password: "password123",
+        first_name: "Test",
+        last_name: "Learner"
+      )
+
+      app = TutorApplication.new(status: "pending", reason: "I love teaching", learner: learner)
       expect(app).to be_valid
 
-      app = TutorApplication.new(status: "approved", reason: "I love teaching")
+      app = TutorApplication.new(status: "approved", reason: "I love teaching", learner: learner)
       expect(app).to be_valid
 
-      app = TutorApplication.new(status: "denied", reason: "I love teaching")
+      app = TutorApplication.new(status: "denied", reason: "I love teaching", learner: learner)
       expect(app).not_to be_valid
       expect(app.errors[:status]).to include("is not included in the list")
     end
