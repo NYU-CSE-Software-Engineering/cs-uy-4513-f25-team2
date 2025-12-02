@@ -13,9 +13,9 @@ Feature: Admin approves or rejects tutor applications
     @happy
     Scenario: Approve a tutor application
         Given the following tutor applications exist:
-            | learner_email         | reason                                                |
-            | janedoe@example.com   | I have 3 years prior experience of tutoring Calculus. |
-            | johnsmith@example.com | I really enjoy tutoring!                              |
+            | learner    | reason                                                |
+            | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
+            | John Smith | I really enjoy tutoring!                              |
         And I am on the "Pending Tutor Applications" page
         When I select "Approve" from the dropdown for "Jane Doe"
         And I press "Confirm" for "Jane Doe"
@@ -27,9 +27,9 @@ Feature: Admin approves or rejects tutor applications
     @reject
     Scenario: Reject a tutor application
         Given the following tutor applications exist:
-            | learner_email         | reason                                                |
-            | janedoe@example.com   | I have 3 years prior experience of tutoring Calculus. |
-            | johnsmith@example.com | I really enjoy tutoring!                              |
+            | learner    | reason                                                |
+            | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
+            | John Smith | I really enjoy tutoring!                              |
         And I am on the "Pending Tutor Applications" page
         When I select "Reject" from the dropdown for "Jane Doe"
         And I press "Confirm" for "Jane Doe"
@@ -41,11 +41,10 @@ Feature: Admin approves or rejects tutor applications
     @no_selection
     Scenario: No approval option selected
         Given the following tutor applications exist:
-            | learner_email         | reason                                                |
-            | janedoe@example.com   | I have 3 years prior experience of tutoring Calculus. |
-            | johnsmith@example.com | I really enjoy tutoring!                              |
+            | learner    | reason                                                |
+            | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
+            | John Smith | I really enjoy tutoring!                              |
         And I am on the "Pending Tutor Applications" page
-        When neither "Approve" or "Reject" is selected for "Jane Doe"
         And I press "Confirm" for "Jane Doe"
         Then I should see "No option selected."
         And I should see a tutor application for "Jane Doe"
