@@ -10,10 +10,13 @@ RSpec.describe "TutorApplications", type: :request do
     )}
 
   describe "GET /tutor_applications/new" do
-    it "renders the new template" do
-      get new_tutor_application_path
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Apply To Be A Tutor")
+    context "when learner has no existing tutor application" do
+      it "renders the page and indicates no application exists" do
+        get "/tutor_applications/new"
+
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:tutor_application_status)).to eq(:none)
+      end
     end
   end
 
