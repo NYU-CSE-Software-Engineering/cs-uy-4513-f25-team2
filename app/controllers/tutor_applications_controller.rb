@@ -17,6 +17,7 @@ class TutorApplicationsController < ApplicationController
     app = current_learner.build_tutor_application(tutor_application_params)
     app.status = "pending"
     app.save!
+    new
     render :new
   end
 
