@@ -7,6 +7,8 @@ class TutorApplicationsController < ApplicationController
         :none       # no application exists
       elsif tutor_app.status == "pending"
         :pending    # application is pending
+      elsif tutor_app.status == "approved"
+        :approved   # application is approved
       end
   end
 
