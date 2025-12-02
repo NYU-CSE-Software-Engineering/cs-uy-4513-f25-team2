@@ -46,8 +46,8 @@ class SessionsController < ApplicationController
       return
     end
 
-    @start_time = Time.iso8601(params[:start_at])
-    @end_time = Time.iso8601(params[:end_at])
+    @start_time = Time.zone.parse(params[:start_at])
+    @end_time = Time.zone.parse(params[:end_at])
 
     @sessions = TutorSession
       .where(subject_id: @subject.id)
@@ -59,6 +59,13 @@ class SessionsController < ApplicationController
   def confirm; end
 
   def book
+    # Makes sure tutor can't book their own tutor session
+    current_tutor = Tutor.find_by(learner: current_learner)
+    if current_tutor && @tutor_session.tutor == current_tutor
+      redirect_to confirm_session_path(@tutor_session), alert: "You cannot book your own session"
+      return
+    end
+
     # Double booking
     if SessionAttendee.exists?(tutor_session: @tutor_session, learner: current_learner)
       redirect_to confirm_session_path(@tutor_session), alert: "You are already booked for that session"
