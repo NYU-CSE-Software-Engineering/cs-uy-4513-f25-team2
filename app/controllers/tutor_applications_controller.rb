@@ -5,6 +5,8 @@ class TutorApplicationsController < ApplicationController
     @tutor_application_status =
       if tutor_app.nil?
         :none       # no application exists
+      elsif tutor_app.status == "pending"
+        :pending    # application is pending
       end
   end
 
