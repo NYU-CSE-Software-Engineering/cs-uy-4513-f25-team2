@@ -3,6 +3,13 @@
 <% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
 <% if flash[:alert] %><p><%= flash[:alert] %></p><% end %>
 
+<% if @tutor_session.end_at < Time.current && current_learner %>
+  <% attendee = SessionAttendee.find_by(tutor_session: @tutor_session, learner: current_learner) %>
+  <% if attendee && attendee.attended == false %>
+    <p>You were not marked present for this session</p>
+  <% end %>
+<% end %>
+
 <h2>Session Information</h2>
 <ul>
   <li><strong>Subject:</strong> <%= @tutor_session.subject.name %></li>

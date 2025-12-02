@@ -35,7 +35,7 @@ end
 Given('the following sessions exist:') do |table|
   table.hashes.each do |row|
     subject = Subject.find_by!(name: row['subject'])
-    Session.create!(
+    TutorSession.create!(
       tutor:        @tutor,
       subject:      subject,
       start_at:     Time.iso8601(row['start_at']),
@@ -50,14 +50,14 @@ end
 Given('the following feedback exists:') do |table|
   table.hashes.each do |row|
     subject = Subject.find_by!(name: row['session'])
-    session = Session.where(tutor: @tutor, subject: subject).order(:start_at).first
+    tutor_session = TutorSession.where(tutor: @tutor, subject: subject).order(:start_at).first
     learner = Learner.find_by!(email: row['learner_email'])
     Feedback.create!(
-      session: session,
-      learner: learner,
-      tutor:   @tutor,
-      score:   row['score'].to_i,
-      comment: row['comment']
+      tutor_session: tutor_session,
+      learner:       learner,
+      tutor:         @tutor,
+      score:         row['score'].to_i,
+      comment:       row['comment']
     )
   end
 end
@@ -111,11 +111,15 @@ end
 Given('I have more than 10 feedback entries') do
   subject = Subject.first || Subject.create!(name: 'Temp', code: 'TEMP')
   12.times do |i|
-    session = Session.create!(
+    # Create non-overlapping sessions: each session is 1 hour, spaced 2 hours apart
+    start_time = Time.zone.now - (i * 2).hours - 1.hour
+    end_time = start_time + 1.hour
+    
+    tutor_session = TutorSession.create!(
       tutor:        @tutor,
       subject:      subject,
-      start_at:     Time.zone.now - i.hours,
-      end_at:       Time.zone.now - (i.hours - 1.hour),
+      start_at:     start_time,
+      end_at:       end_time,
       capacity:     5,
       status:       'completed',
       meeting_link: 'https://meet.example/test'
@@ -126,12 +130,20 @@ Given('I have more than 10 feedback entries') do
       email:      "l#{i}@example.com",
       password:   'password'
     )
+    
+    # Create session attendee with attended and feedback_submitted set to true
+    attendee = SessionAttendee.find_or_create_by!(
+      tutor_session: tutor_session,
+      learner: learner
+    )
+    attendee.update!(attended: true, feedback_submitted: true)
+    
     Feedback.create!(
-      session: session,
-      learner: learner,
-      tutor:   @tutor,
-      score:   3 + (i % 3),
-      comment: "Comment #{i}"
+      tutor_session: tutor_session,
+      learner:       learner,
+      tutor:         @tutor,
+      score:         3 + (i % 3),
+      comment:       "Comment #{i}"
     )
   end
 end

@@ -35,4 +35,12 @@ Rails.application.routes.draw do
       get :past
     end
   end
+
+  # Learner feedback on sessions
+  resources :feedbacks, only: [:new, :create]
+
+  # Tutor feedbacks
+  namespace :tutor do
+    resources :feedbacks, only: [:index]
+  end
 end
