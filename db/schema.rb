@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_26_225924) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_02_141642) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -61,6 +61,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_26_225924) do
     t.index ["tutor_id"], name: "index_teaches_on_tutor_id"
   end
 
+  create_table "tutor_applications", force: :cascade do |t|
+    t.bigint "learner_id", null: false
+    t.string "reason"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["learner_id"], name: "index_tutor_applications_on_learner_id"
+  end
+
   create_table "tutor_sessions", force: :cascade do |t|
     t.bigint "tutor_id", null: false
     t.bigint "subject_id", null: false
@@ -89,6 +98,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_26_225924) do
   add_foreign_key "session_attendees", "tutor_sessions"
   add_foreign_key "teaches", "subjects"
   add_foreign_key "teaches", "tutors"
+  add_foreign_key "tutor_applications", "learners"
   add_foreign_key "tutor_sessions", "subjects"
   add_foreign_key "tutor_sessions", "tutors"
   add_foreign_key "tutors", "learners"

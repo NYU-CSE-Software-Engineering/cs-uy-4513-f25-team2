@@ -27,12 +27,13 @@ RSpec.describe "Sessions", type: :request do
   end
 
   # Helper to create a TutorSession
-  def make_tutor_session(tutor:, subject:, start_at:, end_at:, capacity: 1, status: "Scheduled")
+  def make_tutor_session(tutor:, subject:, start_at:, end_at:, capacity: 1, status: "Scheduled", meeting_link: nil)
     TutorSession.find_or_create_by!(
       tutor: tutor,
       subject: subject,
       start_at: start_at,
-      end_at: end_at
+      end_at: end_at,
+      meeting_link: meeting_link
     ) do |s|
       s.capacity = capacity
       s.status = status
@@ -49,6 +50,227 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
+  # Booking Sessions Specs
+  describe "GET /sessions/search" do
+    let(:learner) { Learner.create!(email: "mia@example.com", password: "password123", first_name: "Mia", last_name: "Patel") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "renders the search page" do
+      get search_sessions_path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Find a Session")
+    end
+  end
+
+  describe "GET /sessions/results" do
+    let(:learner) { Learner.create!(email: "mia@example.com", password: "password123", first_name: "Mia", last_name: "Patel") }
+    let(:calculus) { make_subject("Calculus", "MATH101") }
+    let(:emily) { make_tutor(first: "Emily", last: "Johnson") }
+    let(:michael) { make_tutor(first: "Michael", last: "Chen") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "returns matching sessions within time range" do
+      session1 = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+        capacity: 3,
+        meeting_link: 'https://zoom.us/meeting1'
+      )
+
+      session2 = make_tutor_session(
+        tutor: michael,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T14:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T15:00:00Z'),
+        capacity: 2,
+        meeting_link: 'https://zoom.us/meeting2'
+      )
+
+      get results_sessions_path, params: {
+        subject: 'Calculus',
+        start_at: '2026-03-10T08:00:00Z',
+        end_at: '2026-03-10T20:00:00Z'
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:sessions)).to match_array([session1, session2])
+    end
+
+    it "filters out sessions outside time range" do
+      session_in_range = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+        capacity: 3
+      )
+
+      session_out_of_range = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-11T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-11T11:00:00Z'),
+        capacity: 2
+      )
+
+      get results_sessions_path, params: {
+        subject: 'Calculus',
+        start_at: '2026-03-10T08:00:00Z',
+        end_at: '2026-03-10T20:00:00Z'
+      }
+
+      expect(assigns(:sessions)).to include(session_in_range)
+      expect(assigns(:sessions)).not_to include(session_out_of_range)
+    end
+  end
+
+  describe "GET /sessions/:id/confirm" do
+    let(:learner) { Learner.create!(email: "mia@example.com", password: "password123", first_name: "Mia", last_name: "Patel") }
+    let(:calculus) { make_subject("Calculus", "MATH101") }
+    let(:emily) { make_tutor(first: "Emily", last: "Johnson") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "renders the confirmation page" do
+      session = make_tutor_session(
+        tutor: emily,
+        subject: calculus,
+        start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+        end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+        capacity: 3
+      )
+
+      get confirm_session_path(session)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Booking")
+      expect(assigns(:tutor_session)).to eq(session)
+    end
+  end
+
+  describe "POST /sessions/:id/book" do
+    let(:learner) { Learner.create!(email: "mia@example.com", password: "password123", first_name: "Mia", last_name: "Patel") }
+    let(:calculus) { make_subject("Calculus", "MATH101") }
+    let(:emily) { make_tutor(first: "Emily", last: "Johnson") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    context "happy path" do
+      it "creates a booking and redirects with success message" do
+        session = make_tutor_session(
+          tutor: emily,
+          subject: calculus,
+          start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+          end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+          capacity: 3,
+          meeting_link: 'https://zoom.us/meeting1'
+        )
+
+        expect {
+          post book_session_path(session)
+        }.to change(SessionAttendee, :count).by(1)
+
+        expect(response).to redirect_to(session_path(session))
+        expect(flash[:notice]).to eq("Booking confirmed")
+
+        follow_redirect!
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Meeting link")
+      end
+    end
+
+    context "double booking" do
+      it "shows error when learner already booked the same session" do
+        session = make_tutor_session(
+          tutor: emily,
+          subject: calculus,
+          start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+          end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+          capacity: 3
+        )
+
+        make_session_attendee(tutor_session: session, learner: learner)
+
+        post book_session_path(session)
+
+        expect(response).to redirect_to(confirm_session_path(session))
+        expect(flash[:alert]).to eq("You are already booked for that session")
+      end
+    end
+
+    context "session is full" do
+      it "shows error when session is at capacity" do
+        session = make_tutor_session(
+          tutor: emily,
+          subject: calculus,
+          start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
+          end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
+          capacity: 3
+        )
+
+        learner2 = Learner.create!(email: "learner2@example.com", password: "password123")
+        learner3 = Learner.create!(email: "learner3@example.com", password: "password123")
+        learner4 = Learner.create!(email: "learner4@example.com", password: "password123")
+
+        make_session_attendee(tutor_session: session, learner: learner2)
+        make_session_attendee(tutor_session: session, learner: learner3)
+        make_session_attendee(tutor_session: session, learner: learner4)
+
+        post book_session_path(session)
+
+        expect(response).to redirect_to(confirm_session_path(session))
+        expect(flash[:alert]).to eq("This session is full")
+      end
+    end
+
+    context "time conflict" do
+      it "shows error when session conflicts with another booking" do
+        daniel = make_tutor(first: "Daniel", last: "Kim")
+
+        conflicting_session = make_tutor_session(
+          tutor: daniel,
+          subject: calculus,
+          start_at: Time.zone.parse('2026-03-10T10:15:00Z'),
+          end_at: Time.zone.parse('2026-03-10T10:45:00Z'),
+          capacity: 2
+        )
+
+        new_session = make_tutor_session(
+          tutor: emily,
+          subject: calculus,
+          start_at: Time.zone.parse('2026-03-10T10:30:00Z'),
+          end_at: Time.zone.parse('2026-03-10T11:30:00Z'),
+          capacity: 3
+        )
+
+        make_session_attendee(tutor_session: conflicting_session, learner: learner)
+
+        post book_session_path(new_session)
+
+        expect(response).to redirect_to(confirm_session_path(new_session))
+        expect(flash[:alert]).to eq("This session conflicts with another session")
+      end
+    end
+  end
+
+  # Marking Attendance Specs
   describe "GET /sessions/:id" do
     let(:subject) { make_subject("Calculus", "MATH101") }
     let(:tutor_learner) { Learner.create!(email: "miapatel@example.com", password: "password123", first_name: "Mia", last_name: "Patel") }
@@ -238,4 +460,80 @@ RSpec.describe "Sessions", type: :request do
       end
     end
   end
+  describe "POST /sessions" do
+    let(:tutor_learner) { Learner.create!(email: 'tutor@example.com', password: 'password123') }
+    let(:tutor) { Tutor.create!(learner: tutor_learner) }
+    let(:subject_math) { Subject.create!(name: "Math", code: "MATH101") }
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(tutor_learner)
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_tutor).and_return(tutor)
+    end
+
+    # happy path
+    context "with valid information" do 
+      it "creates a new session and redirects to show page" do 
+        expect {
+          post "/sessions", params: {
+            tutor_session: {
+              subject: subject_math.name,  # Changed from subject_id to subject name
+              start_at: Time.parse('2026-10-15T10:00'),
+              end_at: Time.parse('2026-10-15T10:59'),
+              capacity: 1
+            }
+          }
+        }.to change(TutorSession, :count).by(1)
+        expect(response).to redirect_to(session_path(TutorSession.last))
+      end
+    end
+
+    context "with missing information" do 
+      it "does not create a session and shows an error" do 
+        expect {
+          post "/sessions", params: {
+            tutor_session: {
+              subject: subject_math.name,  # Keep subject, remove subject_id
+              start_at: Time.parse('2026-10-15T08:00'), 
+              end_at: Time.parse('2026-10-15T09:00'), 
+              capacity: nil  # Make capacity nil to trigger error
+            }
+          }
+        }.not_to change(TutorSession, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+        body = CGI.unescapeHTML(response.body)
+        expect(body).to include("can't be blank")
+      end
+    end
+
+    context "when overlapping with existing session" do
+      before do
+        TutorSession.create!(
+          tutor: tutor,
+          subject_id: subject_math.id,
+          start_at: Time.parse('2026-10-15T11:00'),
+          end_at: Time.parse('2026-10-15T11:59'),
+          capacity: 1,
+          status: "open"
+        )
+      end
+
+      it "does not allow overlapping session" do
+        expect {
+          post "/sessions", params: {
+            tutor_session: {
+              subject: subject_math.name,  # Changed from subject_id
+              start_at: Time.parse('2026-10-15T11:30'),
+              end_at: Time.parse('2026-10-15T12:30'),
+              capacity: 1
+            }
+          }
+        }.not_to change(TutorSession, :count)
+        expect(response).to have_http_status(:unprocessable_content)
+        body = CGI.unescapeHTML(response.body)
+        expect(body).to include("Session overlaps with existing session")
+      end
+    end
+  end
+
 end
