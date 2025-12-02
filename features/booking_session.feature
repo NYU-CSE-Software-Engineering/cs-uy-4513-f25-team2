@@ -69,3 +69,12 @@ Feature: Search posted sessions by subject/time range and book one
     And I select the session for tutor "Emily Johnson" from "2026-03-10T10:30:00Z" to "2026-03-10T11:30:00Z"
     And I confirm the booking
     Then I should see "This session conflicts with another session"
+
+  @self_booking
+  Scenario: Reject booking when tutor tries to book their own session
+    Given I am a signed-in learner
+    And I am also a tutor and have a session
+    And I am on the "Find a Session" page
+    When I find and select my own session
+    And I confirm the booking
+    Then I should see "You cannot book your own session"

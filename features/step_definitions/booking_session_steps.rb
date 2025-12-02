@@ -170,3 +170,29 @@ end
 Then('I should see {string}') do |text|
   expect(page).to have_content(text)
 end
+
+# new step for self-booking
+Given('I am also a tutor and have a session') do
+  subj = Subject.find_or_create_by!(name: 'test', code: 'TEST101', description: 'subject to test self booking')
+  tutor = Tutor.find_or_create_by!(learner: @current_learner)
+  session = TutorSession.find_or_create_by!(
+    tutor: tutor,
+    subject: subj,
+    start_at: Time.iso8601('2026-03-10T11:00:00Z'),
+    end_at:   Time.iso8601('2026-03-10T12:00:00Z'),
+    capacity: 2,
+    status: 'scheduled',
+    meeting_link: "https://example.org/meet/#{SecureRandom.hex(3)}"
+  )
+end
+
+Given('I find and select my own session') do
+  start_at = Time.iso8601('2026-03-10T11:00:00Z')
+  end_at = Time.iso8601('2026-03-10T12:00:00Z')
+  fill_in 'subject', with: 'test'
+  fill_in 'start_at', with: start_at
+  fill_in 'end_at',   with: end_at
+  click_button 'Search'
+  label = "Select #{'Mia Patel'} #{'2026-03-10T11:00:00Z'}-#{'2026-03-10T12:00:00Z'}"
+  click_button(label)
+end
