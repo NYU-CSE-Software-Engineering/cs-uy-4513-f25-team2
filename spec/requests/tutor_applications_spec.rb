@@ -10,12 +10,31 @@ RSpec.describe "TutorApplications", type: :request do
     )}
 
   describe "GET /tutor_applications/new" do
+    before do
+      allow_any_instance_of(ApplicationController).to receive(:current_learner).and_return(learner)
+    end
+
     context "when learner has no existing tutor application" do
       it "renders the page and indicates no application exists" do
         get "/tutor_applications/new"
 
         expect(response).to have_http_status(:ok)
         expect(assigns(:tutor_application_status)).to eq(:none)
+      end
+    end
+
+    context "when learner has a pending tutor application" do
+      before do
+        TutorApplication.create!(
+          learner_id: learner.id,
+          reason: "I want to help others",
+          status: "pending"
+        )
+      end
+      it "renders the page and indicates pending status" do
+        get "/tutor_applications/new"
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:tutor_application_status)).to eq(:pending)
       end
     end
   end
