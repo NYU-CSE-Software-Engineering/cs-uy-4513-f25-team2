@@ -16,8 +16,10 @@ class TutorApplicationsController < ApplicationController
     # build_tutor_application is a method from Rails’ has_one association in the Learner model. It builds a new TutorApplication object for the current_learner
     app = current_learner.build_tutor_application(tutor_application_params)
     app.status = "pending"
-    if app.save!
+    if app.save
       flash[:notice] = "Application Sent!"
+    else
+      flash[:alert] = "Could Not Apply"
     end
     new
     render :new
