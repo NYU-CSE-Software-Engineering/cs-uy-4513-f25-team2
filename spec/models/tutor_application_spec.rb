@@ -23,8 +23,13 @@ RSpec.describe TutorApplication, type: :model do
 
       app = TutorApplication.new(status: "denied", reason: "I love teaching")
       expect(app).not_to be_valid
-      app.valid?
       expect(app.errors[:status]).to include("is not included in the list")
+    end
+
+    it "is invalid without a learner" do
+      app = TutorApplication.new(reason: "I love teaching", status: "pending", learner: nil)
+      expect(app).not_to be_valid
+      expect(app.errors[:learner]).to include("must exist")
     end
   end
 end
