@@ -1,4 +1,6 @@
 class TutorApplicationsController < ApplicationController
+  before_action :require_learner
+
   def new
     # grabs the current learners application status to decide what to render on the page
     tutor_app = current_learner&.tutor_application
