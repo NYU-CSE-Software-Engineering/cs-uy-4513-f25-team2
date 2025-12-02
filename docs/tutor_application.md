@@ -6,11 +6,9 @@ So that **I can access tutor privileges, like reserving a room and booking a ses
 I want to **apply to be a tutor**
 
 ## Acceptance Criteria (SMART)
-1. **Happy path:** From the Settings page, I view the option to apply to be a tutor, go to an Application page, fill out an application, submit my application, and see a confirmation message.  
-2. **Already a tutor:** From the Settings page, if I am already a tutor, the option to apply is hidden.  
-3. **Pending review:** From the Settings page, if my application is pending, the option to apply is replaced with a “Pending review” message.
-4. **Admin approval:** When an admin approves my application, I am now a Tutor.  
-5. **Admin rejection:** When an admin rejects my application, I stay a learner.
+1. **Happy path:** From the Home page, I view the option to apply to be a tutor, go to an Application page, fill out an application, submit my application, and see a confirmation message.  
+2. **Already a tutor:** From the Home page, if I am already a tutor, the option to apply is hidden.  
+3. **Pending review:** From the Home page, if my application is pending, the option to apply is replaced with a “Pending review” message.
 
 ## MVC Outline
 ### Models
@@ -23,4 +21,4 @@ I want to **apply to be a tutor**
 - A **settings.html.erb view** that will conditionally render a button to apply for being a tutor or a "pending review" message.
 
 ### Controllers
-- An **ApplicationsController** with `create`, `approve`, `deny`, and `status` actions.
+- An **TutorApplicationsController** with `new`, `create` actions.
