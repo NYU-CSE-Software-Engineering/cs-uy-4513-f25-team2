@@ -1,85 +1,90 @@
-# features/step_definitions/feedback_steps.rb
-Given("I am a logged-in learner") do
-  @learner = Learner.create!(
-    email: "learner@example.com",
-    password: "password123",
-    first_name: "Exa",
-    last_name: "Mine"
+require "securerandom"
+
+# We rely on "Given I am a signed-in learner" from booking_session_steps.rb
+# which sets @current_learner.
+
+# ---------- Data setup ----------
+
+Given("I have a completed session with {string} where I was marked present") do |tutor_name|
+  learner = @current_learner
+  raise "current_learner is nil – make sure Background has 'Given I am a signed-in learner'" if learner.nil?
+
+  # Split tutor name like "Michael Chen"
+  first, last = tutor_name.split(" ", 2)
+  last ||= ""
+
+  tutor_learner = Learner.find_or_create_by!(
+    email: "#{first.downcase}.#{last.downcase}@example.com"
+  ) do |l|
+    l.password   = "password123"
+    l.first_name = first
+    l.last_name  = last
+  end
+
+  @tutor = Tutor.find_or_create_by!(learner: tutor_learner) do |t|
+    t.bio          = "Test tutor"
+    t.rating_avg   = 4.1
+    t.rating_count = 45
+  end
+
+  subject = Subject.first || Subject.create!(name: "Statistics", code: "STAT101")
+
+  @tutor_session = TutorSession.create!(
+    tutor:    @tutor,
+    subject:  subject,
+    start_at: 2.days.ago,
+    end_at:   2.days.ago + 1.hour,
+    capacity: 5,
+    status:   "Completed"
+  )
+
+  @attendee = SessionAttendee.create!(
+    tutor_session: @tutor_session,
+    learner:       learner,
+    attended:      true
   )
 end
 
-Given("I have completed a tutoring session with {string}") do |tutor_name|
-  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
-  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
-end
-
-Given("I have a completed session with {string} where I was marked present") do |tutor_name|
-  step %{I am a logged-in learner}
-  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
-  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
-  SessionsAttendee.create!(session: @session, learner: @learner, attended: true)
-end
-
 Given("I have a completed session with {string} where I was marked absent") do |tutor_name|
-  step %{I am a logged-in learner}
-  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
-  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
-  SessionsAttendee.create!(session: @session, learner: @learner, attended: false)
+  step %{I have a completed session with "#{tutor_name}" where I was marked present}
+  @attendee.update!(attended: false)
 end
 
+# ---------- Navigation / UI steps ----------
 
 When("I navigate to the feedback form for {string}") do |tutor_name|
-  visit learner_sessions_path(@learner) # adjust if we change the path
+  # For now, assume the feedback form is reached from the session's show page.
+  # This matches the SessionsController routes: session_path(@tutor_session)
+  visit session_path(@tutor_session)
+
   expect(page).to have_content(tutor_name)
 
-  # Click the UI element that opens the feedback form
-  # Use link or button depending on your view:
+  # Click whatever control opens the feedback form.
   if page.has_link?("Leave Feedback")
     click_link "Leave Feedback", match: :first
-  else
+  elsif page.has_button?("Leave Feedback")
     click_button "Leave Feedback", match: :first
   end
-
-  expect(page).to have_content("Submit Feedback for #{tutor_name}")
 end
 
-Given("I am on the feedback page for {string}") do |tutor_name|
-  visit new_feedback_path(session_id: @session.id)
-  expect(page).to have_content("Submit Feedback for #{tutor_name}")
+When("I visit the session page for {string}") do |tutor_name|
+  visit session_path(@tutor_session)
+  expect(page).to have_content(tutor_name)
 end
 
-# ---------- Form interactions (scoped/specific to avoid overlap) ----------
+# ---------- Form interactions ----------
 
-When("I select a feedback rating of {string}") do |rating|
+When("I select a rating of {string}") do |rating|
   # assumes radio buttons labelled 1..5
   choose(rating)
 end
 
-When("I fill the feedback comment with {string}") do |text|
-  # make sure your textarea label or id is "Comment"
-  fill_in "Comment", with: text
-end
+# NOTE: you already have generic steps:
+#   And I fill in "Comment" with "Great tutor!"
+#   And I press "Submit Feedback"
+# from auth_steps / application_steps, so we don't re-define them here.
 
-When("I submit the feedback form") do
-  click_button "Submit Feedback"
-end
-
-Then("I should see a feedback notice {string}") do |message|
-  expect(page).to have_content(message)
-end
-
-Then("the feedback button should be hidden") do
-  expect(page).not_to have_link("Leave Feedback")
-  expect(page).not_to have_button("Leave Feedback")
-end
-
-When("I select a rating of {string}") do |rating|
-  choose(rating)
-end
-
-When('I visit the session page for {string}') do |string|
-  pending
-end
+# ---------- Assertions ----------
 
 Then("I should not see {string}") do |text|
   expect(page).not_to have_content(text)

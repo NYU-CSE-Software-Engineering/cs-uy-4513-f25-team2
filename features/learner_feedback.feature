@@ -1,4 +1,3 @@
-@wip
 Feature: Learner submits feedback
   As a signed-in learner
   I want to submit feedback about my tutoring session
