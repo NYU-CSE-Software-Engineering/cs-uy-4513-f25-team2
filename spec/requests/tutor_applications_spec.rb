@@ -62,9 +62,7 @@ RSpec.describe "TutorApplications", type: :request do
     end
 
     context "when valid parameters are passed" do
-      let(:valid_params) do
-        { tutor_application: { reason: "I like helping others" } }
-      end
+      let(:valid_params) do { tutor_application: { reason: "I like helping others" } } end
 
       it "creates a TutorApplication with pending status and redirects/rerenders correctly" do
         expect {
@@ -77,6 +75,16 @@ RSpec.describe "TutorApplications", type: :request do
         expect(application.reason).to eq("I like helping others")
         expect(response).to render_template(:new)
         expect(flash[:notice]).to eq("Application Sent!")
+      end
+    end
+
+    context "when invalid parameters are passed" do
+      let(:invalid_params) do { tutor_application: { reason: "" } } end
+
+      it "does not create a TutorApplication and rerenders the new template with flash notice" do
+        expect { post "/tutor_applications", params: invalid_params }.not_to change(TutorApplication, :count)
+        expect(response).to render_template(:new)
+        expect(flash[:alert]).to eq("Could Not Apply")
       end
     end
   end
