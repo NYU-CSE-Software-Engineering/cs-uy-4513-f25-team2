@@ -5,15 +5,15 @@ Feature: Tutor Application
   I want to apply to become a tutor
 
   @button
-  Scenario: Learner goes to the settings page
+  Scenario: Learner goes to the Home page
     Given I am a signed-in learner
-    When I visit the Settings page
+    When I visit the Home page
     Then I should see the "Apply to be a tutor" button
 
   @apply
   Scenario: Learner goes to the application page
     Given I am a signed-in learner
-    When I visit the Settings page
+    When I visit the Home page
     And I click the "Apply to be a tutor" button
     Then I should see the tutor application page
 
@@ -29,7 +29,7 @@ Feature: Tutor Application
   Scenario: Learner who is already a tutor
     Given I am a signed-in learner
     And I am a Tutor
-    When I visit the Settings page
+    When I visit the Home page
     Then I should not see the "Apply to be a tutor" button
     And I should not see the "Pending review" message
 
@@ -37,7 +37,7 @@ Feature: Tutor Application
   Scenario: Learner with a pending application
     Given I am a signed-in learner
     And I have a pending application
-    When I visit the Settings page
+    When I visit the Home page
     Then I should not see the "Apply to be a tutor" button
     And I should see "Pending review"
 
