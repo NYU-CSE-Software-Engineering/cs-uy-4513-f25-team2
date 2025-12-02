@@ -1,6 +1,11 @@
 class TutorApplicationsController < ApplicationController
   def new
-    @tutor_application = TutorApplication.new
+    # grabs the current learners application status to decide what to render on the page
+    tutor_app = current_learner&.tutor_application
+    @tutor_application_status =
+      if tutor_app.nil?
+        :none       # no application exists
+      end
   end
 
   def create
@@ -8,6 +13,7 @@ class TutorApplicationsController < ApplicationController
     app = current_learner.build_tutor_application(tutor_application_params)
     app.status = "pending"
     app.save!
+    render :new
   end
 
   private
