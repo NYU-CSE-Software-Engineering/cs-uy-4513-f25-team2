@@ -37,7 +37,24 @@ RSpec.describe "TutorApplications", type: :request do
         expect(assigns(:tutor_application_status)).to eq(:pending)
       end
     end
+
+    context "when learner has an approved tutor application" do
+      before do
+        TutorApplication.create!(
+          learner_id: learner.id,
+          reason: "I want to help others",
+          status: "approved"
+        )
+      end
+      it "renders the page and indicates approved status" do
+        get "/tutor_applications/new"
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:tutor_application_status)).to eq(:approved)
+      end
+    end
   end
+
+
 
   describe "POST /tutor_applications" do
     it "creates a TutorApplication with the current learner, pending status, and submitted reason" do
