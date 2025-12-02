@@ -5,9 +5,10 @@ class SessionAttendee < ApplicationRecord
   validates :tutor_session, presence: true
   validates :learner, presence: true
 
-  # double booking validation
+  # A learner can only have one *active* (not cancelled) booking per session
   validates :learner_id, uniqueness: {
     scope: :tutor_session_id,
+    conditions: -> { where(cancelled: false) },
     message: 'is already booked for this session'
   }
 
@@ -36,31 +37,32 @@ class SessionAttendee < ApplicationRecord
   def session_not_full
     return unless tutor_session
 
-    # get the number of people already signed up for the session
-    attendee_count = SessionAttendee.where(tutor_session_id: tutor_session.id).count
+    # Only count non-cancelled attendees when enforcing capacity
+    attendee_count = SessionAttendee.where(
+      tutor_session_id: tutor_session.id,
+      cancelled: false
+    ).count
 
-    # When a new SessionAttendee is being created, check if it there is over capacity
     if new_record? && attendee_count >= tutor_session.capacity
-      errors.add(:base, "This session is full")
+      errors.add(:base, 'This session is full')
     end
   end
 
   def time_conflicts
     return unless learner && tutor_session
 
-    # get all sessions the learner is booked for
+    # Only consider other non-cancelled bookings when checking for overlaps
     learner_sessions = SessionAttendee
-      .where(learner_id: learner.id)
-      .where.not(tutor_session_id: tutor_session.id)
-      .includes(:tutor_session)
+                         .where(learner_id: learner.id, cancelled: false)
+                         .where.not(tutor_session_id: tutor_session.id)
+                         .includes(:tutor_session)
 
-    # check for time overlaps
     learner_sessions.each do |attendee|
       existing_session = attendee.tutor_session
 
       if tutor_session.start_at < existing_session.end_at &&
-          tutor_session.end_at > existing_session.start_at
-        errors.add(:base, "This session conflicts with another session")
+         tutor_session.end_at > existing_session.start_at
+        errors.add(:base, 'This session conflicts with another session')
         break
       end
     end

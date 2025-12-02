@@ -47,13 +47,13 @@ class SessionsController < ApplicationController
     end
 
     @start_time = Time.zone.parse(params[:start_at])
-    @end_time = Time.zone.parse(params[:end_at])
+    @end_time   = Time.zone.parse(params[:end_at])
 
     @sessions = TutorSession
-      .where(subject_id: @subject.id)
-      .where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
-      .where(status: ['Scheduled', 'scheduled'])
-      .order(:start_at)
+                  .where(subject_id: @subject.id)
+                  .where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
+                  .where(status: ['Scheduled', 'scheduled'])
+                  .order(:start_at)
   end
 
   def confirm; end
@@ -66,8 +66,10 @@ class SessionsController < ApplicationController
       return
     end
 
-    # Double booking
-    if SessionAttendee.exists?(tutor_session: @tutor_session, learner: current_learner)
+    # Double booking: only consider non-cancelled bookings
+    if SessionAttendee.exists?(tutor_session: @tutor_session,
+                               learner: current_learner,
+                               cancelled: false)
       redirect_to confirm_session_path(@tutor_session), alert: "You are already booked for that session"
       return
     end
@@ -137,7 +139,6 @@ class SessionsController < ApplicationController
 
   def tutor_session_params
     params.require(:tutor_session).permit(
-      #:subject,
       :start_at,
       :end_at,
       :capacity
