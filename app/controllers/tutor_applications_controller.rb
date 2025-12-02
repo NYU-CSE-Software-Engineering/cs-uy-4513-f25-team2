@@ -23,8 +23,7 @@ class TutorApplicationsController < ApplicationController
     else
       flash[:alert] = "Could Not Apply"
     end
-    new
-    render :new
+    redirect_to root_path
   end
 
   private

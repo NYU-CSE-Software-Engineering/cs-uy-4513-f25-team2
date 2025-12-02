@@ -73,7 +73,8 @@ RSpec.describe "TutorApplications", type: :request do
         expect(application.learner_id).to eq(learner.id)
         expect(application.status).to eq("pending")
         expect(application.reason).to eq("I like helping others")
-        expect(response).to render_template(:new)
+        expect(response).to redirect_to(root_path)
+        follow_redirect!
         expect(flash[:notice]).to eq("Application Sent!")
       end
     end
@@ -83,7 +84,8 @@ RSpec.describe "TutorApplications", type: :request do
 
       it "does not create a TutorApplication and rerenders the new template with flash notice" do
         expect { post "/tutor_applications", params: invalid_params }.not_to change(TutorApplication, :count)
-        expect(response).to render_template(:new)
+        expect(response).to redirect_to(root_path)
+        follow_redirect!
         expect(flash[:alert]).to eq("Could Not Apply")
       end
     end
