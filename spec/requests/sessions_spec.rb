@@ -477,7 +477,7 @@ RSpec.describe "Sessions", type: :request do
         expect {
           post "/sessions", params: {
             tutor_session: {
-              subject: subject_math.name,  # ✅ Changed from subject_id to subject name
+              subject: subject_math.name,  # Changed from subject_id to subject name
               start_at: Time.parse('2026-10-15T10:00'),
               end_at: Time.parse('2026-10-15T10:59'),
               capacity: 1
@@ -493,14 +493,14 @@ RSpec.describe "Sessions", type: :request do
         expect {
           post "/sessions", params: {
             tutor_session: {
-              subject: subject_math.name,  # ✅ Keep subject, remove subject_id
+              subject: subject_math.name,  # Keep subject, remove subject_id
               start_at: Time.parse('2026-10-15T08:00'), 
               end_at: Time.parse('2026-10-15T09:00'), 
-              capacity: nil  # ✅ Make capacity nil to trigger error
+              capacity: nil  # Make capacity nil to trigger error
             }
           }
         }.not_to change(TutorSession, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         body = CGI.unescapeHTML(response.body)
         expect(body).to include("can't be blank")
       end
@@ -522,14 +522,14 @@ RSpec.describe "Sessions", type: :request do
         expect {
           post "/sessions", params: {
             tutor_session: {
-              subject: subject_math.name,  # ✅ Changed from subject_id
+              subject: subject_math.name,  # Changed from subject_id
               start_at: Time.parse('2026-10-15T11:30'),
               end_at: Time.parse('2026-10-15T12:30'),
               capacity: 1
             }
           }
         }.not_to change(TutorSession, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         body = CGI.unescapeHTML(response.body)
         expect(body).to include("Session overlaps with existing session")
       end

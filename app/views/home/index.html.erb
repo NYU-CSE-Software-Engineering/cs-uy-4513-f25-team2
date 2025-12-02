@@ -9,6 +9,7 @@
   <p>Signed in as Learner: <%= current_learner.email %></p>
   <p><%= link_to 'View Tutors', tutors_path %></p>
   <p><%= link_to 'Find a Session', search_sessions_path %></p>
+  <p><%= link_to 'View My Sessions', learner_sessions_path %></p>
 <% else %>
   <p>You are not signed in.</p>
 <% end %>
