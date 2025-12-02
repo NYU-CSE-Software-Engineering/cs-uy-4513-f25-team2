@@ -11,16 +11,13 @@ Rails.application.routes.draw do
   post   '/login',  to: 'logins#create', as: :login
   delete '/logout', to: 'logins#delete', as: :logout
 
-  # Sessions
-  #resources :sessions, path: 'sessions', only: [:new, :create, :show]
-
   # Subjects
   resources :subjects, only: [:new, :create]
 
   # Tutors
   resources :tutors, only: [:index, :show]
 
-  # Sessions
+  # Sessions (tutor sessions for search / booking / attendance)
   resources :sessions, only: [:new, :create, :show, :update] do
     collection do
       get :search
@@ -31,5 +28,11 @@ Rails.application.routes.draw do
       post :book
     end
   end
-end
 
+  # Learner's booked sessions (upcoming and past)
+  resources :learner_sessions, only: [:index] do
+    collection do
+      get :past
+    end
+  end
+end

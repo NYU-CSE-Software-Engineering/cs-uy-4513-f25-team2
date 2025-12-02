@@ -4,7 +4,6 @@ class SessionsController < ApplicationController
   before_action :require_authorization, only: [:show, :update]
   before_action :require_tutor, only: [:new, :create]
 
-
   def show; end
 
   def update
@@ -87,7 +86,7 @@ class SessionsController < ApplicationController
     @tutor_session = TutorSession.new
     @tutor_session.tutor = current_tutor
     @tutor_session.status = "open"
-    
+
     if params[:tutor_session][:subject].present?
       subject_name = params[:tutor_session][:subject]
       subject = Subject.find_or_create_by(name: subject_name) do |s|
@@ -95,31 +94,24 @@ class SessionsController < ApplicationController
       end
       @tutor_session.subject = subject
     end
-    
+
     @tutor_session.start_at = params[:tutor_session][:start_at]
-    @tutor_session.end_at = params[:tutor_session][:end_at]
+    @tutor_session.end_at   = params[:tutor_session][:end_at]
     @tutor_session.capacity = params[:tutor_session][:capacity]
 
     if @tutor_session.save
       redirect_to session_path(@tutor_session), notice: 'Session successfully created'
     else
       @errors = @tutor_session.errors.full_messages
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
-
 
   def show
     @tutor_session = TutorSession.find(params[:id])
   end
 
-
   private
-
-  def require_learner
-    return if current_learner
-    redirect_to new_login_path
-  end
 
   def current_session
     @tutor_session = TutorSession.find(params[:id])
@@ -144,9 +136,10 @@ class SessionsController < ApplicationController
       :capacity
     )
   end
+
   def require_tutor
     return if current_tutor
+
     redirect_to new_login_path, alert: 'You must be logged in as a tutor'
   end
-
 end
