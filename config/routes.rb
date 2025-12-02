@@ -17,8 +17,8 @@ Rails.application.routes.draw do
   # Tutors
   resources :tutors, only: [:index, :show]
 
-  # Sessions
-  resources :sessions, only: [:show, :update] do
+  # Sessions (tutor sessions for search / booking / attendance)
+  resources :sessions, only: [:new, :create, :show, :update] do
     collection do
       get :search
       get :results
@@ -28,5 +28,11 @@ Rails.application.routes.draw do
       post :book
     end
   end
-end
 
+  # Learner's booked sessions (upcoming and past)
+  resources :learner_sessions, only: [:index] do
+    collection do
+      get :past
+    end
+  end
+end

@@ -1,66 +1,41 @@
-
-
 Given('I am on new session page,') do
-  visit new_tutor_session_path
+  visit new_session_path
 end
 
-When('I fill in "Start Time" with {string}') do |datetime_string|
-  time = Time.parse(datetime_string)
-  fill_in 'Start Time', with: time.strftime("%Y-%m-%d %H:%M")
-  @start_time = Time.parse(datetime_string)
+When('I fill in the session start time with {string}') do |datetime_string|
+  fill_in 'Start Time', with: datetime_string
+  @start_time = Time.iso8601(datetime_string)
 end
 
-When('I fill in "End Time" with {string}') do |datetime_string|
-  time = Time.parse(datetime_string)
-  fill_in 'End Time', with: time.strftime("%Y-%m-%d %H:%M")
-  @end_time = Time.parse(datetime_string)
+When('I fill in the session end time with {string}') do |datetime_string|
+  fill_in 'End Time', with: datetime_string
+  @end_time = Time.iso8601(datetime_string)
 end
 
-When('I fill in "Capacity" with {string}') do |capacity|
-  fill_in 'Capacity', with: capacity
-  @capacity = capacity
-end
-
-When('I fill in "Subject" with {string}') do |subject|
-  fill_in 'Subject', with: subject
-  @subject = subject
-end
-
-When('I press "Create new session"') do
-  click_button 'Create new session'
-end
-
-Then('I should see the message that session is deleted') do
-  expect(page).to have_content("Session deleted")
+When('I fill in {string} from {string}') do |value, field|
+  fill_in field, with: value
+  @subject = value
 end
 
 Then('I should see the session on the page') do
-  expect(page).to have_content(Session.last.subject)
+  expect(page).to have_content(TutorSession.last.subject.name)
 end
 
 Then('I should see an error message saying it is missing information') do
-  expect(page).to have_content("Missing information")
+  expect(page).to have_content("can't be blank")
 end
 
 Then('I should see an error message that there is a time conflict') do
-  expect(page).to have_content("Time conflict")
+  expect(page).to have_content("Session overlaps with existing session")
 end
 
-Given("I am on the session's show page") do
-  expect(page).to have_content(Session.last.subject)
-end
-
-When('I press on "Delete"') do
-  click_link 'Delete'
-end
-
-Then("I should be on tutor's session's page") do
-  expect(page).to have_current_path(tutor_sessions_path)
+Then("I am on the session's show page") do
+  expect(page).to have_current_path(session_path(TutorSession.last))
 end
 
 Given('the following session exists:') do |table|
   table.hashes.each do |row|
-    subj = Subject.find_by!(name: row['subject'])
+    subj = Subject.find_or_create_by!(name: row['subject'])
     tutor = Tutor.find_by!(learner: @current_learner)
 
     @current_session = TutorSession.find_or_create_by!(
@@ -75,10 +50,15 @@ Given('the following session exists:') do |table|
   end  
 end
 
+When('this session overlaps with existing session') do
+  overlap = TutorSession
+              .where(tutor: Tutor.find_by(learner: @current_learner))
+              .where("start_at < ? AND end_at > ?", @end_time, @start_time)
+  expect(overlap.exists?).to be true
+end
+
+
 Then('I should see the message {string}') do |message|
   expect(page).to have_content(message)
 end
 
-When('this session overlaps with existing session') do
-  (@start_time <= @current_session.end_time) && (@end_time >= @current_session.start_time)
-end

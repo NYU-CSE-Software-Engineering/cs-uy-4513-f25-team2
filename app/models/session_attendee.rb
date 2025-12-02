@@ -14,6 +14,25 @@ class SessionAttendee < ApplicationRecord
   validate :session_not_full
   validate :time_conflicts
 
+  # Scopes to retrieve bookings for a given learner
+  scope :for_learner, ->(learner) { where(learner:) }
+
+  scope :upcoming_for, ->(learner) {
+    for_learner(learner)
+      .joins(:tutor_session)
+      .where(cancelled: false)
+      .where('tutor_sessions.start_at >= ?', Time.current)
+      .order('tutor_sessions.start_at ASC')
+  }
+
+  scope :past_for, ->(learner) {
+    for_learner(learner)
+      .joins(:tutor_session)
+      .where(cancelled: false)
+      .where('tutor_sessions.start_at < ?', Time.current)
+      .order('tutor_sessions.start_at DESC')
+  }
+
   def session_not_full
     return unless tutor_session
 
@@ -46,6 +65,4 @@ class SessionAttendee < ApplicationRecord
       end
     end
   end
-
-
 end
