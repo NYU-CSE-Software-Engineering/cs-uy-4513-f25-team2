@@ -15,11 +15,10 @@ RSpec.describe "TutorApplications", type: :request do
     end
 
     context "when learner has no existing tutor application" do
-      it "renders the page and indicates no application exists" do
+      it "renders the application page" do
         get "/tutor_applications/new"
 
         expect(response).to have_http_status(:ok)
-        expect(assigns(:tutor_application_status)).to eq(:none)
       end
     end
 
@@ -33,8 +32,8 @@ RSpec.describe "TutorApplications", type: :request do
       end
       it "renders the page and indicates pending status" do
         get "/tutor_applications/new"
-        expect(response).to have_http_status(:ok)
-        expect(assigns(:tutor_application_status)).to eq(:pending)
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You cannot apply again for now")
       end
     end
 
@@ -48,8 +47,8 @@ RSpec.describe "TutorApplications", type: :request do
       end
       it "renders the page and indicates approved status" do
         get "/tutor_applications/new"
-        expect(response).to have_http_status(:ok)
-        expect(assigns(:tutor_application_status)).to eq(:approved)
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq("You cannot apply again for now")
       end
     end
   end
@@ -75,7 +74,7 @@ RSpec.describe "TutorApplications", type: :request do
         expect(application.reason).to eq("I like helping others")
         expect(response).to redirect_to(root_path)
         follow_redirect!
-        expect(flash[:notice]).to eq("Application Sent!")
+        expect(flash[:alert]).to eq("Application Sent!")
       end
     end
 

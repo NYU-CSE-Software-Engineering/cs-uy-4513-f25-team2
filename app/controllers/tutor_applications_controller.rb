@@ -2,16 +2,11 @@ class TutorApplicationsController < ApplicationController
   before_action :require_learner
 
   def new
-    # grabs the current learners application status to decide what to render on the page
     tutor_app = current_learner&.tutor_application
-    @tutor_application_status =
-      if tutor_app.nil?
-        :none       # no application exists
-      elsif tutor_app.status == "pending"
-        :pending    # application is pending
-      elsif tutor_app.status == "approved"
-        :approved   # application is approved
-      end
+    if tutor_app&.status == "pending" || tutor_app&.status == "approved"
+      flash[:alert] = "You cannot apply again for now"
+      redirect_to root_path and return
+    end
   end
 
   def create
@@ -19,7 +14,7 @@ class TutorApplicationsController < ApplicationController
     app = current_learner.build_tutor_application(tutor_application_params)
     app.status = "pending"
     if app.save
-      flash[:notice] = "Application Sent!"
+      flash[:alert] = "Application Sent!"
     else
       flash[:alert] = "Could Not Apply"
     end
