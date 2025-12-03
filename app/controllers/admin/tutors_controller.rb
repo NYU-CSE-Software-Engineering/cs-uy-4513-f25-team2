@@ -2,6 +2,7 @@ class Admin::TutorsController < ApplicationController
   before_action :require_admin
 
   def index
+    @tutors = Tutor.includes(:learner).all
   end
 
   def destroy

@@ -2,3 +2,16 @@
 <% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
 <% if flash[:alert]  %><p><%= flash[:alert]  %></p><% end %>
 
+<% if @tutors.any? %>
+  <ul>
+    <% @tutors.each do |tutor| %>
+      <li>
+        <%= tutor.learner.email %>
+        <%= button_to "Revoke Privilege", admin_tutor_path(tutor), method: :delete %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No tutors found.</p>
+<% end %>
+
