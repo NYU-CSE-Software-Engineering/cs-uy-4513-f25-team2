@@ -27,6 +27,8 @@ Rails.application.routes.draw do
       get :confirm
       post :book
     end
+
+    resources :feedbacks, only: [:new, :create]
   end
 
   # Learner's booked sessions (upcoming, past, and cancellation)
