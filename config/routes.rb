@@ -48,4 +48,13 @@ Rails.application.routes.draw do
   namespace :tutor do
     resources :feedbacks, only: [:index]
   end
+
+
+  # Tutor's booked sessions (upcoming and past)
+  resources :tutor_sessions, only: [:index] do
+    collection do
+      get :past
+    end
+  end
+
 end
