@@ -53,4 +53,12 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :tutors, only: [:index, :destroy]
   end
+
+  # Tutor's booked sessions (upcoming and past)
+  resources :tutor_sessions, only: [:index] do
+    collection do
+      get :past
+    end
+  end
+
 end
