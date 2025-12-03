@@ -17,6 +17,7 @@ class FeedbacksController < ApplicationController
     @feedback = Feedback.new(feedback_params)
     @feedback.tutor_session = @tutor_session
     @feedback.learner       = current_learner
+    @feedback.tutor         = @tutor_session.tutor   # 👈 NEW: satisfy "Tutor must exist"
 
     if @feedback.save
       # mark that this learner has submitted feedback for this session
