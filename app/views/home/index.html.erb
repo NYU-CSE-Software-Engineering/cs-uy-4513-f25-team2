@@ -10,6 +10,17 @@
   <p><%= link_to 'View Tutors', tutors_path %></p>
   <p><%= link_to 'Find a Session', search_sessions_path %></p>
   <p><%= link_to 'View My Sessions', learner_sessions_path %></p>
+
+<% if defined?(@tutor_application_status) %>
+  <% case @tutor_application_status %>
+  <% when :none %>
+      <%= link_to 'Apply to be a Tutor', new_tutor_application_path %>
+  <% when :pending %>
+    <p>Pending</p>
+  <% when :approved %>
+  <% end %>
+<% end %>
+
 <% else %>
   <p>You are not signed in.</p>
 <% end %>
