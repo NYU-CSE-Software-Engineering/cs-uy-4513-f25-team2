@@ -37,7 +37,7 @@ class Tutor::FeedbacksController < ApplicationController
 
     # Summary stats on filtered set
     @total_reviews = scoped.count
-    avg = scoped.average(:score)
+    avg = scoped.average(:rating)
     @average_rating = avg ? avg.round(1) : 0
 
     # Subjects for filter dropdown

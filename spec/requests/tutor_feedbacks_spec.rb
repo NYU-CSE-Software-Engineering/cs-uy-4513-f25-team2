@@ -65,7 +65,7 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         tutor_session: session1,
         learner: learner1,
         tutor: tutor,
-        score: 5,
+        rating: 5,
         comment: 'Very clear explanations!'
       )
 
@@ -73,7 +73,7 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         tutor_session: session2,
         learner: learner2,
         tutor: tutor,
-        score: 4,
+        rating: 4,
         comment: 'Helpful but a bit too fast.'
       )
 
@@ -122,7 +122,7 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         tutor_session: calc_session,
         learner: learner,
         tutor: tutor,
-        score: 5,
+        rating: 5,
         comment: 'Calculus feedback'
       )
 
@@ -130,7 +130,7 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         tutor_session: chem_session,
         learner: learner,
         tutor: tutor,
-        score: 4,
+        rating: 4,
         comment: 'Chemistry feedback'
       )
 
@@ -169,7 +169,7 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
           tutor_session: session,
           learner: learner,
           tutor: tutor,
-          score: 3 + (i % 3),
+          rating: 3 + (i % 3),
           comment: "Comment #{i}"
         )
       end
@@ -212,7 +212,7 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         tutor_session: session,
         learner: learner,
         tutor: other_tutor,
-        score: 5,
+        rating: 5,
         comment: 'Other tutor feedback'
       )
 

@@ -52,13 +52,13 @@ Given('the following feedback exists:') do |table|
     subject = Subject.find_by!(name: row['session'])
     tutor_session = TutorSession.where(tutor: @tutor, subject: subject).order(:start_at).first
     learner = Learner.find_by!(email: row['learner_email'])
-    Feedback.create!(
-      tutor_session: tutor_session,
-      learner:       learner,
-      tutor:         @tutor,
-      score:         row['score'].to_i,
-      comment:       row['comment']
-    )
+      Feedback.create!(
+        tutor_session: tutor_session,
+        learner:       learner,
+        tutor:         @tutor,
+        rating:        row['score'].to_i,
+        comment:       row['comment']
+      )
   end
 end
 
@@ -142,7 +142,7 @@ Given('I have more than 10 feedback entries') do
       tutor_session: tutor_session,
       learner:       learner,
       tutor:         @tutor,
-      score:         3 + (i % 3),
+      rating:        3 + (i % 3),
       comment:       "Comment #{i}"
     )
   end

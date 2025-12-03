@@ -39,7 +39,7 @@ RSpec.describe Feedback, type: :model do
   end
 
   describe 'validations' do
-    it 'is invalid without a score' do
+    it 'is invalid without a rating' do
       feedback = Feedback.new(
         tutor_session: tutor_session,
         learner: learner,
@@ -47,7 +47,7 @@ RSpec.describe Feedback, type: :model do
         comment: 'Great session!'
       )
       expect(feedback).not_to be_valid
-      expect(feedback.errors[:score]).to include("can't be blank")
+      expect(feedback.errors[:rating]).to include("can't be blank")
     end
 
     it 'is invalid without a comment' do
@@ -55,54 +55,54 @@ RSpec.describe Feedback, type: :model do
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 5
+        rating: 5
       )
       expect(feedback).not_to be_valid
       expect(feedback.errors[:comment]).to include("can't be blank")
     end
 
-    it 'is invalid with score less than 1' do
+    it 'is invalid with rating less than 1' do
       feedback = Feedback.new(
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 0,
+        rating: 0,
         comment: 'Test comment'
       )
       expect(feedback).not_to be_valid
-      expect(feedback.errors[:score]).to be_present
+      expect(feedback.errors[:rating]).to be_present
     end
 
-    it 'is invalid with score greater than 5' do
+    it 'is invalid with rating greater than 5' do
       feedback = Feedback.new(
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 6,
+        rating: 6,
         comment: 'Test comment'
       )
       expect(feedback).not_to be_valid
-      expect(feedback.errors[:score]).to be_present
+      expect(feedback.errors[:rating]).to be_present
     end
 
-    it 'is invalid with non-integer score' do
+    it 'is invalid with non-integer rating' do
       feedback = Feedback.new(
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 4.5,
+        rating: 4.5,
         comment: 'Test comment'
       )
       expect(feedback).not_to be_valid
-      expect(feedback.errors[:score]).to be_present
+      expect(feedback.errors[:rating]).to be_present
     end
 
-    it 'is valid with score between 1 and 5' do
+    it 'is valid with rating between 1 and 5' do
       feedback = Feedback.new(
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 5,
+        rating: 5,
         comment: 'Great session!'
       )
       expect(feedback).to be_valid
@@ -115,7 +115,7 @@ RSpec.describe Feedback, type: :model do
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 5,
+        rating: 5,
         comment: 'Test comment'
       )
       expect(feedback.tutor_session).to eq(tutor_session)
@@ -126,7 +126,7 @@ RSpec.describe Feedback, type: :model do
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 5,
+        rating: 5,
         comment: 'Test comment'
       )
       expect(feedback.learner).to eq(learner)
@@ -137,7 +137,7 @@ RSpec.describe Feedback, type: :model do
         tutor_session: tutor_session,
         learner: learner,
         tutor: tutor,
-        score: 5,
+        rating: 5,
         comment: 'Test comment'
       )
       expect(feedback.tutor).to eq(tutor)
