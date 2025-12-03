@@ -1,7 +1,11 @@
 class HomeController < ApplicationController
   def index
-    if current_learner
+    if current_tutor
+      @tutor_application_status = :approved
+      return
+    end
 
+    if current_learner
       tutor_app = current_learner.tutor_application
       @tutor_application_status =
         if tutor_app.nil?
