@@ -9,6 +9,7 @@ As a **Learner (Tutee)**, I want to **search tutors’ posted sessions by subjec
 3. **Capacity enforced:** If a session is full, I see “This session is full.”
 4. **Time conflict:** If my chosen session overlaps another upcoming session of mine, I see “This session conflicts with another session.”
 5. **Auditability:** A successful booking creates a `SessionAttendee` linking me (learner) to the chosen session, and the session has a meeting link.
+6. **No self-booking:** If I try to book a session that I am the tutor for, I see "You cannot book your own session"
 
 ## MVC Outline
 ### Models

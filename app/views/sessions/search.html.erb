@@ -3,18 +3,23 @@
 <%= form_with url: results_sessions_path, method: :get, local: true do |f| %>
   <div>
     <%= f.label :subject, "Subject" %>
-    <%= f.text_field :subject %>
+    <%= f.text_field :subject, list: "subjects-list" %>
+    <datalist id="subjects-list">
+      <% Subject.all.each do |subject| %>
+        <option value="<%= subject.name %>"><%= subject.name %></option>
+      <% end %>
+    </datalist>
   </div>
-  
+
   <div>
     <%= f.label :start_at, "Start Time" %>
-    <%= f.text_field :start_at %>
+    <%= f.datetime_local_field :start_at %>
   </div>
-  
+
   <div>
     <%= f.label :end_at, "End Time" %>
-    <%= f.text_field :end_at %>
+    <%= f.datetime_local_field :end_at %>
   </div>
-  
+
   <%= f.submit "Search" %>
 <% end %>
