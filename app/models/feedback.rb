@@ -1,13 +1,17 @@
 class Feedback < ApplicationRecord
   belongs_to :tutor_session
   belongs_to :learner
+  belongs_to :tutor
 
   validates :rating, presence: true,
-                     inclusion: { in: 1..5 }
+                     numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 5 }
   validates :comment, presence: true
 
-  validates :learner_id, uniqueness: {
-    scope: :tutor_session_id,
-    message: "has already submitted feedback for this session"
-  }
+  validate :rating_presence_message
+
+  private
+
+  def rating_presence_message
+    errors.add(:base, "Rating can't be blank") if rating.blank?
+  end
 end
