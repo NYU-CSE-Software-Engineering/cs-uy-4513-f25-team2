@@ -1,0 +1,24 @@
+<h1>My Past Sessions</h1>
+<% if @past_sessions.any? %>
+  <ul class="sessions-list past-sessions">
+    <% @past_sessions.each do |session| %>
+      <li class="session">
+        <p><strong>Subject:</strong> <%= session.subject.name %></p>
+        <p>
+          <strong>Time:</strong>
+          <%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %>
+        </p>
+        <p><strong>Capacity:</strong> <%= session.capacity %></p>
+        <p><strong>Status:</strong> <%= session.status %></p>
+        <% if session.meeting_link.present? %>
+          <p><strong>Meeting Link:</strong> <%= link_to session.meeting_link, session.meeting_link, target: '_blank' %></p>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You have no past sessions.</p>
+<% end %>
+<p>
+  <%= link_to 'Back to upcoming sessions', tutor_sessions_path %>
+</p>
