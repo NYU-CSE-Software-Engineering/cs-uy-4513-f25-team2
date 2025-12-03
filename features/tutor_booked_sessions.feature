@@ -22,6 +22,7 @@ Feature: Tutor views upcoming and past booked sessions
     And I should see "My Upcoming Sessions"
     And I should see "Biology"
     And I should see "Capacity: 1"
+    And I should see "2026-10-15T10:00:00Z"
     And I should not see "Math"
     And I should not see "Capacity: 2"
     And I should see "View past sessions"
@@ -37,10 +38,14 @@ Feature: Tutor views upcoming and past booked sessions
     When I click on "View My Sessions"
     Then I should be on the tutor upcoming sessions page
     And I should see "My Upcoming Sessions"
+    When I click on "View past sessions"
+    Then I should be on the tutor past sessions page
+    And I should see "My Past Sessions"
     And I should not see "Biology"
     And I should not see "Capacity: 1"
     And I should see "Math"
     And I should see "Capacity: 2"
+    And I should see "2026-10-11T10:00:00Z"
     And I should see "Back to upcoming sessions"
 
   @no_upcoming
@@ -69,5 +74,6 @@ Feature: Tutor views upcoming and past booked sessions
   @auth
   Scenario: Unauthenticated user cannot access tutor sessions pages
     Given I am on the home page
-    When I visit the "My Sessions" page directly
+    And I am logged out
+    When I visit the tutor sessions page directly
     Then I should be redirected to the login page
