@@ -1,0 +1,62 @@
+<h1>Tutor Feedback</h1>
+
+<% if flash[:alert] %>
+  <div class="alert" role="alert"><%= flash[:alert] %></div>
+<% end %>
+
+<% if @total_reviews.to_i.zero? %>
+  <p>No feedback yet</p>
+<% else %>
+  <div class="feedback-summary">
+    <p><strong>Average Rating:</strong> <%= @average_rating %></p>
+    <p><strong>Total Reviews:</strong> <%= @total_reviews %></p>
+  </div>
+
+  <%= form_with url: tutor_feedbacks_path, method: :get, local: true do %>
+    <label for="subject">Subject</label>
+    <%= select_tag :subject,
+          options_for_select([''] + @subjects.pluck(:name), @subject_filter),
+          id: 'subject' %>
+    <%= submit_tag 'Apply Filters' %>
+  <% end %>
+
+  <hr />
+
+  <ul class="feedback-list">
+    <% @feedbacks.each do |feedback| %>
+      <li class="feedback-row">
+        <div class="feedback-date">
+          <strong>Date:</strong> <%= feedback.tutor_session.start_at&.to_date %></strong>
+        </div>
+        <div class="feedback-subject">
+          <strong>Subject:</strong> <%= feedback.tutor_session.subject.name %></strong>
+        </div>
+        <div class="feedback-learner">
+          <strong>Learner:</strong> <%= [feedback.learner.first_name, feedback.learner.last_name].compact.join(' ') %>
+        </div>
+        <div class="feedback-rating">
+          <strong>Rating:</strong> <%= feedback.rating %>
+        </div>
+        <div class="feedback-comment">
+          <strong>Comment:</strong> <%= feedback.comment %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+
+  <% if @total_pages > 1 %>
+    <div class="pagination">
+      <% if @page > 1 %>
+        <%= link_to 'Previous', tutor_feedbacks_path(page: @page - 1, subject: @subject_filter), class: 'pagination-prev' %>
+      <% end %>
+
+      <span class="pagination-info">
+        Page <%= @page %> of <%= @total_pages %>
+      </span>
+
+      <% if @page < @total_pages %>
+        <%= link_to 'Next', tutor_feedbacks_path(page: @page + 1, subject: @subject_filter), class: 'pagination-next' %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
