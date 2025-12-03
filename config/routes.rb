@@ -48,4 +48,9 @@ Rails.application.routes.draw do
   namespace :tutor do
     resources :feedbacks, only: [:index]
   end
+
+  # Admin tutors management
+  namespace :admin do
+    resources :tutors, only: [:index, :destroy]
+  end
 end

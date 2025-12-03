@@ -19,6 +19,7 @@ RSpec.describe "Admin::Tutors", type: :request do
 
   describe "DELETE /admin/tutors/:id" do
     it "destroys the tutor and redirects with a success message" do
+      tutor # Ensure tutor is created
       expect {
         delete admin_tutor_path(tutor)
       }.to change(Tutor, :count).by(-1)
