@@ -1,5 +1,13 @@
 <h1>My Upcoming Sessions</h1>
 
+<% if notice.present? %>
+  <p class="notice"><%= notice %></p>
+<% end %>
+
+<% if alert.present? %>
+  <p class="alert"><%= alert %></p>
+<% end %>
+
 <% if @upcoming_bookings.any? %>
   <ul class="sessions-list upcoming-sessions">
     <% @upcoming_bookings.each do |booking| %>
@@ -22,6 +30,10 @@
             <%= link_to 'Join Session', session.meeting_link, target: '_blank' %>
           </p>
         <% end %>
+
+        <p>
+          <%= link_to 'Cancel', cancel_learner_session_path(booking) %>
+        </p>
       </li>
     <% end %>
   </ul>

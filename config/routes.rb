@@ -29,10 +29,15 @@ Rails.application.routes.draw do
     end
   end
 
-  # Learner's booked sessions (upcoming and past)
-  resources :learner_sessions, only: [ :index ] do
+  # Learner's booked sessions (upcoming, past, and cancellation)
+  resources :learner_sessions, only: [:index] do
     collection do
       get :past
+    end
+
+    member do
+      get  :cancel
+      patch :confirm_cancel
     end
   end
 
