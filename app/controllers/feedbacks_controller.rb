@@ -27,14 +27,13 @@ class FeedbacksController < ApplicationController
       )
       attendee&.update!(feedback_submitted: true)
 
-      redirect_to session_path(@tutor_session),
-                  notice: "Thank you for your feedback!"
-    else
-      # The feature checks for exact strings like "Rating can't be blank"
-      flash.now[:alert] = @feedback.errors.full_messages.join(", ")
-      render :new, status: :unprocessable_entity
-    end
+    redirect_to learner_sessions_path,
+                notice: "Thank you for your feedback!"
+  else
+    flash.now[:alert] = @feedback.errors.full_messages.join(", ")
+    render :new, status: :unprocessable_entity
   end
+end
 
   private
 
