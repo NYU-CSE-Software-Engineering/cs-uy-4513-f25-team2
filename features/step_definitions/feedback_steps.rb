@@ -1,9 +1,6 @@
 require "securerandom"
 
-# We rely on "Given I am a signed-in learner" from booking_session_steps.rb
-# which sets @current_learner.
 
-# ---------- Data setup ----------
 
 Given("I have a completed session with {string} where I was marked present") do |tutor_name|
   # Use the learner created by "I am a signed-in learner"
@@ -31,8 +28,7 @@ Given("I have a completed session with {string} where I was marked present") do 
 
   subject = Subject.first || Subject.create!(name: "Statistics", code: "STAT101")
 
-  # Reuse an existing completed session for this tutor+subject if it exists,
-  # so we don't trip the "no overlapping sessions" validation.
+
   @tutor_session = TutorSession.where(
     tutor:   @tutor,
     subject: subject,
@@ -72,20 +68,15 @@ end
 # ---------- Navigation / UI steps ----------
 
 When("I navigate to the feedback form for {string}") do |_tutor_name|
-  # For now, just go to the session's show page.
-  # We *don't* assert the tutor's name here because the current Session Details
-  # view doesn't render "Michael Chen" anywhere.
-  visit session_path(@tutor_session)
+  # @tutor_session was created in the "I have a completed session..." Given step
+  raise "@tutor_session is nil – make sure the Background creates it first" if @tutor_session.nil?
 
-  # If/when a "Leave Feedback" control exists, click it.
-  if page.has_link?("Leave Feedback")
-    click_link "Leave Feedback", match: :first
-  elsif page.has_button?("Leave Feedback")
-    click_button "Leave Feedback", match: :first
-  end
+  # Use the NESTED route: /sessions/:session_id/feedbacks/new
+  visit new_session_feedback_path(@tutor_session)
 end
 
 When("I visit the session page for {string}") do |_tutor_name|
+  raise "@tutor_session is nil – make sure the Background creates it first" if @tutor_session.nil?
   visit session_path(@tutor_session)
 end
 
@@ -96,12 +87,7 @@ When("I select a rating of {string}") do |rating|
   choose(rating)
 end
 
-# NOTE: generic steps like
-#   And I fill in "Comment" with "Great tutor!"
-#   And I press "Submit Feedback"
-# already live in other step files, so we don't redefine them here.
 
-# ---------- Assertions ----------
 
 Then("I should not see {string}") do |text|
   expect(page).not_to have_content(text)
