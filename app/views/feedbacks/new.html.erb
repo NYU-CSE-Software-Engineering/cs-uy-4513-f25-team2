@@ -19,14 +19,14 @@
 </p>
 
 <%= form_with model: @feedback,
-              url: feedbacks_path(tutor_session_id: @tutor_session.id),
+              url: session_feedbacks_path(@tutor_session),
               local: true do |f| %>
-
   <div>
     <p>Rating</p>
     <% (1..5).each do |n| %>
-      <%= f.radio_button :rating, n %>
-      <%= f.label :rating, n.to_s %>
+      <% id = "rating_#{n}" %>
+      <%= f.radio_button :rating, n, id: id %>
+      <%= label_tag id, n.to_s %>
     <% end %>
   </div>
 
