@@ -9,3 +9,4 @@
 - [Tutor Feedback](./tutor_feedback.md)
 - [Create Subject](./create_subject.md)
 - [Learner Views Tutors](./learner_views_tutors.md)
+- [Manage Applications](./manage_applications.md)
