@@ -1,42 +1,53 @@
 Given('I am a Tutor') do
-  @current_tutor ||= Tutor.find_or_create_by!(email: @current_learner.email) do |t|
+  @current_tutor ||= Tutor.find_or_create_by!(learner_id: @current_learner.id) do |t|
     t.bio          = nil
-    t.photo_url    = nil
     t.rating_avg   = 0
     t.rating_count = 0
   end
 end
 
-When('I visit the Settings page') do
-    visit settings_path
+When('I visit the Home page') do
+  visit root_path
 end
 
 Then('I should see the {string} button') do |string|
-    expect(page).to have_button(string)
+  expect(page).to have_button(string)
+end
+
+Then('I should see the {string} link') do |string|
+  expect(page).to have_link(string)
 end
 
 When('I click the {string} button') do |string|
     click_button(string)
 end
 
+When('I click the {string} link') do |string|
+  click_link(string)
+end
+
 Then('I should see the tutor application page') do
-    expect(page).to have_content('Tutor Application')
+    expect(page).to have_content('Apply To Be A Tutor')
 end
 
 Given('I visit the tutor application page') do
-    visit tutor_application_path
+    visit new_tutor_application_path
 end
 
 Given('I enter reason {string}') do |string|
-  fill_in 'Reason', with: string
+  fill_in 'Why do you want to become a tutor?', with: string
 end
 
 Then('I should see a message that my application was submitted') do
-  expect(page).to have_content('Your application has been submitted')
+  expect(page).to have_content('Application Sent!')
 end
 
 Then('I should not see the {string} button') do |string|
     expect(page).not_to have_button(string)
+end
+
+Then('I should not see the {string} link') do |string|
+  expect(page).not_to have_link(string)
 end
 
 Then('I should not see the {string} message') do |string|
@@ -45,7 +56,7 @@ end
 
 Given('I have a pending application') do
     learner = Learner.find_by(email:  @current_learner.email)
-    TutorApplication.find_or_create_by!(learner: learner, reason: 'Testing reason')
+    TutorApplication.find_or_create_by!(learner: learner, reason: 'Testing reason', status: "pending")
 end
 
 Given('an admin has approved my application') do
@@ -55,9 +66,8 @@ Given('an admin has approved my application') do
     l.last_name  = "Patel"
   end
 
-  @current_tutor ||= Tutor.find_or_create_by!(email: @current_learner.email) do |t|
+  @current_tutor ||= Tutor.find_or_create_by!(learner_id: @current_learner.id) do |t|
     t.bio          = nil
-    t.photo_url    = nil
     t.rating_avg   = 0
     t.rating_count = 0
   end

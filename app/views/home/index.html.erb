@@ -13,6 +13,18 @@
   <% else %>
     <p><%= link_to 'View My Sessions', learner_sessions_path %></p>
   <% end %>
+
+<% if defined?(@tutor_application_status) %>
+  <% case @tutor_application_status %>
+  <% when :none %>
+      <%= link_to 'Apply to be a Tutor', new_tutor_application_path %>
+  <% when :pending %>
+    <p>Pending</p>
+  <% when :approved %>
+    <%= button_tag "Book A Session", type: "button" %>
+  <% end %>
+<% end %>
+
 <% else %>
   <p>You are not signed in.</p>
 <% end %>
