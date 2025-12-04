@@ -4,11 +4,10 @@
 
 <ul>
   <li><strong>Subject:</strong> <%= @session.subject.name %></li>
-
+  
   <li>
     <strong>Time:</strong>
-    <%= @session.start_at.utc.iso8601 %> –
-    <%= @session.end_at.utc.iso8601 %>
+    <%= @session.start_at.utc.iso8601 %> – <%= @session.end_at.utc.iso8601 %>
   </li>
   
   <li><strong>Capacity:</strong> <%= @session.capacity %></li>

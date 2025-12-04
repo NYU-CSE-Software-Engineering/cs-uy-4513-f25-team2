@@ -34,8 +34,6 @@ class TutorSessionsController < ApplicationController
       redirect_to tutor_sessions_path, alert: "You can only cancel upcoming sessions"
       return
     end
-
-    render :confirm_cancel
   end
 
   # PATCH /tutor_sessions/:id/confirm_cancel

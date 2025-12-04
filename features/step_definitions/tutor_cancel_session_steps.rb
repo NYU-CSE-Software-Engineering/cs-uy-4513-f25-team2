@@ -1,8 +1,8 @@
 When('I click {string} for the upcoming sessions starting at {string}') do |_text, start_time|
-  start_str = Time.iso8601(start_time)
+  start_str = Time.iso8601(start_time).utc.iso8601  # Use ISO8601 format to match view
 
   within('.upcoming-sessions') do
-    session_li = page.find('li.session', text: start_str.to_s)
+    session_li = page.find('li.session', text: start_str)
     within(session_li) do
       click_link 'Cancel'
     end
@@ -31,6 +31,11 @@ Given('the following session exists for another tutor:') do |table|
       status:   row['status']
     )
   end
+end
+
+When("I attempt to cancel that past session directly") do
+  past_session = TutorSession.where(status: 'completed').last
+  visit cancel_tutor_session_path(past_session)
 end
 
 

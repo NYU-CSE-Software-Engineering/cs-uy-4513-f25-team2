@@ -60,6 +60,6 @@ Feature: Tutor cancels a tutoring session
     And the following session exists:
       | start_at             | end_at               | capacity | subject | status    |
       | 2026-10-11T10:00:00Z | 2026-10-11T10:59:00Z | 2        | Math    | completed |
-    When I attempt to cancel that past booking directly
+    When I attempt to cancel that past session directly
     Then I should be on the tutor upcoming sessions page
     And I should see "You can only cancel upcoming sessions"
