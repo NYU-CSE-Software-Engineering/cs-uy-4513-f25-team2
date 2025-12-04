@@ -12,28 +12,33 @@ Given ('the following tutor applications exist:') do |table|
   end
 end
 
-Given('I am on the "Pending Tutor Applications" page') do
+Given('I am on the home page') do
   visit pending_tutor_applications_path
 end
 
-When('I select {string} from the dropdown for {string}') do |status, learner_name|
+Given("I visit the manage applications page") do
+  visit admin_tutor_applications_path
+end
+
+When('I press the {string} button for {string}') do |button_text, learner_name|
   learner_first, learner_last = learner_name.split(' ', 2)
   learner = Learner.find_by!(first_name: learner_first, last_name: learner_last)
   application = TutorApplication.find_by!(learner: learner)
 
   within("#application_container_#{application.id}") do
-    select status
+    click_button button_text
   end
 end
 
-When('I press {string} for {string}') do |string, learner_name|
+Then('the application for {string} should be deleted') do |learner_name|
   learner_first, learner_last = learner_name.split(' ', 2)
   learner = Learner.find_by!(first_name: learner_first, last_name: learner_last)
-  application = TutorApplication.find_by!(learner: learner)
 
-  within("#application_container_#{application.id}") do
-    click_button string
-  end
+  expect(TutorApplication.exists?(learner: learner)).to be false
+end
+
+Then("I should see the manage applications page") do
+  expect(page).to have_content('Manage Tutor Applications')
 end
 
 Then('the application status for {string} should be {string}') do |learner_name, status|
