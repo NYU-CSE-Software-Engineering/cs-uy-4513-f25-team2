@@ -118,6 +118,17 @@ class SessionsController < ApplicationController
 
   def show
     @tutor_session = TutorSession.find(params[:id])
+
+    # 🔹 NEW: if the current learner attended this session and was marked absent,
+    # show the message expected by the Cucumber scenario.
+    attendee = SessionAttendee.find_by(
+      tutor_session: @tutor_session,
+      learner: current_learner
+    )
+
+    if attendee && attendee.attended == false
+      flash.now[:alert] = "You were not marked present for this session"
+    end
   end
 
   private

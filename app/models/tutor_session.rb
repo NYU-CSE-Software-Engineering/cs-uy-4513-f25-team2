@@ -5,7 +5,7 @@ class TutorSession < ApplicationRecord
   has_many :learners, through: :session_attendees
   has_many :feedbacks, dependent: :destroy
 
-  validates :tutor , presence: true
+  validates :tutor, presence: true
   validates :subject, presence: true
   validates :start_at, presence: true
   validates :end_at, presence: true
