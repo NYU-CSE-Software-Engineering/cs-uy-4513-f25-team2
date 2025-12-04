@@ -1,0 +1,25 @@
+<h1>Cancel Session</h1>
+
+<p>Are you sure you want to cancel this session?</p>
+
+<ul>
+  <li><strong>Subject:</strong> <%= @session.subject.name %></li>
+
+  <li>
+    <strong>Time:</strong>
+    <%= @session.start_at.utc.iso8601 %> –
+    <%= @session.end_at.utc.iso8601 %>
+  </li>
+  
+  <li><strong>Capacity:</strong> <%= @session.capacity %></li>
+</ul>
+
+<p>Please choose:</p>
+
+<%= button_to 'Yes',
+              confirm_cancel_tutor_session_path(@session),
+              method: :patch %>
+
+<%= button_to 'No',
+              tutor_sessions_path,
+              method: :get %>

@@ -41,3 +41,8 @@ end
 When("I confirm the cancellation") do
   click_button 'Yes'
 end
+
+Then('the session should have status {string}') do |expected_status|
+  @current_session.reload
+  expect(@current_session.status).to eq(expected_status)
+end

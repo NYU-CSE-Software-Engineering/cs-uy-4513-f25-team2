@@ -55,6 +55,9 @@ Rails.application.routes.draw do
     collection do
       get :past
     end
+    member do
+      get :cancel
+      patch :confirm_cancel
+    end
   end
-
 end

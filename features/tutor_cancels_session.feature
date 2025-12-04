@@ -25,6 +25,8 @@ Feature: Tutor cancels a tutoring session
     Then I should be on the tutor upcoming sessions page
     And I should see "Session cancelled"
     And I should see "You have no upcoming sessions"
+    And the session should have status "cancelled"
+
 
 
   @cancel_no 
