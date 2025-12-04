@@ -1,20 +1,19 @@
-@wip
 Feature: Tutor Application
   As a learner
   So that I can access tutor privileges like reserving a room and booking sessions
   I want to apply to become a tutor
 
   @button
-  Scenario: Learner goes to the settings page
+  Scenario: Learner goes to the Home page
     Given I am a signed-in learner
-    When I visit the Settings page
-    Then I should see the "Apply to be a tutor" button
+    When I visit the Home page
+    Then I should see the "Apply to be a Tutor" link
 
   @apply
   Scenario: Learner goes to the application page
     Given I am a signed-in learner
-    When I visit the Settings page
-    And I click the "Apply to be a tutor" button
+    When I visit the Home page
+    And I click the "Apply to be a Tutor" link
     Then I should see the tutor application page
 
   @submit
@@ -29,17 +28,17 @@ Feature: Tutor Application
   Scenario: Learner who is already a tutor
     Given I am a signed-in learner
     And I am a Tutor
-    When I visit the Settings page
-    Then I should not see the "Apply to be a tutor" button
+    When I visit the Home page
+    Then I should not see the "Apply to be a Tutor" link
     And I should not see the "Pending review" message
 
   @pending
   Scenario: Learner with a pending application
     Given I am a signed-in learner
     And I have a pending application
-    When I visit the Settings page
-    Then I should not see the "Apply to be a tutor" button
-    And I should see "Pending review"
+    When I visit the Home page
+    Then I should not see the "Apply to be a Tutor" link
+    And I should see "Pending"
 
   @approved  
   Scenario: Admin approves a learner’s application

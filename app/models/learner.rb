@@ -6,4 +6,5 @@ class Learner < ApplicationRecord
   has_many :session_attendees, dependent: :destroy
   has_many :tutor_sessions, through: :session_attendees
   has_many :feedbacks, dependent: :destroy
+  has_one :tutor_application
 end
