@@ -1,24 +1,43 @@
-<h1>My Upcoming Sessions</h1>
+<h1>My Upcoming Sessions (Tutor)</h1>
+
+<% if notice.present? %>
+  <p class="notice"><%= notice %></p>
+<% end %>
+
+<% if alert.present? %>
+  <p class="alert"><%= alert %></p>
+<% end %>
+
 <% if @upcoming_sessions.any? %>
   <ul class="sessions-list upcoming-sessions">
     <% @upcoming_sessions.each do |session| %>
       <li class="session">
         <p><strong>Subject:</strong> <%= session.subject.name %></p>
+
         <p>
           <strong>Time:</strong>
           <%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %>
         </p>
+
         <p><strong>Capacity:</strong> <%= session.capacity %></p>
+
         <% if session.meeting_link.present? %>
-          <p><strong>Meeting Link:</strong> <%= link_to session.meeting_link, session.meeting_link, target: '_blank' %></p>
+          <p>
+            <strong>Meeting Link:</strong>
+            <%= link_to 'Join Session', session.meeting_link, target: '_blank' %>
+          </p>
         <% end %>
-        <%= link_to "Edit", edit_tutor_session_path(session) %>
+        <p>
+          <%= link_to "Edit", edit_tutor_session_path(session) %>
+          <%= link_to 'Cancel', cancel_tutor_session_path(session) %>
+        </p>
       </li>
     <% end %>
   </ul>
 <% else %>
   <p>You have no upcoming sessions.</p>
 <% end %>
+
 <p>
-  <%= link_to 'View past sessions', past_tutor_sessions_path %>
+  <%= link_to 'View past sessions (Tutor)', past_tutor_sessions_path %>
 </p>

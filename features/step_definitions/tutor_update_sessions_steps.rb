@@ -2,6 +2,10 @@ Then('I should see the edit session page') do
   expect(page).to have_content('Edit Session')
 end
 
+Then('I should see a link with text {string} pointing to {string}') do |link_text, content|
+  expect(page).to have_link(link_text, href: content)
+end
+
 When('I make the update') do
   click_button('update') if page.has_button?('update')
 end

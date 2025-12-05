@@ -274,7 +274,75 @@ RSpec.describe 'TutorSessions', type: :request do
 
       expect(flash[:notice]).to eq('Session updated successfully')
     end
-
   end
 
+  describe 'PATCH /tutor_sessions/:id/confirm_cancel' do
+    it 'allows the tutor to cancel their own upcoming session' do
+      biology = Subject.create!(name: 'Biology', code: 'BIO101')
+
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: biology,
+        start_at: 2.days.from_now,
+        end_at: 3.days.from_now,
+        capacity: 1,
+        status: 'scheduled'
+      )
+
+      log_in_as(tutor)
+      patch confirm_cancel_tutor_session_path(session)
+      expect(response).to redirect_to(tutor_sessions_path)
+      follow_redirect!
+      expect(response.body).to include("Session cancelled")
+      session.reload
+      expect(session.status).to eq('cancelled')
+    end
+
+    it "does not allow a tutor to cancel another tutor's session" do
+      other_learner = Learner.create!(
+        email: "other@example.com",
+        password: "password123"
+      )
+
+      other_tutor = Tutor.create!(learner: other_learner)
+      biology = Subject.create!(name: "Biology", code: "BIO101")
+      other_session = TutorSession.create!(
+        tutor: other_tutor,
+        subject: biology,
+        start_at: 2.days.from_now,
+        end_at: 3.days.from_now,
+        capacity: 1,
+        status: "scheduled"
+      )
+
+      log_in_as(tutor)
+      patch confirm_cancel_tutor_session_path(other_session)
+      expect(response).to redirect_to(tutor_sessions_path)
+      follow_redirect!
+      expect(response.body).to include("You are not authorized to cancel the session")
+      other_session.reload
+      expect(other_session.status).to eq("scheduled")
+    end
+
+    it 'does not allow a past session to be cancelled' do
+      math = Subject.create!(name: "Math", code: "MATH101")
+
+      past_session = TutorSession.create!(
+        tutor: tutor,
+        subject: math,
+        start_at: 5.days.ago,
+        end_at: 4.days.ago,
+        capacity: 1,
+        status: "completed"
+      )
+
+      log_in_as(tutor)
+      patch confirm_cancel_tutor_session_path(past_session)
+      expect(response).to redirect_to(tutor_sessions_path)
+      follow_redirect!
+      expect(response.body).to include("You can only cancel upcoming sessions")
+      past_session.reload
+      expect(past_session.status).to eq("completed")
+    end
+  end
 end

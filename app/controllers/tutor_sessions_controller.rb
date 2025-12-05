@@ -1,7 +1,7 @@
 class TutorSessionsController < ApplicationController
   # Only signed-in tutors should see their session lists
   before_action :require_tutor
-  before_action :set_tutor_session, only: [:edit, :update]
+  before_action :set_session, only: [:cancel, :confirm_cancel, :edit, :update]
   before_action :authorize_tutor, only: [:edit, :update]
 
   def index
@@ -28,14 +28,46 @@ class TutorSessionsController < ApplicationController
   def edit;end
 
   def update
-    if @tutor_session.update(tutor_session_params)
+    if @session.update(tutor_session_params)
       redirect_to tutor_sessions_path , notice: 'Session updated successfully'
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
+  def cancel
+    if @session.tutor != current_tutor
+      redirect_to tutor_sessions_path, alert: "You are not authorized to cancel the session"
+      return
+    end
+
+    if @session.start_at < Time.current || @session.status != 'scheduled'
+      redirect_to tutor_sessions_path, alert: "You can only cancel upcoming sessions"
+      return
+    end
+  end
+
+  # PATCH /tutor_sessions/:id/confirm_cancel
+  def confirm_cancel
+    if @session.tutor != current_tutor
+      redirect_to tutor_sessions_path, alert: "You are not authorized to cancel the session"
+      return
+    end
+
+    if @session.start_at < Time.current || @session.status != 'scheduled'
+      redirect_to tutor_sessions_path, alert: "You can only cancel upcoming sessions"
+      return
+    end
+
+    @session.update!(status: 'cancelled')
+    redirect_to tutor_sessions_path, notice: "Session cancelled"
+  end
+
   private
+
+  def set_session
+    @session = TutorSession.find(params[:id])
+  end
 
   def require_tutor
     redirect_to(new_login_path) and return unless current_tutor
@@ -45,12 +77,8 @@ class TutorSessionsController < ApplicationController
     params.require(:tutor_session).permit(:meeting_link)
   end
 
-  def set_tutor_session
-    @tutor_session = TutorSession.find(params[:id])
-  end
-
   def authorize_tutor
-    unless @tutor_session.tutor == current_tutor
+    unless @session.tutor == current_tutor
       flash.now[:alert] = "You cannot edit another tutor's session"
       redirect_to new_login_path
     end

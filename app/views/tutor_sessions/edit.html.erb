@@ -1,16 +1,15 @@
 <h1>Edit Session</h1>
 
 <div>
-  <p><strong>Subject:</strong> <%= @tutor_session.subject.name %></p>
-  <p><strong>Start:</strong> <%= @tutor_session.start_at.utc.iso8601 %></p>
-  <p><strong>End:</strong> <%= @tutor_session.end_at.utc.iso8601 %></p>
-  <p><strong>Capacity:</strong> <%= @tutor_session.capacity %></p>
-  <p><strong>Status:</strong> <%= @tutor_session.status %></p>
+  <p><strong>Subject:</strong> <%= @session.subject.name %></p>
+  <p><strong>Start:</strong> <%= @session.start_at.utc.iso8601 %></p>
+  <p><strong>End:</strong> <%= @session.end_at.utc.iso8601 %></p>
+  <p><strong>Capacity:</strong> <%= @session.capacity %></p>
+  <p><strong>Status:</strong> <%= @session.status %></p>
 </div>
 
-<%= form_with model: @tutor_session, url: tutor_session_path(@tutor_session), method: :patch, local: true do |f| %>
+<%= form_with model: @session, url: tutor_session_path(@session), method: :patch, local: true do |f| %>
   <div>
-    <p>Yo this is a test</p>
     <%= f.label :meeting_link, "Meeting Link" %>
     <%= f.text_field :meeting_link, placeholder: "https://zoom.us/j/123456789" %>
   </div>
