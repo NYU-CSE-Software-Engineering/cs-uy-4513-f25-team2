@@ -51,6 +51,10 @@ Rails.application.routes.draw do
     resources :feedbacks, only: [:index]
   end
 
+  # Admin tutors management
+  namespace :admin do
+    resources :tutors, only: [:index, :destroy]
+  end
 
   # Tutor's booked sessions (upcoming and past)
   resources :tutor_sessions, only: [:index] do
