@@ -25,7 +25,12 @@ class TutorSessionsController < ApplicationController
       .order(start_at: :desc)
   end
 
-  def edit;end
+  def edit
+    if @session.start_at < Time.current || @session.status != 'scheduled'
+      redirect_to tutor_sessions_path, alert: "You can only edit upcoming sessions"
+      return
+    end
+  end
 
   def update
     if @session.update(tutor_session_params)
@@ -79,8 +84,7 @@ class TutorSessionsController < ApplicationController
 
   def authorize_tutor
     unless @session.tutor == current_tutor
-      flash.now[:alert] = "You cannot edit another tutor's session"
-      redirect_to new_login_path
+      redirect_to tutor_sessions_path, alert: "You cannot edit another tutor's session"
     end
   end
 end

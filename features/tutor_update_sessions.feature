@@ -49,3 +49,22 @@ Feature: Tutor updates session link
     And I cancel the update
     Then I should be on the tutor upcoming sessions page
     And I should not see "Join Session"
+
+  @edit_unauthorized
+  Scenario: Tutor cannot edit someone else's session
+    Given I am a signed-in tutor
+    And the following session exists for another tutor:
+      | start_at             | end_at               | capacity | subject | status    |
+      | 2026-10-16T10:00:00Z | 2026-10-16T10:59:00Z | 1        | Math    | scheduled |
+    When I attempt to edit that other tutor's booking directly
+    Then I should be on the tutor upcoming sessions page
+    And I should see "You cannot edit another tutor's session"
+
+  @edit_past
+  Scenario: Tutor cannot edit past sessions
+    And the following session exists:
+      | start_at             | end_at               | capacity | subject | status    |
+      | 2026-10-11T10:00:00Z | 2026-10-11T10:59:00Z | 2        | Math    | completed |
+    When I attempt to edit that past session directly
+    Then I should be on the tutor upcoming sessions page
+    And I should see "You can only edit upcoming sessions"

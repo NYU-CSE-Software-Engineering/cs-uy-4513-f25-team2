@@ -29,3 +29,12 @@ When('I enter the meeting link {string}') do |link|
   fill_in 'tutor_session_meeting_link', with: link
 end
 
+# @other_session referenced in tutor_cancel_session_steps.rb
+When("I attempt to edit that other tutor's booking directly") do
+  visit edit_tutor_session_path(@other_session)
+end
+
+When("I attempt to edit that past session directly") do
+  past_session = TutorSession.where(status: 'completed').last
+  visit edit_tutor_session_path(past_session)
+end
