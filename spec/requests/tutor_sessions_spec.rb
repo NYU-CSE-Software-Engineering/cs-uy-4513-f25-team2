@@ -251,6 +251,30 @@ RSpec.describe 'TutorSessions', type: :request do
       session.reload
       expect(session.meeting_link).to eq('https://zoom.us/updated')
     end
+
+    it "displays a success message" do
+      biology = Subject.create!(name: 'Biology', code: 'BIO101')
+
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: biology,
+        start_at: Time.zone.parse('2026-10-15T10:00:00Z'),
+        end_at: Time.zone.parse('2026-10-15T10:59:00Z'),
+        capacity: 1,
+        status: 'scheduled',
+        meeting_link: 'https://zoom.us/meeting/biology'
+      )
+
+      log_in_as(tutor)
+      patch tutor_session_path(session), params: {
+        tutor_session: {
+          meeting_link: 'https://zoom.us/updated'
+        }
+      }
+
+      expect(flash[:notice]).to eq('Session updated successfully')
+    end
+
   end
 
 end
