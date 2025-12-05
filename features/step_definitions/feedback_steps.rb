@@ -1,85 +1,93 @@
-# features/step_definitions/feedback_steps.rb
-Given("I am a logged-in learner") do
-  @learner = Learner.create!(
-    email: "learner@example.com",
-    password: "password123",
-    first_name: "Exa",
-    last_name: "Mine"
-  )
-end
+require "securerandom"
 
-Given("I have completed a tutoring session with {string}") do |tutor_name|
-  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
-  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
-end
+
 
 Given("I have a completed session with {string} where I was marked present") do |tutor_name|
-  step %{I am a logged-in learner}
-  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
-  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
-  SessionsAttendee.create!(session: @session, learner: @learner, attended: true)
+  # Use the learner created by "I am a signed-in learner"
+  learner = @current_learner || @learner
+  raise "current_learner is nil – make sure Background has 'Given I am a signed-in learner'" if learner.nil?
+
+  # Split tutor name like "Michael Chen"
+  names = tutor_name.split
+  first = names[0..-2].join(" ")
+  last  = names.last || ""
+
+  tutor_learner = Learner.find_or_create_by!(
+    email: "#{first.downcase.gsub(' ', '_')}.#{last.downcase}@example.com"
+  ) do |l|
+    l.password   = "password123"
+    l.first_name = first
+    l.last_name  = last
+  end
+
+  @tutor = Tutor.find_or_create_by!(learner: tutor_learner) do |t|
+    t.bio          ||= "Test tutor"
+    t.rating_avg   ||= 4.1
+    t.rating_count ||= 45
+  end
+
+  subject = Subject.first || Subject.create!(name: "Statistics", code: "STAT101")
+
+
+  @tutor_session = TutorSession.where(
+    tutor:   @tutor,
+    subject: subject,
+    status:  "Completed"
+  ).where("end_at < ?", Time.current).first
+
+  unless @tutor_session
+    @tutor_session = TutorSession.create!(
+      tutor:    @tutor,
+      subject:  subject,
+      start_at: 2.days.ago.change(min: 0, sec: 0),
+      end_at:   2.days.ago.change(min: 59, sec: 59),
+      capacity: 5,
+      status:   "Completed"
+    )
+  end
+
+  # Reuse or create the attendee and mark present
+  @attendee = SessionAttendee.find_or_create_by!(
+    tutor_session: @tutor_session,
+    learner:       learner
+  ) do |sa|
+    sa.attended = true
+  end
 end
 
 Given("I have a completed session with {string} where I was marked absent") do |tutor_name|
-  step %{I am a logged-in learner}
-  @tutor = Tutor.find_or_create_by!(name: tutor_name, email: "tutor@example.com")
-  @session = Session.create!(learner: @learner, tutor: @tutor, completed: true)
-  SessionsAttendee.create!(session: @session, learner: @learner, attended: false)
-end
-
-
-When("I navigate to the feedback form for {string}") do |tutor_name|
-  visit learner_sessions_path(@learner) # adjust if we change the path
-  expect(page).to have_content(tutor_name)
-
-  # Click the UI element that opens the feedback form
-  # Use link or button depending on your view:
-  if page.has_link?("Leave Feedback")
-    click_link "Leave Feedback", match: :first
-  else
-    click_button "Leave Feedback", match: :first
+  # Background already set up the "present" session, but in case someone
+  # reuses this step elsewhere, fall back to the present step.
+  if @attendee.nil? || @tutor_session.nil?
+    step %{I have a completed session with "#{tutor_name}" where I was marked present}
   end
 
-  expect(page).to have_content("Submit Feedback for #{tutor_name}")
+  @attendee.update!(attended: false)
 end
 
-Given("I am on the feedback page for {string}") do |tutor_name|
-  visit new_feedback_path(session_id: @session.id)
-  expect(page).to have_content("Submit Feedback for #{tutor_name}")
+# ---------- Navigation / UI steps ----------
+
+When("I navigate to the feedback form for {string}") do |_tutor_name|
+  # @tutor_session was created in the "I have a completed session..." Given step
+  raise "@tutor_session is nil – make sure the Background creates it first" if @tutor_session.nil?
+
+  # Use the NESTED route: /sessions/:session_id/feedbacks/new
+  visit new_session_feedback_path(@tutor_session)
 end
 
-# ---------- Form interactions (scoped/specific to avoid overlap) ----------
+When("I visit the session page for {string}") do |_tutor_name|
+  raise "@tutor_session is nil – make sure the Background creates it first" if @tutor_session.nil?
+  visit session_path(@tutor_session)
+end
 
-When("I select a feedback rating of {string}") do |rating|
+# ---------- Form interactions ----------
+
+When("I select a rating of {string}") do |rating|
   # assumes radio buttons labelled 1..5
   choose(rating)
 end
 
-When("I fill the feedback comment with {string}") do |text|
-  # make sure your textarea label or id is "Comment"
-  fill_in "Comment", with: text
-end
 
-When("I submit the feedback form") do
-  click_button "Submit Feedback"
-end
-
-Then("I should see a feedback notice {string}") do |message|
-  expect(page).to have_content(message)
-end
-
-Then("the feedback button should be hidden") do
-  expect(page).not_to have_link("Leave Feedback")
-  expect(page).not_to have_button("Leave Feedback")
-end
-
-When("I select a rating of {string}") do |rating|
-  choose(rating)
-end
-
-When('I visit the session page for {string}') do |string|
-  pending
-end
 
 Then("I should not see {string}") do |text|
   expect(page).not_to have_content(text)

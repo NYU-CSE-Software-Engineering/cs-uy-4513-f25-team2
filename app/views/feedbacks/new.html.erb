@@ -1,0 +1,41 @@
+<h1>Submit Feedback</h1>
+
+<% if flash[:alert].present? %>
+  <p><%= flash[:alert] %></p>
+<% end %>
+
+<% if @feedback.errors.any? %>
+  <ul>
+    <% @feedback.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<p>
+  Tutor:
+  <%= @tutor_session.tutor.learner.first_name %>
+  <%= @tutor_session.tutor.learner.last_name %>
+</p>
+
+<%= form_with model: @feedback,
+              url: session_feedbacks_path(@tutor_session),
+              local: true do |f| %>
+  <div>
+    <p>Rating</p>
+    <% (1..5).each do |n| %>
+      <% id = "rating_#{n}" %>
+      <%= f.radio_button :rating, n, id: id %>
+      <%= label_tag id, n.to_s %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :comment, "Comment" %><br>
+    <%= f.text_area :comment %>
+  </div>
+
+  <div>
+    <%= f.submit "Submit Feedback" %>
+  </div>
+<% end %>
