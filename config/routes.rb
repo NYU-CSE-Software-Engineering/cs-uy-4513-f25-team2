@@ -50,8 +50,8 @@ Rails.application.routes.draw do
   end
 
 
-  # Tutor's booked sessions (upcoming and past)
-  resources :tutor_sessions, only: [:index] do
+  # Tutor's booked sessions (upcoming, past, and edit)
+  resources :tutor_sessions, only: [:index, :edit, :update] do
     collection do
       get :past
     end
