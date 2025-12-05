@@ -24,7 +24,7 @@ Feature: Tutor updates session link
     And I should see "Biology"
     And I should see "Capacity: 1"
     And I should see "2026-10-15T10:00:00Z"
-    When I enter meeting link "https://zoom.example.us"
+    When I enter the meeting link "https://zoom.example.us"
     And I make the update
     Then I should be on the tutor upcoming sessions page
     And I should see "https://zoom.example.us"
@@ -45,7 +45,7 @@ Feature: Tutor updates session link
     And I should see "Biology"
     And I should see "Capacity: 1"
     And I should see "2026-10-15T10:00:00Z"
-    When I enter meeting link "https://zoom.example.us"
-    And I cancel the updating the session
+    When I enter the meeting link "https://zoom.example.us"
+    And I cancel the update
     Then I should be on the tutor upcoming sessions page
-    And I should see "https://zoom.example.us"
+    And I should not see "https://zoom.example.us"

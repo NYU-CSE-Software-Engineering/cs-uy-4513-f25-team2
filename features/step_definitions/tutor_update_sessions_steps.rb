@@ -6,8 +6,8 @@ When('I make the update') do
   click_button('update') if page.has_button?('update')
 end
 
-When('I cancel updating the session') do
-  click_button('cancel') if page.has_button?('cancel')
+When('I cancel the update') do
+  click_link ('Cancel')
 end
 
 When('I click Edit for the upcoming session starting at {string}') do |start_iso|
@@ -16,11 +16,12 @@ When('I click Edit for the upcoming session starting at {string}') do |start_iso
   within('.upcoming-sessions') do
     li = page.find('li.session', text: start_str)
     within(li) do
-      click_link 'Cancel'
+      click_link 'Edit'
     end
   end
 end
 
 When('I enter the meeting link {string}') do |link|
-  fill_in 'meeting_link', with: link
+  fill_in 'tutor_session_meeting_link', with: link
 end
+
