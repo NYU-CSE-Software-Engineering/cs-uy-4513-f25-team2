@@ -1,0 +1,15 @@
+<h1>Manage Tutor Applications</h1>
+
+<% @tutor_applications.each do |application| %>
+  <div id="application_container_<%= application.id %>">
+
+    <p><strong>Learner:</strong> <%= application.learner.first_name %> <%= application.learner.last_name %></p>
+    <p><strong>Status:</strong> <%= application.status %></p>
+
+    <%# <%= button_to "Approve", approve_admin_tutor_application_path(application), method: :patch %> %>
+    <%# <%= button_to "Reject", reject_admin_tutor_application_path(application), method: :patch %> %>
+
+  </div>
+
+  <hr>
+<% end %>
