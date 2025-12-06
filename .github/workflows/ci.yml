@@ -50,6 +50,8 @@ jobs:
         run: bundle exec rspec
 
       - name: Run Cucumber
+        env:
+          COVERAGE_ENFORCE: "true"
         run: bundle exec cucumber
 
       - name: Upload coverage report artifact

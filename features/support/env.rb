@@ -5,7 +5,7 @@
 # files.
 
 if ENV["COVERAGE"]
-  require "simplecov" # Uses the shared .simplecov config
+  require "simplecov"
 end
 
 require 'cucumber/rails'
