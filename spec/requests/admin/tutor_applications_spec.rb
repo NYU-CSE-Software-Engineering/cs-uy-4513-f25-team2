@@ -27,7 +27,7 @@ RSpec.describe "Admin::TutorApplications", type: :request do
     )
   end
 
-  describe "GET /admin/tutor_applications/new" do
+  describe "GET /admin/tutor_applications/pending" do
     before do
       allow_any_instance_of(ApplicationController)
         .to receive(:current_admin)
@@ -35,7 +35,7 @@ RSpec.describe "Admin::TutorApplications", type: :request do
     end
 
     it "returns a successful response" do
-      get "/admin/tutor_applications/new"
+      get "/admin/tutor_applications/pending"
       expect(response).to have_http_status(:ok)
     end
   end

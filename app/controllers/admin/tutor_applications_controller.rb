@@ -1,7 +1,7 @@
 class Admin::TutorApplicationsController < ApplicationController
   before_action :require_admin
 
-  def new
+  def pending
     @tutor_applications = TutorApplication.where(status: "pending").includes(:learner)
   end
 
@@ -9,6 +9,6 @@ class Admin::TutorApplicationsController < ApplicationController
     application = TutorApplication.find(params[:id])
     Tutor.create!(learner: application.learner)
     application.update!(status: "approved")
-    redirect_to new_admin_tutor_application_path, notice: "Application approved successfully"
+    redirect_to admin_tutor_applications_pending_path, notice: "Application approved successfully"
   end
 end

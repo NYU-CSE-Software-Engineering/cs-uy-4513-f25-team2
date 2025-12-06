@@ -64,7 +64,9 @@ Rails.application.routes.draw do
 
 # Tutor managing Applications
 namespace :admin do
-  resources :tutor_applications, only: [ :new ] do
+  get "tutor_applications/pending", to: "tutor_applications#pending", as: :tutor_applications_pending
+
+  resources :tutor_applications, only: [] do
     member do
       post :approve
     end
