@@ -70,7 +70,7 @@ RSpec.describe Tutor, type: :model do
                 new_bio = 'a' * 501
                 t = Tutor.new(learner: l, bio: new_bio)
                 expect(t).not_to be_valid
-                expect(t.errors[:bio]).to include("is too long (maximum is 500 characters)")
+                expect(t.errors[:bio]).to include("Character limit exceeded (500)")
             end
         end
 
