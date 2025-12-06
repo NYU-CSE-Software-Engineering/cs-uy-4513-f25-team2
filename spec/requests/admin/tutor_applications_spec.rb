@@ -91,4 +91,26 @@ RSpec.describe "Admin::TutorApplications", type: :request do
       end
     end
   end
+
+    describe "POST /admin/tutor_applications/:id/reject" do
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_admin)
+        .and_return(admin)
+    end
+
+    context "when valid parameters are passed" do
+      it "deletes the tutor application without creating a Tutor" do
+        expect { post "/admin/tutor_applications/#{application.id}/reject" }.to change { TutorApplication.count }.by(-1)
+        expect(Tutor.count).to eq(0)
+        expect(TutorApplication.exists?(application.id)).to be_falsey
+
+        expect(response).to have_http_status(:success).or have_http_status(:redirect)
+        follow_redirect! if response.redirect?
+
+        expect(response.body).not_to include("application_container_#{application.id}")
+        expect(response.body).to include("Application rejected")
+      end
+    end
+  end
 end
