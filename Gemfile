@@ -61,6 +61,9 @@ end
 
 group :test do
   gem 'rails-controller-testing'
+  
+  gem "simplecov", "~> 0.22.0", require: false
+  gem "simplecov-html", "~> 0.11", require: false
 end
 
 group :development do

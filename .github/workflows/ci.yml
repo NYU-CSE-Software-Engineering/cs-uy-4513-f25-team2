@@ -28,6 +28,7 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/tutorme_test
+      COVERAGE: "true"
 
     steps:
       - name: Checkout code
@@ -50,3 +51,10 @@ jobs:
 
       - name: Run Cucumber
         run: bundle exec cucumber
+
+      - name: Upload coverage report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage

@@ -4,6 +4,9 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+if ENV["COVERAGE"]
+  require "simplecov" # Uses the shared .simplecov config
+end
 
 require 'cucumber/rails'
 
