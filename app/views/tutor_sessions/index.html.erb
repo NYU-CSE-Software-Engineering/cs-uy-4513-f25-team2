@@ -27,8 +27,8 @@
             <%= link_to 'Join Session', session.meeting_link, target: '_blank' %>
           </p>
         <% end %>
-
         <p>
+          <%= link_to "Edit", edit_tutor_session_path(session) %>
           <%= link_to 'Cancel', cancel_tutor_session_path(session) %>
         </p>
       </li>
