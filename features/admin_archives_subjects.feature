@@ -17,7 +17,7 @@ Feature: Admin archives subjects
     And I should not see "Physics" on the subjects page
 
   Scenario: Archived subjects are not available for new sessions
-    Given I am logged in as an admin
+    Given I am a signed-in tutor
     And the subject "Physics" has been archived
     When I go to create a new tutor session
     Then I should not see "Physics" in the subject dropdown
