@@ -1,4 +1,4 @@
-<h1>My Upcoming Sessions</h1>
+<h1>My Upcoming Sessions (Tutor)</h1>
 
 <% if notice.present? %>
   <p class="notice"><%= notice %></p>
@@ -8,31 +8,28 @@
   <p class="alert"><%= alert %></p>
 <% end %>
 
-<% if @upcoming_bookings.any? %>
+<% if @upcoming_sessions.any? %>
   <ul class="sessions-list upcoming-sessions">
-    <% @upcoming_bookings.each do |booking| %>
-      <% session = booking.tutor_session %>
+    <% @upcoming_sessions.each do |session| %>
       <li class="session">
         <p><strong>Subject:</strong> <%= session.subject.name %></p>
-        <p>
-          <strong>Tutor:</strong>
-          <%= session.tutor.learner.first_name %>
-          <%= session.tutor.learner.last_name %>
-        </p>
+
         <p>
           <strong>Time:</strong>
           <%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %>
         </p>
 
+        <p><strong>Capacity:</strong> <%= session.capacity %></p>
+
         <% if session.meeting_link.present? %>
           <p>
-            <strong>Meeting link:</strong>
+            <strong>Meeting Link:</strong>
             <%= link_to 'Join Session', session.meeting_link, target: '_blank' %>
           </p>
         <% end %>
 
         <p>
-          <%= link_to 'Cancel', cancel_learner_session_path(booking) %>
+          <%= link_to 'Cancel', cancel_tutor_session_path(session) %>
         </p>
       </li>
     <% end %>
@@ -42,5 +39,5 @@
 <% end %>
 
 <p>
-  <%= link_to 'View past sessions', past_learner_sessions_path %>
+  <%= link_to 'View past sessions (Tutor)', past_tutor_sessions_path %>
 </p>

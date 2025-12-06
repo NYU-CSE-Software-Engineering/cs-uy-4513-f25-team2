@@ -3,6 +3,7 @@ class TutorSession < ApplicationRecord
   belongs_to :subject
   has_many :session_attendees
   has_many :learners, through: :session_attendees
+  has_many :feedbacks, dependent: :destroy
 
   validates :tutor, presence: true
   validates :subject, presence: true

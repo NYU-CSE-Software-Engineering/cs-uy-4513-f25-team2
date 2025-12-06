@@ -1,7 +1,6 @@
 <h1>Home</h1>
 <% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
 <% if flash[:alert]  %><p><%= flash[:alert]  %></p><% end %>
-
 <% if current_admin %>
   <p>Signed in as Admin: <%= current_admin.email %></p>
   <p><%= link_to 'Add New Subject', new_subject_path %></p>
@@ -10,10 +9,24 @@
   <p><%= link_to 'View Tutors', tutors_path %></p>
   <p><%= link_to 'Find a Session', search_sessions_path %></p>
   <p><%= link_to 'View My Sessions', learner_sessions_path %></p>
+  <% if current_tutor %>
+    <p><%= link_to 'View My Sessions (Tutor)', tutor_sessions_path %></p>
+  <% end %>
+
+<% if defined?(@tutor_application_status) %>
+  <% case @tutor_application_status %>
+  <% when :none %>
+      <%= link_to 'Apply to be a Tutor', new_tutor_application_path %>
+  <% when :pending %>
+    <p>Pending</p>
+  <% when :approved %>
+    <%= button_tag "Book A Session", type: "button" %>
+  <% end %>
+<% end %>
+
 <% else %>
   <p>You are not signed in.</p>
 <% end %>
-
 <% if current_admin || current_learner %>
   <%= button_to 'Log out', logout_path, method: :delete %>
 <% else %>

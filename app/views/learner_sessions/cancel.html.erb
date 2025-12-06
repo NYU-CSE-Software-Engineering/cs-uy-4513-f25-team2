@@ -1,0 +1,26 @@
+<h1>Cancel Session</h1>
+
+<p>Are you sure you want to cancel this session?</p>
+
+<ul>
+  <li><strong>Subject:</strong> <%= @tutor_session.subject.name %></li>
+  <li>
+    <strong>Tutor:</strong>
+    <%= @tutor_session.tutor.learner.first_name %>
+    <%= @tutor_session.tutor.learner.last_name %>
+  </li>
+  <li>
+    <strong>Time:</strong>
+    <%= @tutor_session.start_at.utc.iso8601 %> – <%= @tutor_session.end_at.utc.iso8601 %>
+  </li>
+</ul>
+
+<p>Please choose:</p>
+
+<%= button_to 'Yes',
+              confirm_cancel_learner_session_path(@booking, decision: 'yes'),
+              method: :patch %>
+
+<%= button_to 'No',
+              confirm_cancel_learner_session_path(@booking, decision: 'no'),
+              method: :patch %>

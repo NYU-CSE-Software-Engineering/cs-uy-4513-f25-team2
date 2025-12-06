@@ -79,7 +79,6 @@ RSpec.describe 'LearnerSessions', type: :request do
       expect(response.body).to include('My Upcoming Sessions')
       expect(response.body).to include('Calculus')
       expect(response.body).not_to include('Biology')
-      # Ensure we have a link to the past sessions page
       expect(response.body).to include('View past sessions')
     end
 
@@ -167,6 +166,190 @@ RSpec.describe 'LearnerSessions', type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('You have no past sessions.')
       expect(response.body).to include('Back to upcoming sessions')
+    end
+  end
+
+  describe 'GET /learner_sessions/:id/cancel' do
+    it 'redirects to login when not signed in' do
+      subject = Subject.create!(name: 'Math', code: 'MATH01')
+      tutor_learner = Learner.create!(
+        email: 'tutor@example.com',
+        password: 'password123'
+      )
+      tutor = Tutor.create!(learner: tutor_learner)
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: subject,
+        start_at: 2.days.from_now,
+        end_at:   3.days.from_now,
+        capacity: 3,
+        status: 'scheduled'
+      )
+      booking = SessionAttendee.create!(
+        tutor_session: session,
+        learner: learner
+      )
+
+      get cancel_learner_session_path(booking)
+      expect(response).to redirect_to(new_login_path)
+    end
+
+    it 'shows the confirmation page for the current learner’s upcoming booking' do
+      subject = Subject.create!(name: 'Math', code: 'MATH01')
+      tutor_learner = Learner.create!(
+        email: 'tutor@example.com',
+        password: 'password123'
+      )
+      tutor = Tutor.create!(learner: tutor_learner)
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: subject,
+        start_at: 2.days.from_now,
+        end_at:   3.days.from_now,
+        capacity: 3,
+        status: 'scheduled'
+      )
+      booking = SessionAttendee.create!(
+        tutor_session: session,
+        learner: learner
+      )
+
+      log_in_as(learner)
+      get cancel_learner_session_path(booking)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('Cancel Session')
+      expect(response.body).to include('Are you sure you want to cancel this session?')
+      expect(response.body).to include('Math')
+    end
+
+    it 'does not allow cancelling another learner’s booking' do
+      subject = Subject.create!(name: 'Biology', code: 'BIOL01')
+      tutor_learner = Learner.create!(
+        email: 'tutor@example.com',
+        password: 'password123'
+      )
+      tutor = Tutor.create!(learner: tutor_learner)
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: subject,
+        start_at: 2.days.from_now,
+        end_at:   3.days.from_now,
+        capacity: 3,
+        status: 'scheduled'
+      )
+
+      other_learner = Learner.create!(
+        email: 'other@example.com',
+        password: 'password123'
+      )
+      booking = SessionAttendee.create!(
+        tutor_session: session,
+        learner: other_learner
+      )
+
+      log_in_as(learner)
+      get cancel_learner_session_path(booking)
+
+      expect(response).to redirect_to(learner_sessions_path)
+      follow_redirect!
+      expect(response.body).to include('You are not authorized to cancel that session')
+    end
+
+    it 'does not allow cancelling a past session' do
+      subject = Subject.create!(name: 'Math', code: 'MATH01')
+      tutor_learner = Learner.create!(
+        email: 'tutor@example.com',
+        password: 'password123'
+      )
+      tutor = Tutor.create!(learner: tutor_learner)
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: subject,
+        start_at: 2.days.ago,
+        end_at:   1.day.ago,
+        capacity: 3,
+        status: 'completed'
+      )
+      booking = SessionAttendee.create!(
+        tutor_session: session,
+        learner: learner
+      )
+
+      log_in_as(learner)
+      get cancel_learner_session_path(booking)
+
+      expect(response).to redirect_to(learner_sessions_path)
+      follow_redirect!
+      expect(response.body).to include('You can only cancel upcoming sessions')
+    end
+  end
+
+  describe 'PATCH /learner_sessions/:id/confirm_cancel' do
+    it 'marks the booking as cancelled and removes it from upcoming sessions when the learner confirms' do
+      subject = Subject.create!(name: 'Math', code: 'MATH01')
+      tutor_learner = Learner.create!(
+        email: 'tutor@example.com',
+        password: 'password123'
+      )
+      tutor = Tutor.create!(learner: tutor_learner)
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: subject,
+        start_at: 2.days.from_now,
+        end_at:   3.days.from_now,
+        capacity: 3,
+        status: 'scheduled'
+      )
+      booking = SessionAttendee.create!(
+        tutor_session: session,
+        learner: learner
+      )
+
+      log_in_as(learner)
+      patch confirm_cancel_learner_session_path(booking), params: { decision: 'yes' }
+
+      expect(response).to redirect_to(learner_sessions_path)
+      booking.reload
+      expect(booking.cancelled).to be(true)
+
+      get learner_sessions_path
+      expect(response.body).to include('You have no upcoming sessions.')
+      expect(response.body).not_to include('Math')
+      expect(response.body).to include('Session cancelled')
+    end
+
+    it 'does not cancel the booking when the learner chooses No' do
+      subject = Subject.create!(name: 'Math', code: 'MATH01')
+      tutor_learner = Learner.create!(
+        email: 'tutor@example.com',
+        password: 'password123'
+      )
+      tutor = Tutor.create!(learner: tutor_learner)
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: subject,
+        start_at: 2.days.from_now,
+        end_at:   3.days.from_now,
+        capacity: 3,
+        status: 'scheduled'
+      )
+      booking = SessionAttendee.create!(
+        tutor_session: session,
+        learner: learner
+      )
+
+      log_in_as(learner)
+      patch confirm_cancel_learner_session_path(booking), params: { decision: 'no' }
+
+      expect(response).to redirect_to(learner_sessions_path)
+      booking.reload
+      expect(booking.cancelled).to be(false)
+
+      get learner_sessions_path
+      expect(response.body).to include('My Upcoming Sessions')
+      expect(response.body).to include('Math')
+      expect(response.body).to include('Cancellation aborted')
     end
   end
 end
