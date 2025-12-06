@@ -69,6 +69,7 @@ namespace :admin do
   resources :tutor_applications, only: [] do
     member do
       post :approve
+      post :reject
     end
   end
 end

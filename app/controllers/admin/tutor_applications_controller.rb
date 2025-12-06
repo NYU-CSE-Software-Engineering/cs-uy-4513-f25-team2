@@ -23,5 +23,10 @@ class Admin::TutorApplicationsController < ApplicationController
     redirect_to admin_tutor_applications_pending_path, notice: "Application approved successfully"
   end
 
-  
+  def reject
+    application = TutorApplication.find_by(id: params[:id])
+
+    application.destroy
+    redirect_to admin_tutor_applications_pending_path, alert: "Application rejected"
+  end
 end
