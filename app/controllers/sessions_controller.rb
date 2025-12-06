@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
   before_action :current_session, only: [:show, :update, :confirm, :book]
   before_action :require_authorization, only: [:show, :update]
   before_action :require_tutor, only: [:new, :create]
+  before_action :load_subjects, only: [:new, :create]
 
   def show; end
 
@@ -91,12 +92,17 @@ class SessionsController < ApplicationController
     @tutor_session = TutorSession.new
   end
 
-  def create
+    def create
     @tutor_session = TutorSession.new
-    @tutor_session.tutor = current_tutor
+    @tutor_session.tutor  = current_tutor
     @tutor_session.status = "open"
 
-    if params[:tutor_session][:subject].present?
+    # Prefer subject chosen from dropdown (subject_id)
+    if params[:tutor_session][:subject_id].present?
+      @tutor_session.subject = Subject.find(params[:tutor_session][:subject_id])
+
+    # Fallback: support legacy free-text subject if present
+    elsif params[:tutor_session][:subject].present?
       subject_name = params[:tutor_session][:subject]
       subject = Subject.find_or_create_by(name: subject_name) do |s|
         s.code = subject_name.upcase.gsub(/[^A-Z]/, '')[0..5] || 'SUBJ'
@@ -115,6 +121,7 @@ class SessionsController < ApplicationController
       render :new, status: :unprocessable_content
     end
   end
+
 
   def show
     @tutor_session = TutorSession.find(params[:id])
@@ -161,4 +168,10 @@ class SessionsController < ApplicationController
 
     redirect_to new_login_path, alert: 'You must be logged in as a tutor'
   end
+
+  def load_subjects
+    @subjects = Subject.active.order(:name)
+  end
+
+
 end
