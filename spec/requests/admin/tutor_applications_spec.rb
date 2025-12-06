@@ -92,7 +92,7 @@ RSpec.describe "Admin::TutorApplications", type: :request do
     end
   end
 
-    describe "POST /admin/tutor_applications/:id/reject" do
+  describe "POST /admin/tutor_applications/:id/reject" do
     before do
       allow_any_instance_of(ApplicationController)
         .to receive(:current_admin)
@@ -124,6 +124,21 @@ RSpec.describe "Admin::TutorApplications", type: :request do
         follow_redirect! if response.redirect?
 
         expect(response.body).to include("Invalid Learner was passed")
+      end
+    end
+
+    context "when the learner is already a tutor" do
+      before do
+        Tutor.create!(learner: learner)
+      end
+      it "does not delete any application and shows an alert" do
+        expect { post "/admin/tutor_applications/#{application.id}/reject" }.not_to change { TutorApplication.count }
+        expect(Tutor.count).to eq(1)
+
+        expect(response).to have_http_status(:success).or have_http_status(:redirect)
+        follow_redirect! if response.redirect?
+
+        expect(response.body).to include("Learner is already a Tutor")
       end
     end
   end
