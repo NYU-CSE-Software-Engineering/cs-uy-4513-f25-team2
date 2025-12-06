@@ -6,7 +6,13 @@ class Admin::TutorApplicationsController < ApplicationController
   end
 
   def approve
-    application = TutorApplication.find(params[:id])
+    application = TutorApplication.find_by(id: params[:id])
+
+    if application.nil?
+      redirect_to admin_tutor_applications_pending_path, alert: "Invalid Learner was passed"
+      return
+    end
+
     Tutor.create!(learner: application.learner)
     application.update!(status: "approved")
     redirect_to admin_tutor_applications_pending_path, notice: "Application approved successfully"
