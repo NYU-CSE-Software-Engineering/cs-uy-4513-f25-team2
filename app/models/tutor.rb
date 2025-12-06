@@ -5,6 +5,7 @@ class Tutor < ApplicationRecord
     has_many :feedbacks, dependent: :destroy
     
     validates :learner, uniqueness: true
+    validates :bio, length: { maximum: 500, message: "Character limit exceeded (500)" }
     validates :rating_avg, numericality: { 
         allow_nil: true, 
         greater_than_or_equal_to: 0, 

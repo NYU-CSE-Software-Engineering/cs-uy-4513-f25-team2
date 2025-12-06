@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   resources :subjects, only: [ :new, :create ]
 
   # Tutors
-  resources :tutors, only: [ :index, :show ]
+  resources :tutors, only: [ :index, :show, :edit, :update ]
 
   # Sessions (tutor sessions for search / booking / attendance)
   resources :sessions, only: [ :new, :create, :show, :update ] do

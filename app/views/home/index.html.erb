@@ -11,6 +11,7 @@
   <p><%= link_to 'View My Sessions', learner_sessions_path %></p>
   <% if current_tutor %>
     <p><%= link_to 'View My Sessions (Tutor)', tutor_sessions_path %></p>
+    <p><%= link_to 'Update my Profile', edit_tutor_path(current_tutor) %></p>
   <% end %>
 
 <% if defined?(@tutor_application_status) %>
