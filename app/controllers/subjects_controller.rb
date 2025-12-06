@@ -1,5 +1,10 @@
 class SubjectsController < ApplicationController
   before_action :require_admin
+  before_action :set_subject, only: [:destroy]
+
+  def index
+    @subjects = Subject.active.order(:name)
+  end
 
   def new
     @subject = Subject.new
@@ -15,7 +20,19 @@ class SubjectsController < ApplicationController
     end
   end
 
+  def destroy
+    if @subject.update(archived: true)
+      redirect_to subjects_path, notice: "Subject was successfully archived."
+    else
+      redirect_to subjects_path, alert: "Could not archive subject."
+    end
+  end
+
   private
+
+  def set_subject
+    @subject = Subject.find(params[:id])
+  end
 
   def subject_params
     params.require(:subject).permit(:name, :code, :description)

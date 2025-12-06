@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   delete "/logout", to: "logins#delete", as: :logout
 
   # Subjects
-  resources :subjects, only: [ :new, :create ]
+resources :subjects, only: [:index, :new, :create, :destroy]
 
   # Tutors
   resources :tutors, only: [ :index, :show ]
