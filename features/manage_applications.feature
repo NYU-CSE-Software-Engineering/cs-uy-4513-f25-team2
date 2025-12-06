@@ -1,4 +1,3 @@
-@wip
 Feature: Admin approves or rejects tutor applications
     As an admin
     I want to approve or reject a submitted tutor application
@@ -19,9 +18,15 @@ Feature: Admin approves or rejects tutor applications
 
     @visit
     Scenario: Visit the manage applications page
+        Given the following tutor applications exist:
+            | learner    | reason                                                |
+            | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
+            | John Smith | I really enjoy tutoring!                              |
         When I click the "Manage Applications" link
         Then I should see the manage applications page
-        
+        And I should see a tutor application for "Jane Doe"
+        And I should see a tutor application for "John Smith"
+     
     @happy_approve
     Scenario: Approve a tutor application
         Given the following tutor applications exist:
@@ -30,7 +35,7 @@ Feature: Admin approves or rejects tutor applications
             | John Smith | I really enjoy tutoring!                              |
         And I visit the manage applications page
         When I press the "Approve" button for "Jane Doe"
-        Then the application status for "Jane Doe" should be "Approved"
+        Then the application status for "Jane Doe" should be "approved"
         And "Jane Doe" should be a tutor
         And I should see "Application approved"
 
@@ -44,11 +49,11 @@ Feature: Admin approves or rejects tutor applications
         When I press the "Reject" button for "Jane Doe"
         Then the application for "Jane Doe" should be deleted
         And "Jane Doe" should not be a tutor
-        And I should see "Application rejected."
+        And I should see "Application rejected"
         And I should not see a tutor application for "Jane Doe"
 
     @no_applications
     Scenario: No pending applications
         Given I visit the manage applications page
-        Then I should see "There are no pending applications to review."
+        Then I should see "There are no pending applications to review"
         Then I should not see any tutor applications

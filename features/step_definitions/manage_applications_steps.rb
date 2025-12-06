@@ -5,19 +5,13 @@ Given ('the following tutor applications exist:') do |table|
 
     TutorApplication.find_or_create_by!(
       learner: learner,
-      reason: row['reason']
-    ) do |ta|
-      ta.status = 'Pending'
-    end
+      reason: row['reason'],
+      status: "pending")
   end
 end
 
-Given('I am on the home page') do
-  visit pending_tutor_applications_path
-end
-
 Given("I visit the manage applications page") do
-  visit admin_tutor_applications_path
+  visit admin_tutor_applications_pending_path
 end
 
 When('I press the {string} button for {string}') do |button_text, learner_name|
@@ -52,18 +46,19 @@ Then(/"([^"]*)" should (not )?be a tutor/) do |learner_name, not_be|
   learner_first, learner_last = learner_name.split(' ', 2)
   learner = Learner.find_by!(first_name: learner_first, last_name: learner_last)
   if not_be
-    expect(learner.tutor).to be_nil
+    expect(Tutor.exists?(learner: learner)).to be_falsey
   else
-    expect(learner.tutor).to be_present
+    expect(Tutor.exists?(learner: learner)).to be_truthy
   end
 end
 
 Then(/I should (not )?see a tutor application for "([^"]*)"/) do |not_see, learner_name|
   learner_first, learner_last = learner_name.split(' ', 2)
   learner = Learner.find_by!(first_name: learner_first, last_name: learner_last)
-  application = TutorApplication.find_by!(learner: learner)
+  application = TutorApplication.find_by(learner: learner) # <- use find_by, not find_by!
+
   if not_see
-    expect(page).not_to have_css("#application_container_#{application.id}")
+    expect(application).to be_nil
   else
     expect(page).to have_css("#application_container_#{application.id}")
   end
