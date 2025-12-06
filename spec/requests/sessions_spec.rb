@@ -536,4 +536,34 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
+
+    describe "GET /sessions/new" do
+    let(:tutor)   { make_tutor(first: "Test", last: "Tutor") }
+    let(:learner) { tutor.learner }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "does not show archived subjects in the subject dropdown" do
+      active_subject   = make_subject("Mathematics", "MTH101")
+      archived_subject = Subject.create!(
+        name: "Physics",
+        code: "PHY101",
+        archived: true
+      )
+
+      get new_session_path
+
+      expect(response).to have_http_status(:ok)
+      html = response.body
+
+      # The form's select uses subject names as options
+      expect(html).to include("Mathematics")
+      expect(html).not_to include("Physics")
+    end
+  end
+
+
 end
