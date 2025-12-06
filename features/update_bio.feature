@@ -9,7 +9,7 @@ Feature: Tutor updates their bio
 
     @happy
     Scenario: Update bio with new information
-        When I click "Update my Profile"
+        When I click on "Update my Profile"
         And I change the bio to "Hi! This is my new bio!"
         And I click the "Update" button
         Then I should see "Changes saved"
@@ -18,13 +18,13 @@ Feature: Tutor updates their bio
 
     @unchanged
     Scenario: Update bio with no changes
-        When I click "Update my Profile"
+        When I click on "Update my Profile"
         And I click the "Update" button
         Then I should see "No changes made"
 
     @empty
     Scenario: Update to empty bio
-        When I click "Update my Profile"
+        When I click on "Update my Profile"
         And I change the bio to ""
         And I click the "Update" button
         Then I should see "Changes saved"
@@ -33,7 +33,7 @@ Feature: Tutor updates their bio
 
     @char_limit
     Scenario: Bio exceeds character limit
-        When I click "Update my Profile"
+        When I click on "Update my Profile"
         And I change the bio to a string with 501 characters
         And I click the "Update" button
         Then I should see "Character limit exceeded (500)"
