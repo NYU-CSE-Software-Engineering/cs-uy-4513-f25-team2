@@ -49,9 +49,7 @@ RSpec.describe "Admin::TutorApplications", type: :request do
 
     context "when valid parameters are passed" do
       it "approves the application and creates a Tutor record succesfully" do
-        expect {
-          post "/admin/tutor_applications/#{application.id}/approve"
-        }.to change { Tutor.count }.by(1)
+        expect { post "/admin/tutor_applications/#{application.id}/approve" }.to change { Tutor.count }.by(1)
 
         application.reload
         expect(application.status).to eq("approved")
@@ -59,6 +57,18 @@ RSpec.describe "Admin::TutorApplications", type: :request do
         follow_redirect! if response.redirect?
         expect(response.body).not_to include("application_container_#{application.id}")
         expect(response.body).to include("Application approved successfully")
+      end
+    end
+
+    context "when invalid parameters are passed" do
+      it "does not create a Tutor and shows an alert" do
+        fake_id = application.id + 999
+
+        expect { post "/admin/tutor_applications/#{fake_id}/approve" }.not_to change { Tutor.count }
+
+        expect(response).to have_http_status(:success).or have_http_status(:redirect)
+        follow_redirect! if response.redirect?
+        expect(response.body).to include("Invalid Learner was passed")
       end
     end
   end
