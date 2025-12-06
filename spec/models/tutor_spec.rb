@@ -52,6 +52,28 @@ RSpec.describe Tutor, type: :model do
             expect(t.errors[:rating_count]).to include("must be greater than or equal to 0")
         end
 
+        context 'bio validations' do
+            it 'allows bio to be nil' do
+                l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+                t = Tutor.new(learner: l, bio: nil)
+                expect(t).to be_valid
+            end
+
+            it 'allows bio to be empty' do
+                l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+                t = Tutor.new(learner: l, bio: '')
+                expect(t).to be_valid
+            end
+
+            it 'requires bio to be less than 500 characters' do
+                l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')
+                new_bio = 'a' * 501
+                t = Tutor.new(learner: l, bio: new_bio)
+                expect(t).not_to be_valid
+                expect(t.errors[:bio]).to include("character limit exceeded (500)")
+            end
+        end
+
         context 'associations' do
             it 'can have many teaches' do
                 l = Learner.create!(email: 'jane_doe@example.com', password: 'password123')

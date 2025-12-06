@@ -3,7 +3,7 @@ When('I change the bio to {string}') do |string|
 end
 
 When('I change the bio to a string with {int} characters') do |int|
-    new_bio = 'a'*int
+    new_bio = 'a' * int
     fill_in 'bio', with: new_bio
 end
 
