@@ -1,3 +1,7 @@
+if ENV["COVERAGE"]
+  require "simplecov"
+end
+
 require "rails-controller-testing"
 Rails::Controller::Testing.install
 
