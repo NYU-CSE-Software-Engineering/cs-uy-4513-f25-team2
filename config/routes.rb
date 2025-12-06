@@ -62,8 +62,12 @@ Rails.application.routes.draw do
   # Tutor Applications
   resources :tutor_applications, only: [ :new, :create ]
 
-  # Tutor managing Applications
-  namespace :admin do
-    resources :tutor_applications, only: [ :new ]
+# Tutor managing Applications
+namespace :admin do
+  resources :tutor_applications, only: [ :new ] do
+    member do
+      post :approve
+    end
   end
+end
 end
