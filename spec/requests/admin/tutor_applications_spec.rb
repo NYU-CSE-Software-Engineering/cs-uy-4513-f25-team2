@@ -66,9 +66,28 @@ RSpec.describe "Admin::TutorApplications", type: :request do
 
         expect { post "/admin/tutor_applications/#{fake_id}/approve" }.not_to change { Tutor.count }
 
+        application.reload
+        expect(application.status).to eq("pending")
+
         expect(response).to have_http_status(:success).or have_http_status(:redirect)
         follow_redirect! if response.redirect?
         expect(response.body).to include("Invalid Learner was passed")
+      end
+    end
+
+    context "when the learner is already a tutor" do
+      before do
+        Tutor.create!(learner: learner)
+      end
+      it "does not create a Tutor and shows an alert" do
+        expect { post "/admin/tutor_applications/#{application.id}/approve" }.not_to change { Tutor.count }
+
+        application.reload
+        expect(application.status).to eq("pending")
+
+        expect(response).to have_http_status(:success).or have_http_status(:redirect)
+        follow_redirect! if response.redirect?
+        expect(response.body).to include("Learner is already Tutor")
       end
     end
   end
