@@ -112,5 +112,19 @@ RSpec.describe "Admin::TutorApplications", type: :request do
         expect(response.body).to include("Application rejected")
       end
     end
+
+    context "when invalid parameters are passed" do
+      it "does not delete any application and shows an alert" do
+        fake_id = application.id + 999
+
+        expect { post "/admin/tutor_applications/#{fake_id}/reject" }.not_to change { TutorApplication.count }
+        expect(Tutor.count).to eq(0)
+
+        expect(response).to have_http_status(:success).or have_http_status(:redirect)
+        follow_redirect! if response.redirect?
+
+        expect(response.body).to include("Invalid Learner was passed")
+      end
+    end
   end
 end
