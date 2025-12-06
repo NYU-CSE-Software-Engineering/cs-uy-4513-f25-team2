@@ -13,8 +13,15 @@ class Admin::TutorApplicationsController < ApplicationController
       return
     end
 
+    if Tutor.exists?(learner: application.learner)
+      redirect_to admin_tutor_applications_pending_path, alert: "Learner is already Tutor"
+      return
+    end
+
     Tutor.create!(learner: application.learner)
     application.update!(status: "approved")
     redirect_to admin_tutor_applications_pending_path, notice: "Application approved successfully"
   end
+
+  
 end
