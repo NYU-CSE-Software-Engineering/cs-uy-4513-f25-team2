@@ -26,6 +26,11 @@ class Admin::TutorApplicationsController < ApplicationController
   def reject
     application = TutorApplication.find_by(id: params[:id])
 
+    if application.nil?
+      redirect_to admin_tutor_applications_pending_path, alert: "Invalid Learner was passed"
+      return
+    end
+
     application.destroy
     redirect_to admin_tutor_applications_pending_path, alert: "Application rejected"
   end
