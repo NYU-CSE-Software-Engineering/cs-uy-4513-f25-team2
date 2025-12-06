@@ -2,11 +2,13 @@
 
 <h1><%= full_name.presence || 'Tutor' %></h1>
 
-<% if @tutor.bio.present? || @tutor.rating_avg.present? || @tutor.rating_count.present? %>
+<% if @tutor.bio.present? || @tutor.bio.blank? || @tutor.rating_avg.present? || @tutor.rating_count.present? %>
   <h2>Details</h2>
   <ul class="tutor-details">
     <% if @tutor.bio.present? %>
       <li><strong>Bio:</strong> <%= @tutor.bio %></li>
+    <% else %>
+      <li>No bio has been provided.</li>
     <% end %>
     <% if @tutor.rating_avg.present? %>
       <li><strong>Rating:</strong> <%= @tutor.rating_avg %></li>

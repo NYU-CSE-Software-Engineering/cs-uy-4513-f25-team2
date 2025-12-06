@@ -139,7 +139,7 @@ RSpec.describe "Tutors", type: :request do
     context "when updating bio with new information" do
       it "successfully updates the bio" do
         patch tutor_path(tutor), params: { tutor: { bio: "Hi! This is my new bio!" } }
-        expect(response).to redirect_to(tutor_path(tutor))
+        expect(response).to redirect_to(edit_tutor_path(tutor))
         expect(flash[:notice]).to eq("Changes saved")
 
         tutor.reload
@@ -161,7 +161,7 @@ RSpec.describe "Tutors", type: :request do
     context "when updating bio to be empty" do
       it "successfully updates the bio to be empty" do
         patch tutor_path(tutor), params: { tutor: { bio: "" } }
-        expect(response).to redirect_to(tutor_path(tutor))
+        expect(response).to redirect_to(edit_tutor_path(tutor))
         expect(flash[:notice]).to eq("Changes saved")
 
         tutor.reload
@@ -173,7 +173,7 @@ RSpec.describe "Tutors", type: :request do
       it "does not allow bio to exceed 500 characters" do
         new_bio = 'a' * 501
         patch tutor_path(tutor), params: { tutor: { bio: new_bio } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         page_content = CGI.unescapeHTML(response.body)
         expect(page_content).to include("Character limit exceeded (500)")
 

@@ -5,6 +5,7 @@ Feature: Tutor updates their bio
 
     Background:
         Given I am a signed-in tutor
+        And my bio is "Hi, I am a tutor!"
         And I am on the home page
 
     @happy

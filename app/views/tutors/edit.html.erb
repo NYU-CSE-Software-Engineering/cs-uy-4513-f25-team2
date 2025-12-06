@@ -1,0 +1,23 @@
+<h1>Update my Profile</h1>
+
+<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
+<% if flash[:alert] %><p><%= flash[:alert] %></p><% end %>
+
+<% if @tutor && @tutor.errors.any? %>
+  <div id="errors">
+    <ul>
+      <% @tutor.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: @tutor, url: tutor_path(@tutor), method: :patch, local: true do |f| %>
+  <div>
+    <%= f.label :bio, 'bio' %>
+    <%= f.text_area :bio %>
+  </div>
+
+  <%= f.submit 'Update' %>
+<% end %>

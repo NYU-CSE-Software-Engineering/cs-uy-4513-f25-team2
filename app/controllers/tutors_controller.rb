@@ -30,9 +30,9 @@ class TutorsController < ApplicationController
     end
 
     if @tutor.update(tutor_params)
-      redirect_to tutor_path(@tutor), notice: "Changes saved"
+      redirect_to edit_tutor_path(@tutor), notice: "Changes saved"
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
