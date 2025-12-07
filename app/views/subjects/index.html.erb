@@ -1,0 +1,40 @@
+<h1>Manage Subjects</h1>
+
+<% if flash[:notice] %>
+  <p class="notice"><%= flash[:notice] %></p>
+<% end %>
+
+<% if flash[:alert] %>
+  <p class="alert"><%= flash[:alert] %></p>
+<% end %>
+
+<p>
+  <%= link_to "New Subject", new_subject_path %>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Code</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @subjects.each do |subject| %>
+    <tr>
+      <td><%= subject.name %></td>
+      <td><%= subject.code %></td>
+      <td><%= subject.description %></td>
+      <td>
+        <%= button_to "Delete",
+                      subject_path(subject),
+                      method: :delete,
+                      data: { confirm: "Are you sure you want to archive this subject?" },
+                      form: { style: "display:inline" } %>
+      </td>
+    </tr>
+  <% end %>
+</tbody>
+</table>

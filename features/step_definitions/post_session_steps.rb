@@ -62,3 +62,7 @@ Then('I should see the message {string}') do |message|
   expect(page).to have_content(message)
 end
 
+When('I select {string} from the Subject dropdown') do |subject_name|
+  select subject_name, from: 'Subject'
+end
+

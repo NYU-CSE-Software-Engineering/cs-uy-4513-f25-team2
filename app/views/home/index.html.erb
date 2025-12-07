@@ -4,6 +4,7 @@
 <% if current_admin %>
   <p>Signed in as Admin: <%= current_admin.email %></p>
   <p><%= link_to 'Add New Subject', new_subject_path %></p>
+  <p><%= link_to "Manage Subjects", subjects_path %></p>
   <p><%= link_to 'Manage Applications', admin_tutor_applications_pending_path %></p>
 <% elsif current_learner %>
   <p>Signed in as Learner: <%= current_learner.email %></p>

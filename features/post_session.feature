@@ -16,7 +16,7 @@ Feature: Tutor posts a new session
     When I fill in the session start time with "2026-10-15T12:00:00Z"
     And I fill in the session end time with "2026-10-15T12:59:00Z"
     And I fill in "Capacity" with "1"
-    And I fill in "Subject" with "Math"
+    And I select "Math" from the Subject dropdown
     And I press "Create new session"
     Then I am on the session's show page
     And I should see the message "Session successfully created"
@@ -27,7 +27,7 @@ Feature: Tutor posts a new session
     And I am on new session page,
     When I fill in the session start time with "2026-10-15T10:00:00Z"
     And I fill in the session end time with "2026-10-15T10:59:00Z"
-    And I fill in "Subject" with "Math"
+    And I select "Math" from the Subject dropdown
     And I press "Create new session"
     Then I should see an error message saying it is missing information
 
@@ -37,7 +37,7 @@ Feature: Tutor posts a new session
     When I fill in the session start time with "2026-10-15T10:00:00Z"
     And I fill in the session end time with "2026-10-15T10:59:00Z"
     And I fill in "Capacity" with "1"
-    And I fill in "Subject" with "Math"
+    And I select "Math" from the Subject dropdown
     And I press "Create new session"
     And this session overlaps with existing session
 	Then I should see an error message that there is a time conflict
