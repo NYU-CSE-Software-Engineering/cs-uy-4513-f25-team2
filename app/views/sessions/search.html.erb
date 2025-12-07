@@ -5,7 +5,7 @@
     <%= f.label :subject, "Subject" %>
     <%= f.text_field :subject, list: "subjects-list" %>
     <datalist id="subjects-list">
-      <% Subject.all.each do |subject| %>
+      <% Subject.active.each do |subject| %>
         <option value="<%= subject.name %>"><%= subject.name %></option>
       <% end %>
     </datalist>

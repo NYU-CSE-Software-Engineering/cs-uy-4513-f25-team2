@@ -38,24 +38,35 @@ class SessionsController < ApplicationController
 
   def search; end
 
-  def results
-    subject_name = params[:subject]
-    @subject = Subject.where('LOWER(name) = ?', subject_name.to_s.downcase).first
+def results
+  subject_name = params[:subject]
+  @subject = Subject.where('LOWER(name) = ?', subject_name.to_s.downcase).first
 
-    if @subject.nil?
-      @sessions = []
-      return
+  # If no such subject, just return empty list
+  @sessions = TutorSession.none
+  return if @subject.nil?
+
+  # Base scope: subject + "Scheduled" status
+  scope = TutorSession.where(subject_id: @subject.id)
+                      .where(status: ['Scheduled', 'scheduled'])
+
+  # Only apply time filter if BOTH params are present and parsable
+  if params[:start_at].present? && params[:end_at].present?
+    begin
+      @start_time = Time.zone.parse(params[:start_at])
+      @end_time   = Time.zone.parse(params[:end_at])
+
+      if @start_time && @end_time
+        scope = scope.where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
+      end
+    rescue ArgumentError, TypeError
+      # If parsing fails, just skip time filtering and use the base scope
     end
-
-    @start_time = Time.zone.parse(params[:start_at])
-    @end_time   = Time.zone.parse(params[:end_at])
-
-    @sessions = TutorSession
-                  .where(subject_id: @subject.id)
-                  .where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
-                  .where(status: ['Scheduled', 'scheduled'])
-                  .order(:start_at)
   end
+
+  @sessions = scope.order(:start_at)
+end
+
 
   def confirm; end
 

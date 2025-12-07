@@ -45,7 +45,7 @@ end
 When('I click "Delete" for the subject {string}') do |subject_name|
   # Find the table row for the subject and click its "Delete" link
   within(:xpath, "//tr[td[contains(normalize-space(.), '#{subject_name}')]]") do
-    click_link 'Delete'
+    click_button'Delete'
   end
 end
 
