@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 resources :subjects, only: [:index, :new, :create, :destroy]
 
   # Tutors
-  resources :tutors, only: [ :index, :show ]
+  resources :tutors, only: [ :index, :show, :edit, :update ]
 
   # Sessions (tutor sessions for search / booking / attendance)
   resources :sessions, only: [ :new, :create, :show, :update ] do
@@ -28,11 +28,11 @@ resources :subjects, only: [:index, :new, :create, :destroy]
       post :book
     end
 
-    resources :feedbacks, only: [:new, :create]
+    resources :feedbacks, only: [ :new, :create ]
   end
 
   # Learner's booked sessions (upcoming, past, and cancellation)
-  resources :learner_sessions, only: [:index] do
+  resources :learner_sessions, only: [ :index ] do
     collection do
       get :past
     end
@@ -44,16 +44,16 @@ resources :subjects, only: [:index, :new, :create, :destroy]
   end
 
   # Learner feedback on sessions
-  resources :feedbacks, only: [:new, :create]
+  resources :feedbacks, only: [ :new, :create ]
 
   # Tutor feedbacks
   namespace :tutor do
-    resources :feedbacks, only: [:index]
+    resources :feedbacks, only: [ :index ]
   end
 
 
-  # Tutor's booked sessions (upcoming and past)
-  resources :tutor_sessions, only: [:index] do
+  # Tutor's booked sessions (upcoming, past, and edit)
+  resources :tutor_sessions, only: [:index, :edit, :update] do
     collection do
       get :past
     end
@@ -65,4 +65,16 @@ resources :subjects, only: [:index, :new, :create, :destroy]
 
   # Tutor Applications
   resources :tutor_applications, only: [ :new, :create ]
+
+# Tutor managing Applications
+namespace :admin do
+  get "tutor_applications/pending", to: "tutor_applications#pending", as: :tutor_applications_pending
+
+  resources :tutor_applications, only: [] do
+    member do
+      post :approve
+      post :reject
+    end
+  end
+end
 end
