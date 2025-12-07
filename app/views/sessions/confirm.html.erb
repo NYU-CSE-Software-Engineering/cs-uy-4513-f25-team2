@@ -1,18 +1,34 @@
-<h1>Booking</h1>
+<h1 class="display-5 mb-4">Confirm Your Booking</h1>
 
 <% if flash[:alert] %>
-  <div class="alert">
-    <p><%= flash[:alert] %></p>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= flash[:alert] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 <% end %>
 
-<div>
-  <p><strong>Subject:</strong> <%= @tutor_session.subject.name %></p>
-  <p><strong>Tutor:</strong> <%= @tutor_session.tutor.learner.first_name %> <%= @tutor_session.tutor.learner.last_name %></p>
-  <p><strong>Time:</strong> <%= @tutor_session.start_at.strftime('%Y-%m-%d %H:%M') %> - <%= @tutor_session.end_at.strftime('%Y-%m-%d %H:%M') %></p>
-  <p><strong>Capacity:</strong> <%= @tutor_session.capacity %></p>
+<div class="card shadow mb-4">
+  <div class="card-body">
+    <h2 class="card-title h4 mb-3">Session Details</h2>
+    <dl class="row">
+      <dt class="col-sm-3">Subject:</dt>
+      <dd class="col-sm-9"><span class="badge bg-primary"><%= @tutor_session.subject.name %></span></dd>
+
+      <dt class="col-sm-3">Tutor:</dt>
+      <dd class="col-sm-9"><%= @tutor_session.tutor.learner.first_name %> <%= @tutor_session.tutor.learner.last_name %></dd>
+
+      <dt class="col-sm-3">Time:</dt>
+      <dd class="col-sm-9">
+        <%= @tutor_session.start_at.strftime('%B %d, %Y at %I:%M %p') %> -
+        <%= @tutor_session.end_at.strftime('%I:%M %p') %>
+      </dd>
+
+      <dt class="col-sm-3">Capacity:</dt>
+      <dd class="col-sm-9"><%= @tutor_session.capacity %> seats</dd>
+    </dl>
+  </div>
 </div>
 
 <%= form_with url: book_session_path(@tutor_session), method: :post, local: true do |f| %>
-  <%= f.submit "Confirm Booking" %>
+  <%= f.submit "Confirm Booking", class: "btn btn-success btn-lg" %>
 <% end %>

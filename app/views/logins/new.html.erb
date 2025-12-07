@@ -1,20 +1,27 @@
-<h1>Log in</h1>
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow">
+      <div class="card-body p-4">
+        <h1 class="card-title text-center mb-4">Log in</h1>
 
-<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
-<% if flash[:alert]  %><p><%= flash[:alert]  %></p><% end %>
+        <%= form_with url: login_path, local: true, class: "needs-validation" do %>
+          <div class="mb-3">
+            <%= label_tag :email, 'Email', class: "form-label" %>
+            <%= text_field_tag :email, nil, class: "form-control", placeholder: "Enter your email", required: true %>
+          </div>
 
-<%= form_with url: login_path, local: true do %>
-  <div>
-    <%= label_tag :email, 'Email' %>
-    <%= text_field_tag :email %>
+          <div class="mb-3">
+            <%= label_tag :password, 'Password', class: "form-label" %>
+            <%= password_field_tag :password, nil, class: "form-control", placeholder: "Enter your password", required: true %>
+          </div>
+
+          <div class="d-grid">
+            <%= submit_tag 'Log in', class: "btn btn-primary btn-lg" %>
+          </div>
+        <% end %>
+
+        <p class="text-center mt-3">New here? <%= link_to 'Create an account', new_learner_path %></p>
+      </div>
+    </div>
   </div>
-
-  <div>
-    <%= label_tag :password, 'Password' %>
-    <%= password_field_tag :password %>
-  </div>
-
-  <%= submit_tag 'Log in' %>
-<% end %>
-
-<p>New here? <%= link_to 'Create an account', new_learner_path %></p>
+</div>

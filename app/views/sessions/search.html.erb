@@ -1,25 +1,31 @@
-<h1>Find a Session</h1>
+<h1 class="display-5 mb-4">Find a Session</h1>
 
-<%= form_with url: results_sessions_path, method: :get, local: true do |f| %>
-  <div>
-    <%= f.label :subject, "Subject" %>
-    <%= f.text_field :subject, list: "subjects-list" %>
-    <datalist id="subjects-list">
-      <% Subject.active.each do |subject| %>
-        <option value="<%= subject.name %>"><%= subject.name %></option>
-      <% end %>
-    </datalist>
+<div class="card shadow">
+  <div class="card-body p-4">
+    <%= form_with url: results_sessions_path, method: :get, local: true, class: "needs-validation" do |f| %>
+      <div class="mb-3">
+        <%= f.label :subject, "Subject", class: "form-label" %>
+        <%= f.text_field :subject, list: "subjects-list", class: "form-control", placeholder: "e.g., Calculus", required: true %>
+        <datalist id="subjects-list">
+          <% Subject.active.each do |subject| %>
+            <option value="<%= subject.name %>"><%= subject.name %></option>
+          <% end %>
+        </datalist>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :start_at, "Start Time", class: "form-label" %>
+        <%= f.datetime_local_field :start_at, class: "form-control", required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :end_at, "End Time", class: "form-label" %>
+        <%= f.datetime_local_field :end_at, class: "form-control", required: true %>
+      </div>
+
+      <div class="d-grid">
+        <%= f.submit "Search", class: "btn btn-primary btn-lg" %>
+      </div>
+    <% end %>
   </div>
-
-  <div>
-    <%= f.label :start_at, "Start Time" %>
-    <%= f.datetime_local_field :start_at %>
-  </div>
-
-  <div>
-    <%= f.label :end_at, "End Time" %>
-    <%= f.datetime_local_field :end_at %>
-  </div>
-
-  <%= f.submit "Search" %>
-<% end %>
+</div>

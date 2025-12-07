@@ -1,20 +1,42 @@
-<h1>Search Results</h1>
+<h1 class="display-5 mb-4">Search Results</h1>
 
 <% if @sessions.any? %>
-  <% @sessions.each do |session| %>
-    <div>
-      <p><strong>Subject:</strong> <%= session.subject.name %></p>
-      <p><strong>Tutor:</strong> <%= session.tutor.learner.first_name %> <%= session.tutor.learner.last_name %></p>
-      <p><strong>Time:</strong> <%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %></p>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <% @sessions.each do |session| %>
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">
+              <span class="badge bg-primary"><%= session.subject.name %></span>
+            </h5>
+            <p class="card-text">
+              <strong>Tutor:</strong> <%= session.tutor.learner.first_name %> <%= session.tutor.learner.last_name %>
+            </p>
+            <p class="card-text">
+              <strong>Time:</strong><br>
+              <small class="text-muted">
+                <%= session.start_at.strftime('%B %d, %Y at %I:%M %p') %> –
+                <%= session.end_at.strftime('%I:%M %p') %>
+              </small>
+            </p>
 
-      <% start_str = session.start_at.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>
-      <% end_str = session.end_at.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>
+            <% start_str = session.start_at.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>
+            <% end_str = session.end_at.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>
 
-      <%= button_to "Select #{session.tutor.learner.first_name} #{session.tutor.learner.last_name} #{start_str}-#{end_str}", 
-                    confirm_session_path(session), 
-                    method: :get %>
-    </div>
-  <% end %>
+            <div class="mt-auto pt-3">
+              <%= button_to "Select #{session.tutor.learner.first_name} #{session.tutor.learner.last_name} #{start_str}-#{end_str}",
+                            confirm_session_path(session),
+                            method: :get,
+                            class: "btn btn-success btn-sm" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 <% else %>
-  <p>No sessions found</p>
+  <div class="empty-state">
+    <p class="lead">No sessions found matching your criteria.</p>
+    <p>Try adjusting your search filters.</p>
+  </div>
 <% end %>

@@ -1,46 +1,49 @@
-<h1>My Upcoming Sessions</h1>
-
-<% if notice.present? %>
-  <p class="notice"><%= notice %></p>
-<% end %>
-
-<% if alert.present? %>
-  <p class="alert"><%= alert %></p>
-<% end %>
+<h1 class="display-5 mb-4">My Upcoming Sessions</h1>
 
 <% if @upcoming_bookings.any? %>
-  <ul class="sessions-list upcoming-sessions">
+  <ul class="sessions-list upcoming-sessions list-unstyled">
     <% @upcoming_bookings.each do |booking| %>
       <% session = booking.tutor_session %>
-      <li class="session">
-        <p><strong>Subject:</strong> <%= session.subject.name %></p>
-        <p>
-          <strong>Tutor:</strong>
-          <%= session.tutor.learner.first_name %>
-          <%= session.tutor.learner.last_name %>
-        </p>
-        <p>
-          <strong>Time:</strong>
-          <%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %>
-        </p>
-
-        <% if session.meeting_link.present? %>
-          <p>
-            <strong>Meeting link:</strong>
-            <%= link_to 'Join Session', session.meeting_link, target: '_blank' %>
+      <li class="session card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">
+            <span class="badge bg-primary mb-2"><%= session.subject.name %></span>
+          </h5>
+          <p class="card-text">
+            <strong>Tutor:</strong>
+            <%= session.tutor.learner.first_name %>
+            <%= session.tutor.learner.last_name %>
           </p>
-        <% end %>
+          <p class="card-text">
+            <strong>Time:</strong>
+            <span class="visually-hidden"><%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %></span>
+            <small class="text-muted d-block">
+              <%= session.start_at.strftime('%B %d, %Y at %I:%M %p') %> – 
+              <%= session.end_at.strftime('%I:%M %p') %>
+            </small>
+          </p>
 
-        <p>
-          <%= link_to 'Cancel', cancel_learner_session_path(booking) %>
-        </p>
+          <% if session.meeting_link.present? %>
+            <p class="card-text">
+              <strong>Meeting link:</strong>
+              <%= link_to 'Join Session', session.meeting_link, target: '_blank', class: "btn btn-success btn-sm" %>
+            </p>
+          <% end %>
+
+          <p class="card-text">
+            <%= link_to 'Cancel', cancel_learner_session_path(booking), class: "btn btn-outline-danger btn-sm" %>
+          </p>
+        </div>
       </li>
     <% end %>
   </ul>
 <% else %>
-  <p>You have no upcoming sessions.</p>
+  <div class="empty-state">
+    <p class="lead">You have no upcoming sessions.</p>
+    <%= link_to 'Find a Session', search_sessions_path, class: "btn btn-primary" %>
+  </div>
 <% end %>
 
-<p>
-  <%= link_to 'View past sessions', past_learner_sessions_path %>
+<p class="mt-4">
+  <%= link_to 'View past sessions', past_learner_sessions_path, class: "btn btn-outline-secondary" %>
 </p>

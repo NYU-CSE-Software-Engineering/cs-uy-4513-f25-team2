@@ -1,46 +1,60 @@
-<h1>My Past Sessions</h1>
+<h1 class="display-5 mb-4">My Past Sessions</h1>
 
 <% if @past_bookings.any? %>
-  <ul class="sessions-list past-sessions">
+  <div class="row g-4 mb-4">
     <% @past_bookings.each do |booking| %>
       <% session = booking.tutor_session %>
-      <li class="session">
-        <p><strong>Subject:</strong> <%= session.subject.name %></p>
-        <p>
-          <strong>Tutor:</strong>
-          <%= session.tutor.learner.first_name %>
-          <%= session.tutor.learner.last_name %>
-        </p>
-        <p>
-          <strong>Time:</strong>
-          <%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %>
-        </p>
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">
+              <span class="badge bg-primary mb-2"><%= session.subject.name %></span>
+            </h5>
+            <p class="card-text">
+              <strong>Tutor:</strong>
+              <%= session.tutor.learner.first_name %>
+              <%= session.tutor.learner.last_name %>
+            </p>
+            <p class="card-text">
+              <strong>Time:</strong><br>
+              <small class="text-muted">
+                <%= session.start_at.strftime('%B %d, %Y at %I:%M %p') %> –
+                <%= session.end_at.strftime('%I:%M %p') %>
+              </small>
+            </p>
 
-        <p>
-          <strong>Attendance:</strong>
-          <% if booking.attended == true %>
-            Present
-          <% elsif booking.attended == false %>
-            Absent
-          <% else %>
-            Not recorded
-          <% end %>
-        </p>
+            <p class="card-text">
+              <strong>Attendance:</strong>
+              <% if booking.attended == true %>
+                <span class="badge bg-success ms-2">Present</span>
+              <% elsif booking.attended == false %>
+                <span class="badge bg-danger ms-2">Absent</span>
+              <% else %>
+                <span class="badge bg-secondary ms-2">Not recorded</span>
+              <% end %>
+            </p>
 
-        <% if booking.attended == true %>
-          <% if booking.respond_to?(:feedback_submitted) && booking.feedback_submitted %>
-            <p><em>Feedback submitted</em></p>
-          <% else %>
-            <p><%= link_to "Leave Feedback", new_session_feedback_path(session) %></p>
-          <% end %>
-        <% end %>
-      </li>
+            <% if booking.attended == true %>
+              <% if booking.respond_to?(:feedback_submitted) && booking.feedback_submitted %>
+                <p class="card-text text-success"><em>Feedback submitted</em></p>
+              <% else %>
+                <div class="mt-auto pt-3">
+                  <%= link_to "Leave Feedback", new_session_feedback_path(session), class: "btn btn-warning btn-sm" %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </ul>
+  </div>
 <% else %>
-  <p>You have no past sessions.</p>
+  <div class="empty-state">
+    <p class="lead">You have no past sessions.</p>
+    <p>Book an upcoming session to get started!</p>
+  </div>
 <% end %>
 
-<p>
-  <%= link_to 'Back to upcoming sessions', learner_sessions_path %>
-</p>
+<div class="mt-4">
+  <%= link_to 'Back to upcoming sessions', learner_sessions_path, class: "btn btn-outline-secondary" %>
+</div>

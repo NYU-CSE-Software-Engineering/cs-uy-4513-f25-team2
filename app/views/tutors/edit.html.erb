@@ -1,23 +1,31 @@
-<h1>Update my Profile</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h1 class="display-5 mb-4">Update my Profile</h1>
 
-<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
-<% if flash[:alert] %><p><%= flash[:alert] %></p><% end %>
+    <div class="card shadow">
+      <div class="card-body p-4">
+        <% if @tutor && @tutor.errors.any? %>
+          <div class="alert alert-danger" role="alert">
+            <strong>Please fix the following errors:</strong>
+            <ul class="mb-0 mt-2">
+              <% @tutor.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
 
-<% if @tutor && @tutor.errors.any? %>
-  <div id="errors">
-    <ul>
-      <% @tutor.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-    </ul>
+        <%= form_with model: @tutor, url: tutor_path(@tutor), method: :patch, local: true, class: "needs-validation" do |f| %>
+          <div class="mb-3">
+            <%= f.label :bio, 'Bio', class: "form-label" %>
+            <%= f.text_area :bio, id: 'bio', class: "form-control", rows: 5, placeholder: "Enter your bio here..." %>
+          </div>
+
+          <div class="d-grid">
+            <%= f.submit 'Update', class: "btn btn-primary btn-lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
-<% end %>
-
-<%= form_with model: @tutor, url: tutor_path(@tutor), method: :patch, local: true do |f| %>
-  <div>
-    <%= f.label :bio, 'bio' %>
-    <%= f.text_area :bio %>
-  </div>
-
-  <%= f.submit 'Update' %>
-<% end %>
+</div>
