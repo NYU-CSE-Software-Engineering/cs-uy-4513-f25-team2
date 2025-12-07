@@ -11,3 +11,4 @@
 - [Learner Views Tutors](./learner_views_tutors.md)
 - [Manage Applications](./manage_applications.md)
 - [Update Bio](./update_bio.md)
+- [Admin Archives Subjects](./admin_archives_subjects.md)
