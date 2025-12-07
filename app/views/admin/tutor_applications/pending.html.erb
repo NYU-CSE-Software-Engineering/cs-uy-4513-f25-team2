@@ -1,0 +1,29 @@
+<% if notice %>
+  <p class="notice"><%= notice %></p>
+<% end %>
+
+<% if alert %>
+  <p class="alert"><%= alert %></p>
+<% end %>
+
+<h1>Manage Tutor Applications</h1>
+
+<% if @tutor_applications.any? %>
+  <% @tutor_applications.each do |application| %>
+    <div id="application_container_<%= application.id %>">
+
+      <p><strong>Learner:</strong> <%= application.learner.first_name %> <%= application.learner.last_name %></p>
+      <p><strong>Status:</strong> <%= application.status %></p>
+
+      <%= button_to "Approve", approve_admin_tutor_application_path(application), method: :post %>
+      <%= button_to "Reject", reject_admin_tutor_application_path(application), method: :post %>
+
+    </div>
+
+    <hr>
+  <% end %>
+<% else %>
+  <p>There are no pending applications to review</p>
+<% end %>
+
+<%= link_to "Back to Home", root_path %>

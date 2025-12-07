@@ -28,11 +28,11 @@ Rails.application.routes.draw do
       post :book
     end
 
-    resources :feedbacks, only: [:new, :create]
+    resources :feedbacks, only: [ :new, :create ]
   end
 
   # Learner's booked sessions (upcoming, past, and cancellation)
-  resources :learner_sessions, only: [:index] do
+  resources :learner_sessions, only: [ :index ] do
     collection do
       get :past
     end
@@ -44,11 +44,11 @@ Rails.application.routes.draw do
   end
 
   # Learner feedback on sessions
-  resources :feedbacks, only: [:new, :create]
+  resources :feedbacks, only: [ :new, :create ]
 
   # Tutor feedbacks
   namespace :tutor do
-    resources :feedbacks, only: [:index]
+    resources :feedbacks, only: [ :index ]
   end
 
 
@@ -65,4 +65,16 @@ Rails.application.routes.draw do
 
   # Tutor Applications
   resources :tutor_applications, only: [ :new, :create ]
+
+# Tutor managing Applications
+namespace :admin do
+  get "tutor_applications/pending", to: "tutor_applications#pending", as: :tutor_applications_pending
+
+  resources :tutor_applications, only: [] do
+    member do
+      post :approve
+      post :reject
+    end
+  end
+end
 end
