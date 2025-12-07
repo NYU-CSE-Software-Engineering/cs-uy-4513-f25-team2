@@ -1,40 +1,70 @@
-<h1>Session Details</h1>
+<h1 class="display-5 mb-4">Session Details</h1>
 
-<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
-<% if flash[:alert] %><p><%= flash[:alert] %></p><% end %>
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="card-title h4 mb-3">Session Information</h2>
+        <dl class="row">
+          <dt class="col-sm-3">Subject:</dt>
+          <dd class="col-sm-9">
+            <span class="badge bg-primary"><%= @tutor_session.subject.name %></span>
+          </dd>
+          
+          <dt class="col-sm-3">Start:</dt>
+          <dd class="col-sm-9"><%= @tutor_session.start_at.strftime('%B %d, %Y at %I:%M %p') %></dd>
+          
+          <dt class="col-sm-3">End:</dt>
+          <dd class="col-sm-9"><%= @tutor_session.end_at.strftime('%B %d, %Y at %I:%M %p') %></dd>
+          
+          <dt class="col-sm-3">Status:</dt>
+          <dd class="col-sm-9">
+            <span class="badge bg-<%= @tutor_session.status == 'active' ? 'success' : 'secondary' %>">
+              <%= @tutor_session.status %>
+            </span>
+          </dd>
+          
+          <% if @tutor_session.meeting_link.present? %>
+            <dt class="col-sm-3">Meeting link:</dt>
+            <dd class="col-sm-9">
+              <%= link_to 'Join Session', @tutor_session.meeting_link, target: '_blank', class: "btn btn-success btn-sm" %>
+            </dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
 
-<h2>Session Information</h2>
-<ul>
-  <li><strong>Subject:</strong> <%= @tutor_session.subject.name %></li>
-  <li><strong>Start:</strong> <%= @tutor_session.start_at %></li>
-  <li><strong>End:</strong> <%= @tutor_session.end_at %></li>
-  <li><strong>Status:</strong> <%= @tutor_session.status %></li>
-  <% if @tutor_session.meeting_link.present? %>
-    <li><strong>Meeting link:</strong> <%= link_to 'Join Session', @tutor_session.meeting_link, target: '_blank' %></li>
-  <% end %>
-</ul>
-
-<% if @tutor_session.start_at <= Time.current %>
-  <h2>Mark Attendance</h2>
-  <% learners = @tutor_session.learners %>
-  <% learners.each do |learner| %>
-    <%= form_with url: session_path(@tutor_session), method: :patch, local: true do %>
-      <div>
-        <p><strong>Learner:</strong> <%= learner.first_name+' '+learner.last_name %></p>
-        <%= hidden_field_tag 'session_attendee[learner_id]', learner.id %>
-        
-        <div>
-          <%= radio_button_tag 'session_attendee[attended]', 'true', false, id: "attended_true_#{learner.id}" %>
-          <%= label_tag "attended_true_#{learner.id}", 'Present' %>
+    <% if @tutor_session.start_at <= Time.current %>
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title h4 mb-3">Mark Attendance</h2>
+          <% learners = @tutor_session.learners %>
+          <% learners.each do |learner| %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <%= form_with url: session_path(@tutor_session), method: :patch, local: true do %>
+                  <p class="card-text"><strong>Learner:</strong> <%= learner.first_name + ' ' + learner.last_name %></p>
+                  <%= hidden_field_tag 'session_attendee[learner_id]', learner.id %>
+                  
+                  <div class="mb-3">
+                    <div class="form-check">
+                      <%= radio_button_tag 'session_attendee[attended]', 'true', false, id: "attended_true_#{learner.id}", class: "form-check-input" %>
+                      <%= label_tag "attended_true_#{learner.id}", 'Present', class: "form-check-label" %>
+                    </div>
+                    
+                    <div class="form-check">
+                      <%= radio_button_tag 'session_attendee[attended]', 'false', false, id: "attended_false_#{learner.id}", class: "form-check-input" %>
+                      <%= label_tag "attended_false_#{learner.id}", 'Absent', class: "form-check-label" %>
+                    </div>
+                  </div>
+                  
+                  <%= submit_tag 'Save', class: "btn btn-primary btn-sm" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
         </div>
-        
-        <div>
-          <%= radio_button_tag 'session_attendee[attended]', 'false', false, id: "attended_false_#{learner.id}" %>
-          <%= label_tag "attended_false_#{learner.id}", 'Absent' %>
-        </div>
-        
-        <%= submit_tag 'Save' %>
       </div>
     <% end %>
-  <% end %>
-<% end %>
+  </div>
+</div>

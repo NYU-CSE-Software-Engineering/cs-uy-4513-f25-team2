@@ -1,26 +1,48 @@
-<h1>Cancel Session</h1>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h1 class="display-5 mb-4">Cancel Session</h1>
 
-<p>Are you sure you want to cancel this session?</p>
+    <div class="card shadow border-warning">
+      <div class="card-body p-4">
+        <div class="alert alert-warning" role="alert">
+          <strong>Are you sure you want to cancel this session?</strong>
+        </div>
 
-<ul>
-  <li><strong>Subject:</strong> <%= @tutor_session.subject.name %></li>
-  <li>
-    <strong>Tutor:</strong>
-    <%= @tutor_session.tutor.learner.first_name %>
-    <%= @tutor_session.tutor.learner.last_name %>
-  </li>
-  <li>
-    <strong>Time:</strong>
-    <%= @tutor_session.start_at.utc.iso8601 %> – <%= @tutor_session.end_at.utc.iso8601 %>
-  </li>
-</ul>
+        <div class="card mb-3">
+          <div class="card-body">
+            <ul class="list-unstyled mb-0">
+              <li><strong>Subject:</strong> <span class="badge bg-primary"><%= @tutor_session.subject.name %></span></li>
+              <li class="mt-2">
+                <strong>Tutor:</strong>
+                <%= @tutor_session.tutor.learner.first_name %>
+                <%= @tutor_session.tutor.learner.last_name %>
+              </li>
+              <li class="mt-2">
+                <strong>Time:</strong>
+                <span class="visually-hidden"><%= @tutor_session.start_at.utc.iso8601 %> – <%= @tutor_session.end_at.utc.iso8601 %></span>
+                <small class="text-muted d-block">
+                  <%= @tutor_session.start_at.strftime('%B %d, %Y at %I:%M %p') %> – 
+                  <%= @tutor_session.end_at.strftime('%I:%M %p') %>
+                </small>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-<p>Please choose:</p>
+        <p>Please choose:</p>
 
-<%= button_to 'Yes',
-              confirm_cancel_learner_session_path(@booking, decision: 'yes'),
-              method: :patch %>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <%= button_to 'Yes',
+                        confirm_cancel_learner_session_path(@booking, decision: 'yes'),
+                        method: :patch,
+                        class: "btn btn-danger" %>
 
-<%= button_to 'No',
-              confirm_cancel_learner_session_path(@booking, decision: 'no'),
-              method: :patch %>
+          <%= button_to 'No',
+                        confirm_cancel_learner_session_path(@booking, decision: 'no'),
+                        method: :patch,
+                        class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,25 +1,58 @@
-<h1>All Tutors</h1>
+<h1 class="display-5 mb-4">All Tutors</h1>
 
 <% if params.key?(:subject) && params[:subject].blank? %>
-  <div class="alert" role="alert">Please select a subject</div>
-<% elsif flash[:alert].present? %>
-  <div class="alert" role="alert"><%= flash[:alert] %></div>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    Please select a subject
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 <% end %>
 
-<%= form_with url: tutors_path, method: :get, local: true do %>
-  <label for="subject">Subject</label>
-  <%= select_tag :subject,
-        options_for_select([''] + Subject.order(:name).pluck(:name), params[:subject]) %>
-  <%= submit_tag 'Search' %>
-<% end %>
+<div class="card mb-4 shadow">
+  <div class="card-body">
+    <h5 class="card-title">Filter Tutors</h5>
+    <%= form_with url: tutors_path, method: :get, local: true, class: "row g-3 align-items-end" do %>
+      <div class="col-md-8">
+        <label for="subject" class="form-label">Subject</label>
+        <%= select_tag :subject,
+              options_for_select([''] + Subject.order(:name).pluck(:name), params[:subject]),
+              id: 'subject', class: "form-select" %>
+      </div>
+      <div class="col-md-4">
+        <%= submit_tag 'Search', class: "btn btn-primary w-100" %>
+      </div>
+    <% end %>
+  </div>
+</div>
 
-<hr />
+<hr class="my-4" />
 
-<ul class="tutor-list">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
   <% @tutors.each do |t| %>
     <% full_name = [t.learner&.first_name, t.learner&.last_name].compact.join(' ') %>
-    <li class="tutor">
-      <%= link_to(full_name.presence || 'Tutor', tutor_path(t)) %>
-    </li>
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">
+            <%= link_to(full_name.presence || 'Tutor', tutor_path(t), class: "text-decoration-none") %>
+            <% if t.rating_avg.present? %>
+              <span class="badge bg-warning text-dark ms-2">
+                ⭐ <%= sprintf("%.1f", t.rating_avg) %>
+                <% if t.rating_count.present? && t.rating_count > 0 %>
+                  <small>(<%= t.rating_count %> reviews)</small>
+                <% end %>
+              </span>
+            <% end %>
+          </h5>
+          <% if t.bio.present? %>
+            <p class="card-text text-muted flex-grow-1"><%= truncate(t.bio, length: 100) %></p>
+          <% else %>
+            <p class="card-text text-muted flex-grow-1">No bio provided.</p>
+          <% end %>
+          <div class="mt-auto">
+            <%= link_to 'View Profile', tutor_path(t), class: "btn btn-outline-primary btn-sm" %>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
-</ul>
+</div>

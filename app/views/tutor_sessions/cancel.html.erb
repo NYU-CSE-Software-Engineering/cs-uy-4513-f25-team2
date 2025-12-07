@@ -1,24 +1,44 @@
-<h1>Cancel Session</h1>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h1 class="display-5 mb-4">Cancel Session</h1>
 
-<p>Are you sure you want to cancel this session?</p>
+    <div class="card shadow border-warning">
+      <div class="card-body p-4">
+        <div class="alert alert-warning" role="alert">
+          <strong>Are you sure you want to cancel this session?</strong>
+        </div>
 
-<ul>
-  <li><strong>Subject:</strong> <%= @session.subject.name %></li>
-  
-  <li>
-    <strong>Time:</strong>
-    <%= @session.start_at.utc.iso8601 %> – <%= @session.end_at.utc.iso8601 %>
-  </li>
-  
-  <li><strong>Capacity:</strong> <%= @session.capacity %></li>
-</ul>
+        <div class="card mb-3">
+          <div class="card-body">
+            <ul class="list-unstyled mb-0">
+              <li><strong>Subject:</strong> <span class="badge bg-primary"><%= @session.subject.name %></span></li>
+              <li class="mt-2">
+                <strong>Time:</strong>
+                <span class="visually-hidden"><%= @session.start_at.utc.iso8601 %> – <%= @session.end_at.utc.iso8601 %></span>
+                <small class="text-muted d-block">
+                  <%= @session.start_at.strftime('%B %d, %Y at %I:%M %p') %> – 
+                  <%= @session.end_at.strftime('%I:%M %p') %>
+                </small>
+              </li>
+              <li class="mt-2"><strong>Capacity:</strong> <%= @session.capacity %> seats</li>
+            </ul>
+          </div>
+        </div>
 
-<p>Please choose:</p>
+        <p>Please choose:</p>
 
-<%= button_to 'Yes',
-              confirm_cancel_tutor_session_path(@session),
-              method: :patch %>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <%= button_to 'Yes',
+                        confirm_cancel_tutor_session_path(@session),
+                        method: :patch,
+                        class: "btn btn-danger" %>
 
-<%= button_to 'No',
-              tutor_sessions_path,
-              method: :get %>
+          <%= button_to 'No',
+                        tutor_sessions_path,
+                        method: :get,
+                        class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,36 +1,55 @@
 <% full_name = [@tutor.learner&.first_name, @tutor.learner&.last_name].compact.join(' ') %>
 
-<h1><%= full_name.presence || 'Tutor' %></h1>
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-5 mb-4"><%= full_name.presence || 'Tutor' %></h1>
 
-<% if @tutor.bio.present? || @tutor.bio.blank? || @tutor.rating_avg.present? || @tutor.rating_count.present? %>
-  <h2>Details</h2>
-  <ul class="tutor-details">
-    <% if @tutor.bio.present? %>
-      <li><strong>Bio:</strong> <%= @tutor.bio %></li>
-    <% else %>
-      <li>No bio has been provided.</li>
-    <% end %>
-    <% if @tutor.rating_avg.present? %>
-      <li><strong>Rating:</strong> <%= @tutor.rating_avg %></li>
-    <% end %>
-    <% if @tutor.rating_count.present? %>
-      <li><strong>Rating count:</strong> <%= @tutor.rating_count %></li>
-    <% end %>
-  </ul>
-<% end %>
+    <div class="row">
+      <div class="col-md-8">
+        <% if @tutor.bio.present? || @tutor.rating_avg.present? || @tutor.rating_count.present? %>
+          <div class="card mb-4">
+            <div class="card-body">
+              <h2 class="card-title h4 mb-3">Details</h2>
+              <% if @tutor.bio.present? %>
+                <p class="card-text"><strong>Bio:</strong> <%= @tutor.bio %></p>
+              <% else %>
+                <p class="card-text text-muted">No bio has been provided.</p>
+              <% end %>
+              <% if @tutor.rating_avg.present? %>
+                <p class="card-text">
+                  <strong>Rating:</strong>
+                  <span class="badge bg-warning text-dark ms-2">
+                    ⭐ <%= sprintf("%.1f", @tutor.rating_avg) %>
+                    <% if @tutor.rating_count.present? && @tutor.rating_count > 0 %>
+                      <small>(<%= @tutor.rating_count %> reviews)</small>
+                    <% end %>
+                  </span>
+                </p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
 
-<% subjects =
-     if @tutor.respond_to?(:subjects)
-       @tutor.subjects
-     else
-       Teach.where(tutor_id: @tutor.id).includes(:subject).map(&:subject)
-     end %>
+    <% subjects =
+         if @tutor.respond_to?(:subjects)
+           @tutor.subjects
+         else
+           Teach.where(tutor_id: @tutor.id).includes(:subject).map(&:subject)
+         end %>
 
-<% if subjects.present? %>
-  <h2>Subjects</h2>
-  <ul>
-    <% subjects.each do |s| %>
-      <li><%= s.name %></li>
+    <% if subjects.present? %>
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title h4 mb-3">Subjects</h2>
+          <div class="d-flex flex-wrap gap-2">
+            <% subjects.each do |s| %>
+              <span class="badge bg-primary badge-custom"><%= s.name %></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </ul>
-<% end %>
+  </div>
+</div>
