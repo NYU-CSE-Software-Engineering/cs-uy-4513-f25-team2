@@ -1,4 +1,3 @@
-@wip
 Feature: Admin approves or rejects tutor applications
     As an admin
     I want to approve or reject a submitted tutor application
@@ -6,52 +5,55 @@ Feature: Admin approves or rejects tutor applications
 
     Background:
         Given I am a signed-in admin
+        And I am on the home page
         And the following learners exist:
             | email                 | password    | first_name | last_name |
             | janedoe@example.com   | password123 | Jane       | Doe       |
             | johnsmith@example.com | password123 | John       | Smith     |
-        
-    @happy
+
+
+    @button
+    Scenario: See the manage applications link
+        Then I should see the "Manage Applications" link
+
+    @visit
+    Scenario: Visit the manage applications page
+        Given the following tutor applications exist:
+            | learner    | reason                                                |
+            | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
+            | John Smith | I really enjoy tutoring!                              |
+        When I click the "Manage Applications" link
+        Then I should see the manage applications page
+        And I should see a tutor application for "Jane Doe"
+        And I should see a tutor application for "John Smith"
+     
+    @happy_approve
     Scenario: Approve a tutor application
         Given the following tutor applications exist:
             | learner    | reason                                                |
             | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
             | John Smith | I really enjoy tutoring!                              |
-        And I am on the "Pending Tutor Applications" page
-        When I select "Approve" from the dropdown for "Jane Doe"
-        And I press "Confirm" for "Jane Doe"
-        Then the application status for "Jane Doe" should be "Approved"
+        And I visit the manage applications page
+        When I press the "Approve" button for "Jane Doe"
+        Then the application status for "Jane Doe" should be "approved"
         And "Jane Doe" should be a tutor
-        And I should see "Application approved."
-        And I should not see a tutor application for "Jane Doe"
+        And I should see "Application approved"
 
-    @reject
+    @happy_reject
     Scenario: Reject a tutor application
         Given the following tutor applications exist:
             | learner    | reason                                                |
             | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
             | John Smith | I really enjoy tutoring!                              |
-        And I am on the "Pending Tutor Applications" page
-        When I select "Reject" from the dropdown for "Jane Doe"
-        And I press "Confirm" for "Jane Doe"
-        Then the application status for "Jane Doe" should be "Rejected"
+        And I visit the manage applications page
+        When I press the "Reject" button for "Jane Doe"
+        Then the application for "Jane Doe" should be deleted
         And "Jane Doe" should not be a tutor
-        And I should see "Application rejected."
+        And I should see "Application rejected"
         And I should not see a tutor application for "Jane Doe"
-
-    @no_selection
-    Scenario: No approval option selected
-        Given the following tutor applications exist:
-            | learner    | reason                                                |
-            | Jane Doe   | I have 3 years prior experience of tutoring Calculus. |
-            | John Smith | I really enjoy tutoring!                              |
-        And I am on the "Pending Tutor Applications" page
-        And I press "Confirm" for "Jane Doe"
-        Then I should see "No option selected."
-        And I should see a tutor application for "Jane Doe"
 
     @no_applications
     Scenario: No pending applications
-        Given I am on the "Pending Tutor Applications" page
-        Then I should see "There are no pending applications to review."
-        And I should not see any tutor applications
+        Given I visit the manage applications page
+        Then I should see "There are no pending applications to review"
+        Then I should not see any tutor applications
