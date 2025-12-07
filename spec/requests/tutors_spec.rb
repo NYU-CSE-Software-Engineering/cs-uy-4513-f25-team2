@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'cgi'
 
 RSpec.describe "Tutors", type: :request do
   # Helper to create Subjects that meet validation requirements
@@ -64,6 +65,140 @@ RSpec.describe "Tutors", type: :request do
       get tutors_path(tutor)
 
       expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "GET /tutors/:id/edit" do
+    let(:learner) do
+      Learner.create!(
+        email: "mia.patel@example.com",
+        password: "password123",
+        first_name: "Mia",
+        last_name: "Patel"
+      )
+    end
+    let(:tutor) { Tutor.create!(learner: learner, bio: "Hi, I'm Mia!") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "redirects to login when not signed in as a tutor" do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(nil)
+
+      get edit_tutor_path(tutor)
+      expect(response).to redirect_to(new_login_path)
+    end
+
+    it "shows the update profile form for the logged-in tutor" do
+      get edit_tutor_path(tutor)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "does not allow editing another tutor's profile" do
+      learner2 = Learner.create!(
+        email: "john_smith@example.com",
+        password: "password123",
+        first_name: "John",
+        last_name: "Smith"
+      )
+      tutor2 = Tutor.create!(learner: learner2, bio: "Hi, I'm another tutor.")
+      
+      get edit_tutor_path(tutor2)
+      expect(response).to redirect_to(home_path)
+      expect(flash[:alert]).to include("You are not authorized to edit this profile")
+    end
+  end
+
+  describe "PATCH /tutors/:id" do
+    let(:learner) do
+      Learner.create!(
+        email: "mia.patel@example.com",
+        password: "password123",
+        first_name: "Mia",
+        last_name: "Patel"
+      )
+    end
+    let(:tutor) { Tutor.create!(learner: learner, bio: "Hi, I'm Mia!") }
+
+    before do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(learner)
+    end
+
+    it "redirects to login when not signed in as a tutor" do
+      allow_any_instance_of(ApplicationController)
+        .to receive(:current_learner).and_return(nil)
+
+      patch tutor_path(tutor), params: { tutor: { bio: "Hi! This is my new bio!" } }
+      expect(response).to redirect_to(new_login_path)
+    end
+
+    context "when updating bio with new information" do
+      it "successfully updates the bio" do
+        patch tutor_path(tutor), params: { tutor: { bio: "Hi! This is my new bio!" } }
+        expect(response).to redirect_to(edit_tutor_path(tutor))
+        expect(flash[:notice]).to eq("Changes saved")
+
+        tutor.reload
+        expect(tutor.bio).to eq("Hi! This is my new bio!")
+      end
+    end
+
+    context "when updating bio with no changes" do
+      it "shows a message indicating no changes were made" do
+        patch tutor_path(tutor), params: { tutor: { bio: "Hi, I'm Mia!" } }
+        expect(response).to redirect_to(edit_tutor_path(tutor))
+        expect(flash[:notice]).to eq("No changes made")
+
+        tutor.reload
+        expect(tutor.bio).to eq("Hi, I'm Mia!")
+      end
+    end
+
+    context "when updating bio to be empty" do
+      it "successfully updates the bio to be empty" do
+        patch tutor_path(tutor), params: { tutor: { bio: "" } }
+        expect(response).to redirect_to(edit_tutor_path(tutor))
+        expect(flash[:notice]).to eq("Changes saved")
+
+        tutor.reload
+        expect(tutor.bio).to eq("")
+      end
+    end
+
+    context "when bio exceeds character limit" do
+      it "does not allow bio to exceed 500 characters" do
+        new_bio = 'a' * 501
+        patch tutor_path(tutor), params: { tutor: { bio: new_bio } }
+        expect(response).to have_http_status(:unprocessable_content)
+        page_content = CGI.unescapeHTML(response.body)
+        expect(page_content).to include("Character limit exceeded (500)")
+
+        tutor.reload
+        expect(tutor.bio).to eq("Hi, I'm Mia!")
+      end
+    end
+
+    context "authorization" do
+      it "does not allow updating another tutor's profile" do
+        learner2 = Learner.create!(
+          email: "john_smith@example.com",
+          password: "password123",
+          first_name: "John",
+          last_name: "Smith"
+        )
+        tutor2 = Tutor.create!(learner: learner2, bio: "Hi, I'm another tutor.")
+        
+        patch tutor_path(tutor2), params: { tutor: { bio: "Hi! This is my new bio!" } }
+        expect(response).to redirect_to(home_path)
+        expect(flash[:alert]).to include("You are not authorized to edit this profile")
+
+        tutor2.reload
+        expect(tutor2.bio).to eq("Hi, I'm another tutor.")
+      end
     end
   end
 end
