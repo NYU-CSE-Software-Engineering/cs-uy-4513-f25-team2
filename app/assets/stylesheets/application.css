@@ -9,7 +9,6 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-/* Custom styles should be added below this line to override Bootstrap defaults */
 body {
   min-height: 100vh;
   display: flex;
