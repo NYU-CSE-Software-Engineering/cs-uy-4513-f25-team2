@@ -35,10 +35,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <% if current_admin %>
-              <li class="nav-item">
-                <span class="navbar-text text-white me-3">Admin: <%= current_admin.email %></span>
+              <li class="nav-item d-flex align-items-center">
+                <span class="navbar-text text-white me-3 mb-0">Admin: <%= current_admin.email %></span>
               </li>
-              <li class="nav-item">
+              <li class="nav-item d-flex align-items-center">
                 <%= button_to "Log out", logout_path, method: :delete, class: "btn btn-outline-light btn-sm ms-2", form: { class: "d-inline" } %>
               </li>
             <% elsif current_learner %>
