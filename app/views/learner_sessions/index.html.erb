@@ -23,7 +23,10 @@
             </small>
           </p>
 
-           <p><strong>Status:</strong> <%= session.status %></p>
+          <p class="card-text">
+            <strong>Status:</strong>
+            <%= session.status %>
+          </p>
 
           <% if session.meeting_link.present? %>
             <p class="card-text">
