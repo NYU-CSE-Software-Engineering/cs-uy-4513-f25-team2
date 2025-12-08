@@ -26,6 +26,9 @@
               <%= link_to 'View Session', session.meeting_link, target: '_blank', class: "btn btn-outline-primary btn-sm" %>
             </p>
           <% end %>
+          <div class="btn-group-custom">
+            <%= link_to "Details", session_path(session), class: "btn btn-outline-primary btn-sm" %>
+          </div>
         </div>
       </li>
     <% end %>

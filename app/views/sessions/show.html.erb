@@ -34,37 +34,39 @@
       </div>
     </div>
 
-    <% if @tutor_session.start_at <= Time.current %>
-      <div class="card">
-        <div class="card-body">
-          <h2 class="card-title h4 mb-3">Mark Attendance</h2>
-          <% learners = @tutor_session.learners %>
-          <% learners.each do |learner| %>
-            <div class="card mb-3">
-              <div class="card-body">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title h4 mb-3">Attendees</h2>
+        <% learners = @tutor_session.learners.where.not(id: @tutor_session.tutor.learner.id) %>
+        <% learners.each do |learner| %>
+          <% attendee = SessionAttendee.find_by(tutor_session: @tutor_session, learner: learner) %>
+          <% attended_status = attendee&.attended %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <p class="card-text"><strong>Learner:</strong> <%= learner.first_name + ' ' + learner.last_name %></p>
+              <% if @tutor_session.start_at <= Time.current %>
                 <%= form_with url: session_path(@tutor_session), method: :patch, local: true do %>
-                  <p class="card-text"><strong>Learner:</strong> <%= learner.first_name + ' ' + learner.last_name %></p>
                   <%= hidden_field_tag 'session_attendee[learner_id]', learner.id %>
                   
                   <div class="mb-3">
                     <div class="form-check">
-                      <%= radio_button_tag 'session_attendee[attended]', 'true', false, id: "attended_true_#{learner.id}", class: "form-check-input" %>
+                      <%= radio_button_tag 'session_attendee[attended]', 'true', attended_status == true, id: "attended_true_#{learner.id}", class: "form-check-input" %>
                       <%= label_tag "attended_true_#{learner.id}", 'Present', class: "form-check-label" %>
                     </div>
                     
                     <div class="form-check">
-                      <%= radio_button_tag 'session_attendee[attended]', 'false', false, id: "attended_false_#{learner.id}", class: "form-check-input" %>
+                      <%= radio_button_tag 'session_attendee[attended]', 'false', attended_status == false, id: "attended_false_#{learner.id}", class: "form-check-input" %>
                       <%= label_tag "attended_false_#{learner.id}", 'Absent', class: "form-check-label" %>
                     </div>
                   </div>
                   
                   <%= submit_tag 'Save', class: "btn btn-primary btn-sm" %>
                 <% end %>
-              </div>
+              <% end %>
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       </div>
-    <% end %>
+    </div>
   </div>
 </div>
