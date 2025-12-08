@@ -39,9 +39,6 @@
                 <span class="navbar-text text-white me-3">Admin: <%= current_admin.email %></span>
               </li>
               <li class="nav-item">
-                <%= link_to "Add Subject", new_subject_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
                 <%= button_to "Log out", logout_path, method: :delete, class: "btn btn-outline-light btn-sm ms-2", form: { class: "d-inline" } %>
               </li>
             <% elsif current_learner %>
