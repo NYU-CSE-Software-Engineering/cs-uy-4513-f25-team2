@@ -44,7 +44,7 @@ jobs:
         run: bundle install --jobs 4 --retry 3
 
       - name: Prepare database
-        run: bin/rails db:setup
+        run: bin/rails db:drop db:create db:migrate
 
       - name: Run RSpec
         run: bundle exec rspec
