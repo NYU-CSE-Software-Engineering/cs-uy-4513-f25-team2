@@ -7,7 +7,7 @@ class TutorSessionsController < ApplicationController
   def index
     # Upcoming sessions for the current tutor
     @upcoming_sessions = TutorSession
-      .where(tutor_id: current_tutor.id, status: 'scheduled')
+      .where(tutor_id: current_tutor.id, status: ['scheduled', 'cancelled'])
       .where("start_at >= ?", Time.current)
       .includes(:subject)
       .order(:start_at)
