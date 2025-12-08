@@ -1,38 +1,67 @@
-<h1>Home</h1>
-<% if flash[:notice] %><p><%= flash[:notice] %></p><% end %>
-<% if flash[:alert]  %><p><%= flash[:alert]  %></p><% end %>
-<% if current_admin %>
-  <p>Signed in as Admin: <%= current_admin.email %></p>
-  <p><%= link_to 'Add New Subject', new_subject_path %></p>
-  <p><%= link_to "Manage Subjects", subjects_path %></p>
-  <p><%= link_to 'Manage Applications', admin_tutor_applications_pending_path %></p>
-<% elsif current_learner %>
-  <p>Signed in as Learner: <%= current_learner.email %></p>
-  <p><%= link_to 'View Tutors', tutors_path %></p>
-  <p><%= link_to 'Find a Session', search_sessions_path %></p>
-  <p><%= link_to 'View My Sessions', learner_sessions_path %></p>
-  <% if current_tutor %>
-    <p><%= link_to 'View My Sessions (Tutor)', tutor_sessions_path %></p>
-    <p><%= link_to 'Update my Profile', edit_tutor_path(current_tutor) %></p>
-  <% end %>
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-4 mb-4">Welcome to Tutoring Platform</h1>
+    
+    <% if current_admin %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title">Admin Dashboard</h2>
+          <p class="card-text">Signed in as: <strong><%= current_admin.email %></strong></p>
+          <div class="btn-group-custom">
+            <%= link_to 'Add New Subject', new_subject_path, class: "btn btn-primary" %>
+            <%= link_to "Manage Subjects", subjects_path, class: "btn btn-info ms-2" %>
+            <%= link_to 'Manage Applications', admin_tutor_applications_pending_path, class: "btn btn-secondary ms-2" %>
+          </div>
+        </div>
+      </div>
+    <% elsif current_learner %>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title">Learner Dashboard</h2>
+          <p class="card-text">Signed in as: <strong><%= current_learner.email %></strong></p>
+          
+          <div class="btn-group-custom mt-3">
+            <%= link_to 'View Tutors', tutors_path, class: "btn btn-primary" %>
+            <%= link_to 'Find a Session', search_sessions_path, class: "btn btn-success" %>
+            <%= link_to 'View My Sessions', learner_sessions_path, class: "btn btn-info" %>
+            <% if current_tutor %>
+              <%= link_to 'Create Session', new_session_path, class: "btn btn-primary" %>
+              <%= link_to 'View My Sessions (Tutor)', tutor_sessions_path, class: "btn btn-secondary" %>
+              <%= link_to 'My Feedback', tutor_feedbacks_path, class: "btn btn-warning" %>
+              <%= link_to 'Update my Profile', edit_tutor_path(current_tutor), class: "btn btn-outline-primary" %>
+            <% end %>
+          </div>
 
-<% if defined?(@tutor_application_status) %>
-  <% case @tutor_application_status %>
-  <% when :none %>
-      <%= link_to 'Apply to be a Tutor', new_tutor_application_path %>
-  <% when :pending %>
-    <p>Pending</p>
-  <% when :approved %>
-    <%= button_tag "Book A Session", type: "button" %>
-  <% end %>
-<% end %>
-
-<% else %>
-  <p>You are not signed in.</p>
-<% end %>
-<% if current_admin || current_learner %>
-  <%= button_to 'Log out', logout_path, method: :delete %>
-<% else %>
-  <p><%= link_to 'Log in', new_login_path %></p>
-  <p><%= link_to 'Sign up', new_learner_path %></p>
-<% end %>
+          <% if defined?(@tutor_application_status) %>
+            <div class="mt-4">
+              <% case @tutor_application_status %>
+              <% when :none %>
+                <%= link_to 'Apply to be a Tutor', new_tutor_application_path, class: "btn btn-outline-primary" %>
+              <% when :pending %>
+                <div class="alert alert-warning">
+                  <i class="bi bi-clock"></i> Pending
+                </div>
+              <% when :approved %>
+                <div class="alert alert-success mb-3">
+                  <i class="bi bi-check-circle"></i> Your tutor application has been approved!
+                </div>
+                <%= button_to "Book A Session", search_sessions_path, method: :get, class: "btn btn-primary" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <h2 class="card-title">Get Started</h2>
+          <p class="card-text text-muted mb-4">Sign in to access your account or create a new one to get started.</p>
+          <div class="btn-group-custom justify-content-center">
+            <%= link_to 'Log in', new_login_path, class: "btn btn-primary btn-lg" %>
+            <%= link_to 'Sign up', new_learner_path, class: "btn btn-outline-primary btn-lg" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

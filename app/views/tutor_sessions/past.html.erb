@@ -1,31 +1,41 @@
-<h1>My Past Sessions (Tutor)</h1>
+<h1 class="display-5 mb-4">My Past Sessions (Tutor)</h1>
 
 <% if @past_sessions.any? %>
-  <ul class="sessions-list past-sessions">
+  <ul class="sessions-list past-sessions list-unstyled">
     <% @past_sessions.each do |session| %>
-      <li class="session">
-        <p><strong>Subject:</strong> <%= session.subject.name %></p>
-
-        <p>
-          <strong>Time:</strong>
-          <%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %>
-        </p>
-
-        <p><strong>Capacity:</strong> <%= session.capacity %></p>
-
-        <% if session.meeting_link.present? %>
-          <p>
-            <strong>Meeting Link:</strong>
-            <%= link_to 'View Session', session.meeting_link, target: '_blank' %>
+      <li class="session card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">
+            <span class="badge bg-secondary mb-2"><%= session.subject.name %></span>
+          </h5>
+          <p class="card-text">
+            <strong>Time:</strong>
+            <span class="visually-hidden"><%= session.start_at.utc.iso8601 %> – <%= session.end_at.utc.iso8601 %></span>
+            <small class="text-muted d-block">
+              <%= session.start_at.strftime('%B %d, %Y at %I:%M %p') %> – 
+              <%= session.end_at.strftime('%I:%M %p') %>
+            </small>
           </p>
-        <% end %>
+          <p class="card-text">
+            <strong>Capacity:</strong> <%= session.capacity %> seats
+          </p>
+
+          <% if session.meeting_link.present? %>
+            <p class="card-text">
+              <strong>Meeting Link:</strong>
+              <%= link_to 'View Session', session.meeting_link, target: '_blank', class: "btn btn-outline-primary btn-sm" %>
+            </p>
+          <% end %>
+        </div>
       </li>
     <% end %>
   </ul>
 <% else %>
-  <p>You have no past sessions.</p>
+  <div class="empty-state">
+    <p class="lead">You have no past sessions.</p>
+  </div>
 <% end %>
 
-<p>
-  <%= link_to 'Back to upcoming sessions', tutor_sessions_path %>
+<p class="mt-4">
+  <%= link_to 'Back to upcoming sessions', tutor_sessions_path, class: "btn btn-outline-secondary" %>
 </p>

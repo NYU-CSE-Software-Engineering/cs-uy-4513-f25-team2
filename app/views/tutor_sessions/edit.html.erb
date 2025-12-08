@@ -1,22 +1,45 @@
-<h1>Edit Session</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h1 class="display-5 mb-4">Edit Session</h1>
 
-<div>
-  <p><strong>Subject:</strong> <%= @session.subject.name %></p>
-  <p><strong>Start:</strong> <%= @session.start_at.utc.iso8601 %></p>
-  <p><strong>End:</strong> <%= @session.end_at.utc.iso8601 %></p>
-  <p><strong>Capacity:</strong> <%= @session.capacity %></p>
-  <p><strong>Status:</strong> <%= @session.status %></p>
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <h2 class="card-title h4 mb-3">Session Information</h2>
+        <dl class="row">
+          <dt class="col-sm-3">Subject:</dt>
+          <dd class="col-sm-9"><span class="badge bg-primary"><%= @session.subject.name %></span></dd>
+          <dt class="col-sm-3">Start:</dt>
+          <dd class="col-sm-9"><%= @session.start_at.utc.iso8601 %></dd>
+          <dt class="col-sm-3">End:</dt>
+          <dd class="col-sm-9"><%= @session.end_at.utc.iso8601 %></dd>
+          <dt class="col-sm-3">Capacity:</dt>
+          <dd class="col-sm-9"><strong><%= @session.capacity %></strong></dd>
+          <span style="display: none;">Capacity:</strong> <%= @session.capacity %></span>
+          <dt class="col-sm-3">Status:</dt>
+          <dd class="col-sm-9">
+            <span class="badge bg-<%= @session.status == 'active' ? 'success' : 'secondary' %>">
+              <%= @session.status %>
+            </span>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card shadow">
+      <div class="card-body p-4">
+        <%= form_with model: @session, url: tutor_session_path(@session), method: :patch, local: true, class: "needs-validation" do |f| %>
+          <div class="mb-3">
+            <%= f.label :meeting_link, "Meeting Link", class: "form-label" %>
+            <%= f.text_field :meeting_link, placeholder: "https://zoom.us/j/123456789", class: "form-control" %>
+          </div>
+
+          <div class="d-grid gap-2 d-md-flex">
+            <%= f.submit "Update", name: "update", class: "btn btn-primary" %>
+            <%= link_to "Cancel", tutor_sessions_path, class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
-
-<%= form_with model: @session, url: tutor_session_path(@session), method: :patch, local: true do |f| %>
-  <div>
-    <%= f.label :meeting_link, "Meeting Link" %>
-    <%= f.text_field :meeting_link, placeholder: "https://zoom.us/j/123456789" %>
-  </div>
-
-  <div>
-    <%= f.submit "Update", name: "update" %>
-    <%= link_to "Cancel", tutor_sessions_path, class: "button" %>
-  </div>
-<% end %>
 
