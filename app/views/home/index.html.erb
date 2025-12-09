@@ -17,38 +17,30 @@
     <% elsif current_learner %>
       <div class="card mb-4">
         <div class="card-body">
-          <h2 class="card-title">Learner Dashboard</h2>
+          <h2 class="card-title"><%= current_tutor ? "Tutor Dashboard" : "Learner Dashboard" %></h2>
           <p class="card-text">Signed in as: <strong><%= current_learner.email %></strong></p>
-          
+
           <div class="btn-group-custom mt-3">
             <%= link_to 'View Tutors', tutors_path, class: "btn btn-primary" %>
             <%= link_to 'Find a Session', search_sessions_path, class: "btn btn-success" %>
             <%= link_to 'View My Sessions', learner_sessions_path, class: "btn btn-info" %>
+
             <% if current_tutor %>
               <%= link_to 'Create Session', new_session_path, class: "btn btn-primary" %>
               <%= link_to 'View My Sessions (Tutor)', tutor_sessions_path, class: "btn btn-secondary" %>
               <%= link_to 'My Feedback', tutor_feedbacks_path, class: "btn btn-warning" %>
               <%= link_to 'Update my Profile', edit_tutor_path(current_tutor), class: "btn btn-outline-primary" %>
-            <% end %>
-          </div>
-
-          <% if defined?(@tutor_application_status) %>
-            <div class="mt-4">
+            <% else %>
               <% case @tutor_application_status %>
               <% when :none %>
                 <%= link_to 'Apply to be a Tutor', new_tutor_application_path, class: "btn btn-outline-primary" %>
               <% when :pending %>
-                <div class="alert alert-warning">
+                <span class="btn btn-outline-warning disabled">
                   <i class="bi bi-clock"></i> Pending
-                </div>
-              <% when :approved %>
-                <div class="alert alert-success mb-3">
-                  <i class="bi bi-check-circle"></i> Your tutor application has been approved!
-                </div>
-                <%= button_to "Book A Session", search_sessions_path, method: :get, class: "btn btn-primary" %>
+                </span>
               <% end %>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
         </div>
       </div>
     <% else %>

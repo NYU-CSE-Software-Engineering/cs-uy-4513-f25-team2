@@ -14,7 +14,7 @@ class TutorApplicationsController < ApplicationController
     app = current_learner.build_tutor_application(tutor_application_params)
     app.status = "pending"
     if app.save
-      flash[:alert] = "Application Sent!"
+      flash[:notice] = "Application Sent!"
     else
       flash[:alert] = "Could Not Apply"
     end

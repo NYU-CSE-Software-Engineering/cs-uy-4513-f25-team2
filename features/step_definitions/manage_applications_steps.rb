@@ -14,6 +14,10 @@ Given("I visit the manage applications page") do
   visit admin_tutor_applications_pending_path
 end
 
+Given("there are no pending applications in the database") do
+  TutorApplication.destroy_all
+end
+
 When('I press the {string} button for {string}') do |button_text, learner_name|
   learner_first, learner_last = learner_name.split(' ', 2)
   learner = Learner.find_by!(first_name: learner_first, last_name: learner_last)

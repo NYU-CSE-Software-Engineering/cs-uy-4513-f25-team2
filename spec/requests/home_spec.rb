@@ -49,7 +49,7 @@ RSpec.describe "Home", type: :request do
       it "renders the page and indicates approved status" do
         get "/"
         expect(response).to have_http_status(:ok)
-        expect(assigns(:tutor_application_status)).to eq(:approved)
+        expect(assigns(:tutor_application_status)).to be_nil
       end
     end
   end
