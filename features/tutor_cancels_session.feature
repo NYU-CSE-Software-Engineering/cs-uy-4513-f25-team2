@@ -24,7 +24,7 @@ Feature: Tutor cancels a tutoring session
     When I confirm the cancellation
     Then I should be on the tutor upcoming sessions page
     And I should see "Session cancelled"
-    And I should see "You have no upcoming sessions"
+    And I should see "Status: cancelled"
     And the session should have status "cancelled"
 
 

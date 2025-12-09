@@ -16,6 +16,7 @@ Feature: Learner views upcoming and past booked sessions
     And I should see "My Upcoming Sessions"
     And I should see "Math"
     And I should see "Emily Johnson"
+    And I should see "scheduled"
     And I should not see "Biology"
     And I should see "View past sessions"
 

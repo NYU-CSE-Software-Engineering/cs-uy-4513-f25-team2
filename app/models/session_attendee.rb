@@ -21,10 +21,10 @@ class SessionAttendee < ApplicationRecord
   scope :upcoming_for, ->(learner) {
     for_learner(learner)
       .joins(:tutor_session)
-      .where(cancelled: false)
       .where('tutor_sessions.start_at >= ?', Time.current)
+      .where('session_attendees.cancelled = ?', false)
       .order('tutor_sessions.start_at ASC')
-  }
+}
 
   scope :past_for, ->(learner) {
     for_learner(learner)

@@ -57,6 +57,7 @@ RSpec.describe 'TutorSessions', type: :request do
       expect(response.body).to include('Biology')
       expect(response.body).to include('Capacity:</strong> 1')
       expect(response.body).to include('https://zoom.us/meeting/biology')
+      expect(response.body).to include('scheduled')
       expect(response.body).not_to include('Math')
       expect(response.body).not_to include('Capacity:</strong> 2')
       # Ensure we have a link to the past sessions page
