@@ -17,7 +17,7 @@
     <% elsif current_learner %>
       <div class="card mb-4">
         <div class="card-body">
-          <h2 class="card-title">Learner Dashboard</h2>
+          <h2 class="card-title"><%= current_tutor ? "Tutor Dashboard" : "Learner Dashboard" %></h2>
           <p class="card-text">Signed in as: <strong><%= current_learner.email %></strong></p>
           
           <div class="btn-group-custom mt-3">

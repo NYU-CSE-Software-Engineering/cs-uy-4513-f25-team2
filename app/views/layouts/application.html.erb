@@ -28,18 +28,29 @@
     <%# Navigation Bar %>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <%= link_to "Tutoring Platform", root_path, class: "navbar-brand fw-bold" %>
+        <%= link_to "TutorMe", root_path, class: "navbar-brand fw-bold" %>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <% if current_admin %>
-              <li class="nav-item d-flex align-items-center">
-                <span class="navbar-text text-white me-3 mb-0">Admin: <%= current_admin.email %></span>
+              <li class="nav-item">
+                <%= link_to "Add Subject", new_subject_path, class: "nav-link" %>
               </li>
-              <li class="nav-item d-flex align-items-center">
-                <%= button_to "Log out", logout_path, method: :delete, class: "btn btn-outline-light btn-sm ms-2", form: { class: "d-inline" } %>
+              <li class="nav-item">
+                <%= link_to "Manage Subjects", subjects_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Manage Applications", admin_tutor_applications_pending_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <%= current_admin.email %>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                  <li><%= button_to "Log out", logout_path, method: :delete, class: "dropdown-item" %></li>
+                </ul>
               </li>
             <% elsif current_learner %>
               <li class="nav-item">
