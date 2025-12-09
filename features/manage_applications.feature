@@ -54,6 +54,7 @@ Feature: Admin approves or rejects tutor applications
 
     @no_applications
     Scenario: No pending applications
-        Given I visit the manage applications page
+        Given there are no pending applications in the database
+        And I visit the manage applications page
         Then I should see "There are no pending applications to review"
         Then I should not see any tutor applications

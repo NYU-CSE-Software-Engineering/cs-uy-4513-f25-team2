@@ -1,7 +1,6 @@
 class HomeController < ApplicationController
   def index
     if current_tutor
-      @tutor_application_status = :approved
       return
     end
 
@@ -12,8 +11,6 @@ class HomeController < ApplicationController
           :none
         elsif tutor_app.status == "pending"
           :pending
-        elsif tutor_app.status == "approved"
-          :approved
         end
     end
   end

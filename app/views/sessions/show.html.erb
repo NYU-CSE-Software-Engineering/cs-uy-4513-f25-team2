@@ -43,7 +43,7 @@
           <% attended_status = attendee&.attended %>
           <div class="card mb-3">
             <div class="card-body">
-              <p class="card-text"><strong>Learner:</strong> <%= learner.first_name + ' ' + learner.last_name %></p>
+              <p class="card-text"><strong>Learner:</strong><%= [learner&.first_name, learner&.last_name].compact.join(" ").presence || "N/A" %></p>
               <% if @tutor_session.start_at <= Time.current %>
                 <%= form_with url: session_path(@tutor_session), method: :patch, local: true do %>
                   <%= hidden_field_tag 'session_attendee[learner_id]', learner.id %>
