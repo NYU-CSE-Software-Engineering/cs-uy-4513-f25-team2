@@ -3,7 +3,7 @@ Feature: Tutor Application
   So that I can access tutor privileges like reserving a room and booking sessions
   I want to apply to become a tutor
 
-  @button
+  @link
   Scenario: Learner goes to the Home page
     Given I am a signed-in learner
     When I visit the Home page
@@ -44,4 +44,4 @@ Feature: Tutor Application
   Scenario: Admin approves a learner’s application
     Given an admin has approved my application
     When I sign-in as a learner
-    Then I should see the "Book A Session" button
+    Then I should see the "Create Session" link

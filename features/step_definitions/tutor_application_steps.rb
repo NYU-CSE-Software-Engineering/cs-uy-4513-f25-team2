@@ -10,10 +10,6 @@ When('I visit the Home page') do
   visit root_path
 end
 
-Then('I should see the {string} button') do |string|
-  expect(page).to have_button(string)
-end
-
 Then('I should see the {string} link') do |string|
   expect(page).to have_link(string)
 end

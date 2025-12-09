@@ -74,7 +74,7 @@ RSpec.describe "TutorApplications", type: :request do
         expect(application.reason).to eq("I like helping others")
         expect(response).to redirect_to(root_path)
         follow_redirect!
-        expect(flash[:alert]).to eq("Application Sent!")
+        expect(flash[:notice]).to eq("Application Sent!")
       end
     end
 
