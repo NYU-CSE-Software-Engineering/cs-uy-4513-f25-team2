@@ -5,8 +5,6 @@ class SessionsController < ApplicationController
   before_action :require_tutor, only: [:new, :create]
   before_action :load_subjects, only: [:new, :create]
 
-  def show; end
-
   def update
     if params[:session_attendee][:attended].blank?
       flash.now[:alert] = "No attendance option selected."
@@ -36,39 +34,57 @@ class SessionsController < ApplicationController
     end
   end
 
-  def search; end
-
-def results
-  subject_name = params[:subject]
-  @subject = Subject.where('LOWER(name) = ?', subject_name.to_s.downcase).first
-
-  # If no such subject, just return empty list
-  @sessions = TutorSession.none
-  return if @subject.nil?
-
-  # Base scope: subject + "Scheduled" status
-  scope = TutorSession.where(subject_id: @subject.id)
-                      .where(status: ['Scheduled', 'scheduled'])
-
-  # Only apply time filter if BOTH params are present and parsable
-  if params[:start_at].present? && params[:end_at].present?
-    begin
-      @start_time = Time.zone.parse(params[:start_at])
-      @end_time   = Time.zone.parse(params[:end_at])
-
-      if @start_time && @end_time
-        scope = scope.where('start_at >= ? AND end_at <= ?', @start_time, @end_time)
-      end
-    rescue ArgumentError, TypeError
-      # If parsing fails, just skip time filtering and use the base scope
-    end
+  def search
   end
 
-  @sessions = scope.order(:start_at)
-end
+  def results
+    subject_name = params[:subject]
 
+    # Require subject to be selected
+    if subject_name.blank?
+      flash.now[:alert] = "Please select a subject"
+      @sessions = []
+      return
+    end
 
-  def confirm; end
+    @subject = Subject.find_by("LOWER(name) = ?", subject_name.downcase)
+
+    # Subject must exist
+    if @subject.nil?
+      flash.now[:alert] = "No such subject"
+      @sessions = []
+      return
+    end
+
+    # Base scope: this subject, future sessions, valid statuses
+    @sessions = TutorSession.where(subject_id: @subject.id)
+                            .where("start_at >= ?", Time.current)
+                            .where(status: ["Scheduled", "scheduled", "open"])
+
+    # Optional time filtering
+    if params[:start_at].present?
+      begin
+        start_time = Time.zone.parse(params[:start_at])
+        @sessions = @sessions.where("start_at >= ?", start_time) if start_time
+      rescue ArgumentError, TypeError
+        # ignore bad time input, keep base scope
+      end
+    end
+
+    if params[:end_at].present?
+      begin
+        end_time = Time.zone.parse(params[:end_at])
+        @sessions = @sessions.where("end_at <= ?", end_time) if end_time
+      rescue ArgumentError, TypeError
+        # ignore bad time input, keep base scope
+      end
+    end
+
+    @sessions = @sessions.order(:start_at)
+  end
+
+  def confirm
+  end
 
   def book
     # Makes sure tutor can't book their own tutor session
@@ -103,7 +119,7 @@ end
     @tutor_session = TutorSession.new
   end
 
-    def create
+  def create
     @tutor_session = TutorSession.new
     @tutor_session.tutor  = current_tutor
     @tutor_session.status = "open"
@@ -112,11 +128,11 @@ end
     if params[:tutor_session][:subject_id].present?
       @tutor_session.subject = Subject.find(params[:tutor_session][:subject_id])
 
-    # Fallback: support legacy free-text subject if present
+    # Fallback: legacy free-text subject if present
     elsif params[:tutor_session][:subject].present?
       subject_name = params[:tutor_session][:subject]
       subject = Subject.find_or_create_by(name: subject_name) do |s|
-        s.code = subject_name.upcase.gsub(/[^A-Z]/, '')[0..5] || 'SUBJ'
+        s.code = subject_name.upcase.gsub(/[^A-Z]/, "")[0..5] || "SUBJ"
       end
       @tutor_session.subject = subject
     end
@@ -126,19 +142,16 @@ end
     @tutor_session.capacity = params[:tutor_session][:capacity]
 
     if @tutor_session.save
-      redirect_to session_path(@tutor_session), notice: 'Session successfully created'
+      redirect_to session_path(@tutor_session), notice: "Session successfully created"
     else
       @errors = @tutor_session.errors.full_messages
       render :new, status: :unprocessable_content
     end
   end
 
-
   def show
     @tutor_session = TutorSession.find(params[:id])
 
-    # 🔹 NEW: if the current learner attended this session and was marked absent,
-    # show the message expected by the Cucumber scenario.
     attendee = SessionAttendee.find_by(
       tutor_session: @tutor_session,
       learner: current_learner
@@ -177,12 +190,10 @@ end
   def require_tutor
     return if current_tutor
 
-    redirect_to new_login_path, alert: 'You must be logged in as a tutor'
+    redirect_to new_login_path, alert: "You must be logged in as a tutor"
   end
 
   def load_subjects
     @subjects = Subject.active.order(:name)
   end
-
-
 end
