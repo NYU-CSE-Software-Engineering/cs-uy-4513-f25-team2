@@ -23,7 +23,15 @@ When('I click the {string} button') do |string|
 end
 
 When('I click the {string} link') do |string|
-  click_link(string)
+  # If multiple links exist, prefer the one in card-body (dashboard) over navbar to avoid ambiguity
+  links = page.all('a', text: string)
+  if links.count > 1 && page.has_css?('.card-body')
+    within('.card-body') do
+      click_link(string)
+    end
+  else
+    click_link(string)
+  end
 end
 
 Then('I should see the tutor application page') do
