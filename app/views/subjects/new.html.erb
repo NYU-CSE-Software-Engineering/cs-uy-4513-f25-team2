@@ -24,6 +24,13 @@
             <%= f.text_field :code, class: "form-control", placeholder: "e.g., MATH101", required: true %>
           </div>
 
+          <div class="mb-3">
+          <%= f.label :description, "Description", class: "form-label" %>
+          <%= f.text_area :description, rows: 3, class: "form-control", placeholder: "Short description of the subject" %>
+          </div>
+
+
+
           <div class="d-grid">
             <%= f.submit 'Create Subject', class: "btn btn-primary btn-lg" %>
           </div>

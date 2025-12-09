@@ -47,7 +47,7 @@ class SessionsController < ApplicationController
       return
     end
 
-    @subject = Subject.find_by("LOWER(name) = ?", subject_name.downcase)
+    @subject = Subject.active.find_by("LOWER(name) = ?", subject_name.downcase)
 
     # Subject must exist
     if @subject.nil?
