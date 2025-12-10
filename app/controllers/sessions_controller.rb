@@ -59,7 +59,7 @@ class SessionsController < ApplicationController
     # Base scope: this subject, future sessions, valid statuses
     @sessions = TutorSession.where(subject_id: @subject.id)
                             .where("start_at >= ?", Time.current)
-                            .where(status: ["Scheduled", "scheduled", "open"])
+                            .where(status: ["Scheduled", "scheduled"])
 
     # Optional time filtering
     if params[:start_at].present?
@@ -122,7 +122,7 @@ class SessionsController < ApplicationController
   def create
     @tutor_session = TutorSession.new
     @tutor_session.tutor  = current_tutor
-    @tutor_session.status = "open"
+    @tutor_session.status = "scheduled"
 
     # Prefer subject chosen from dropdown (subject_id)
     if params[:tutor_session][:subject_id].present?
