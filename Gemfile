@@ -57,6 +57,7 @@ group :development, :test do
   gem 'selenium-webdriver', '~> 4.38'
   gem 'database_cleaner-active_record', '~> 2.2'
   gem 'dotenv-rails', '~> 3.1'
+  gem "factory_bot_rails", "~> 6.5"
 end
 
 group :test do

@@ -1,14 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Home", type: :request do
-  let!(:learner) do
-    Learner.create!(
-      email: "test@example.com",
-      password: "password123",
-      first_name: "Test",
-      last_name: "Learner"
-    )
-  end
+  let!(:learner) { create(:learner) }
 
   before do
     allow_any_instance_of(ApplicationController).to receive(:current_learner).and_return(learner)
@@ -24,13 +17,7 @@ RSpec.describe "Home", type: :request do
     end
 
     context "when learner has a pending tutor application" do
-      before do
-        TutorApplication.create!(
-          learner_id: learner.id,
-          reason: "I want to help others",
-          status: "pending"
-        )
-      end
+      before { create(:tutor_application, learner: learner, status: "pending") }
       it "renders the page and indicates pending status" do
         get "/"
         expect(response).to have_http_status(:ok)
@@ -39,13 +26,7 @@ RSpec.describe "Home", type: :request do
     end
 
     context "when learner has an approved tutor application" do
-      before do
-        TutorApplication.create!(
-          learner_id: learner.id,
-          reason: "I want to help others",
-          status: "approved"
-        )
-      end
+      before { create(:tutor_application, learner: learner, status: "approved") }
       it "renders the page and indicates approved status" do
         get "/"
         expect(response).to have_http_status(:ok)

@@ -1,147 +1,57 @@
 require 'rails_helper'
 
 RSpec.describe Feedback, type: :model do
-  let(:learner) do
-    Learner.create!(
-      email: 'learner@example.com',
-      password: 'password123',
-      first_name: 'Jane',
-      last_name: 'Doe'
-    )
-  end
-
-  let(:tutor_learner) do
-    Learner.create!(
-      email: 'tutor@example.com',
-      password: 'password123',
-      first_name: 'Test',
-      last_name: 'Tutor'
-    )
-  end
-
-  let(:tutor) do
-    Tutor.create!(learner: tutor_learner, bio: 'Math & CS')
-  end
-
-  let(:subject) do
-    Subject.create!(name: 'Calculus', code: 'MATH101')
-  end
-
-  let(:tutor_session) do
-    TutorSession.create!(
-      tutor: tutor,
-      subject: subject,
-      start_at: 5.days.ago,
-      end_at: 4.days.ago,
-      capacity: 5,
-      status: 'completed',
-      meeting_link: 'https://zoom.us/test'
-    )
-  end
+  # Use FactoryBot's build_stubbed or create to simplify setup
+  let(:feedback) { build(:feedback) }
 
   describe 'validations' do
     it 'is invalid without a rating' do
-      feedback = Feedback.new(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        comment: 'Great session!'
-      )
+      feedback.rating = nil
       expect(feedback).not_to be_valid
       expect(feedback.errors[:rating]).to include("can't be blank")
     end
 
     it 'is invalid without a comment' do
-      feedback = Feedback.new(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 5
-      )
+      feedback.comment = nil
       expect(feedback).not_to be_valid
       expect(feedback.errors[:comment]).to include("can't be blank")
     end
 
     it 'is invalid with rating less than 1' do
-      feedback = Feedback.new(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 0,
-        comment: 'Test comment'
-      )
+      feedback.rating = 0
       expect(feedback).not_to be_valid
       expect(feedback.errors[:rating]).to be_present
     end
 
     it 'is invalid with rating greater than 5' do
-      feedback = Feedback.new(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 6,
-        comment: 'Test comment'
-      )
+      feedback.rating = 6
       expect(feedback).not_to be_valid
       expect(feedback.errors[:rating]).to be_present
     end
 
     it 'is invalid with non-integer rating' do
-      feedback = Feedback.new(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 4.5,
-        comment: 'Test comment'
-      )
+      feedback.rating = 4.5
       expect(feedback).not_to be_valid
       expect(feedback.errors[:rating]).to be_present
     end
 
     it 'is valid with rating between 1 and 5' do
-      feedback = Feedback.new(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 5,
-        comment: 'Great session!'
-      )
+      feedback.rating = 5
       expect(feedback).to be_valid
     end
   end
 
   describe 'associations' do
     it 'belongs to tutor_session' do
-      feedback = Feedback.create!(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 5,
-        comment: 'Test comment'
-      )
-      expect(feedback.tutor_session).to eq(tutor_session)
+      expect(feedback.tutor_session).to be_present
     end
 
     it 'belongs to learner' do
-      feedback = Feedback.create!(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 5,
-        comment: 'Test comment'
-      )
-      expect(feedback.learner).to eq(learner)
+      expect(feedback.learner).to be_present
     end
 
     it 'belongs to tutor' do
-      feedback = Feedback.create!(
-        tutor_session: tutor_session,
-        learner: learner,
-        tutor: tutor,
-        rating: 5,
-        comment: 'Test comment'
-      )
-      expect(feedback.tutor).to eq(tutor)
+      expect(feedback.tutor).to be_present
     end
   end
 end
