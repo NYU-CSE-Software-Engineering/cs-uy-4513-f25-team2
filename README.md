@@ -93,7 +93,7 @@ Follow these instructions to get the project up and running on your local machin
 
 ### 2. Clone Repository
 ```bash
-git clone [https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team2.git](https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team2.git)
+git clone https://github.com/NYU-CSE-Software-Engineering/cs-uy-4513-f25-team2.git
 cd cs-uy-4513-f25-team2/
 ```
 
