@@ -190,7 +190,6 @@ RSpec.describe "Sessions", type: :request do
         expect(flash[:notice]).to eq("Booking confirmed")
 
         follow_redirect!
-
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("Meeting link")
       end
@@ -460,10 +459,12 @@ RSpec.describe "Sessions", type: :request do
       end
     end
   end
+
   describe "POST /sessions" do
     let(:tutor_learner) { Learner.create!(email: 'tutor@example.com', password: 'password123') }
     let(:tutor) { Tutor.create!(learner: tutor_learner) }
     let(:subject_math) { Subject.create!(name: "Math", code: "MATH101") }
+    
     before do
       allow_any_instance_of(ApplicationController)
         .to receive(:current_learner).and_return(tutor_learner)
@@ -477,14 +478,18 @@ RSpec.describe "Sessions", type: :request do
         expect {
           post "/sessions", params: {
             tutor_session: {
-              subject: subject_math.name,  # Changed from subject_id to subject name
-              start_at: Time.parse('2026-10-15T10:00'),
-              end_at: Time.parse('2026-10-15T10:59'),
+              subject_id: subject_math.id,
+              start_at: '2026-10-15T10:00',
               capacity: 1
-            }
+            },
+            duration_hours: 1,
+            duration_minutes: 0
           }
         }.to change(TutorSession, :count).by(1)
-        expect(response).to redirect_to(session_path(TutorSession.last))
+        
+        session = TutorSession.last
+        expect(session.end_at).to eq(session.start_at + 1.hour)
+        expect(response).to redirect_to(session_path(session))
       end
     end
 
@@ -493,13 +498,15 @@ RSpec.describe "Sessions", type: :request do
         expect {
           post "/sessions", params: {
             tutor_session: {
-              subject: subject_math.name,  # Keep subject, remove subject_id
-              start_at: Time.parse('2026-10-15T08:00'), 
-              end_at: Time.parse('2026-10-15T09:00'), 
+              subject_id: subject_math.id,
+              start_at: '2026-10-15T08:00', 
               capacity: nil  # Make capacity nil to trigger error
-            }
+            },
+            duration_hours: 1,
+            duration_minutes: 0
           }
         }.not_to change(TutorSession, :count)
+        
         expect(response).to have_http_status(:unprocessable_content)
         body = CGI.unescapeHTML(response.body)
         expect(body).to include("can't be blank")
@@ -510,9 +517,9 @@ RSpec.describe "Sessions", type: :request do
       before do
         TutorSession.create!(
           tutor: tutor,
-          subject_id: subject_math.id,
-          start_at: Time.parse('2026-10-15T11:00'),
-          end_at: Time.parse('2026-10-15T11:59'),
+          subject: subject_math,
+          start_at: Time.zone.parse('2026-10-15T11:00'),
+          end_at: Time.zone.parse('2026-10-15T12:00'),
           capacity: 1,
           status: "open"
         )
@@ -522,13 +529,15 @@ RSpec.describe "Sessions", type: :request do
         expect {
           post "/sessions", params: {
             tutor_session: {
-              subject: subject_math.name,  # Changed from subject_id
-              start_at: Time.parse('2026-10-15T11:30'),
-              end_at: Time.parse('2026-10-15T12:30'),
+              subject_id: subject_math.id,
+              start_at: '2026-10-15T11:30',
               capacity: 1
-            }
+            },
+            duration_hours: 1,
+            duration_minutes: 0
           }
         }.not_to change(TutorSession, :count)
+        
         expect(response).to have_http_status(:unprocessable_content)
         body = CGI.unescapeHTML(response.body)
         expect(body).to include("Session overlaps with existing session")
@@ -536,8 +545,7 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
-
-    describe "GET /sessions/new" do
+  describe "GET /sessions/new" do
     let(:tutor)   { make_tutor(first: "Test", last: "Tutor") }
     let(:learner) { tutor.learner }
 
@@ -564,6 +572,4 @@ RSpec.describe "Sessions", type: :request do
       expect(html).not_to include("Physics")
     end
   end
-
-
 end
