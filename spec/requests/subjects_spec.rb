@@ -40,5 +40,15 @@ RSpec.describe "Subjects", type: :request do
       delete subject_path(subject)
       expect(subject.reload.archived).to eq(true)
     end
+
+    it "alerts if archiving fails (Sad Path)" do
+      subject = create(:subject)
+      
+      allow_any_instance_of(Subject).to receive(:update).and_return(false)
+
+      delete subject_path(subject)
+      expect(flash[:alert]).to include("Could not archive subject")
+      expect(response).to redirect_to(subjects_path)
+    end
   end
 end

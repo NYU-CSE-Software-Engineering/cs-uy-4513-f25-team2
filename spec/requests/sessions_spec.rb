@@ -18,9 +18,10 @@ RSpec.describe "Sessions", type: :request do
   end
 
   describe "GET /sessions/results" do
+    let!(:calculus) { create(:subject, name: 'Calculus') }
+    let!(:session1) { create(:tutor_session, subject: calculus, start_at: '2026-03-10T10:00:00Z', end_at: '2026-03-10T11:00:00Z') }
+
     it "returns matching sessions within time range" do
-      calculus = create(:subject, name: 'Calculus')
-      session1 = create(:tutor_session, subject: calculus, start_at: '2026-03-10T10:00:00Z', end_at: '2026-03-10T11:00:00Z')
       session2 = create(:tutor_session, subject: calculus, start_at: '2026-03-10T14:00:00Z', end_at: '2026-03-10T15:00:00Z')
 
       get results_sessions_path, params: {
@@ -31,6 +32,28 @@ RSpec.describe "Sessions", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(assigns(:sessions)).to match_array([session1, session2])
+    end
+
+    it "handles invalid date formats gracefully (Sad Path)" do
+      get results_sessions_path, params: {
+        subject: 'Calculus',
+        start_at: 'invalid-date-string',
+        end_at: 'another-bad-date'
+      }
+      expect(response).to have_http_status(:ok)
+      expect(assigns(:sessions)).to include(session1)
+    end
+
+    it "returns empty if subject does not exist" do
+      get results_sessions_path, params: { subject: 'NonExistent' }
+      expect(response).to have_http_status(:ok)
+      expect(flash[:alert]).to include("No such subject")
+    end
+
+    it "alerts if subject is blank" do
+      get results_sessions_path, params: { subject: '' }
+      expect(response).to have_http_status(:ok)
+      expect(flash[:alert]).to include("Please select a subject")
     end
   end
 
@@ -62,6 +85,19 @@ RSpec.describe "Sessions", type: :request do
       post book_session_path(session)
       expect(flash[:alert]).to eq("This session is full")
     end
+
+    it "prevents a tutor from booking their own session (Edge Case)" do
+      tutor = create(:tutor)
+      session = create(:tutor_session, tutor: tutor)
+      
+      allow_any_instance_of(ApplicationController).to receive(:current_learner).and_return(tutor.learner)
+      allow_any_instance_of(ApplicationController).to receive(:current_tutor).and_return(tutor)
+
+      post book_session_path(session)
+
+      expect(response).to redirect_to(confirm_session_path(session))
+      expect(flash[:alert]).to eq("You cannot book your own session")
+    end
   end
 
   describe "PATCH /sessions/:id (Attendance)" do
@@ -81,6 +117,19 @@ RSpec.describe "Sessions", type: :request do
       
       expect(SessionAttendee.last.attended).to be(true)
       expect(response).to redirect_to(session_path(session))
+    end
+
+    it "fails gracefully if saving attendance fails (Sad Path)" do
+      learner_student = create(:learner)
+      
+      allow_any_instance_of(SessionAttendee).to receive(:save).and_return(false)
+
+      patch session_path(session), params: {
+        session_attendee: { learner_id: learner_student.id, attended: "true" }
+      }
+
+      expect(flash[:alert]).to eq("Failed to save attendance.")
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 
@@ -110,6 +159,21 @@ RSpec.describe "Sessions", type: :request do
       }.to change(TutorSession, :count).by(1)
       
       expect(response).to redirect_to(tutor_sessions_path)
+    end
+
+    it "creates a new session with a new Subject name" do
+      expect {
+        post "/sessions", params: {
+          tutor_session: {
+            subject: "NewSubject",
+            start_at: '2026-10-15T10:00',
+            capacity: 1,
+            meeting_link: 'https://zoom.us/new'
+          },
+          duration_hours: 1,
+          duration_minutes: 0
+        }
+      }.to change(Subject, :count).by(1)
     end
   end
 end

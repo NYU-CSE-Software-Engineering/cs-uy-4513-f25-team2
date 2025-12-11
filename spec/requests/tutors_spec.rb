@@ -41,6 +41,14 @@ RSpec.describe "Tutors", type: :request do
       expect(response).to redirect_to(edit_tutor_path(tutor))
     end
 
+    it "fails validation with too long bio (Sad Path)" do
+      long_bio = "a" * 501
+      patch tutor_path(tutor), params: { tutor: { bio: long_bio } }
+      
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(CGI.unescapeHTML(response.body)).to include("Character limit exceeded")
+    end
+
     it "does not allow editing another tutor" do
       other = create(:tutor)
       patch tutor_path(other), params: { tutor: { bio: "Hacked" } }

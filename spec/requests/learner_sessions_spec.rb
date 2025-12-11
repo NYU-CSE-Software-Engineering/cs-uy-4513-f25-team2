@@ -14,14 +14,8 @@ RSpec.describe 'LearnerSessions', type: :request do
     end
 
     it 'shows only upcoming bookings for the current learner' do
-      upcoming_session = create(:tutor_session, 
-        start_at: 2.days.from_now, 
-        subject: create(:subject, name: 'Calculus')
-      )
-      past_session = create(:tutor_session, 
-        start_at: 2.days.ago, 
-        subject: create(:subject, name: 'Biology')
-      )
+      upcoming_session = create(:tutor_session, start_at: 2.days.from_now, subject: create(:subject, name: 'Calculus'))
+      past_session = create(:tutor_session, start_at: 2.days.ago, subject: create(:subject, name: 'Biology'))
 
       create(:session_attendee, tutor_session: upcoming_session, learner: learner)
       create(:session_attendee, tutor_session: past_session, learner: learner)
@@ -67,7 +61,7 @@ RSpec.describe 'LearnerSessions', type: :request do
 
     it 'does not allow cancelling another learner\'s booking' do
       session = create(:tutor_session, start_at: 2.days.from_now)
-      booking = create(:session_attendee, tutor_session: session) # Belongs to another learner
+      booking = create(:session_attendee, tutor_session: session)
 
       log_in_as(learner)
       get cancel_learner_session_path(booking)
@@ -88,6 +82,20 @@ RSpec.describe 'LearnerSessions', type: :request do
 
       expect(booking.reload.cancelled).to be(true)
       expect(response).to redirect_to(learner_sessions_path)
+    end
+
+    it "handles failure to cancel gracefully (Sad Path)" do
+      session = create(:tutor_session, start_at: 2.days.from_now)
+      booking = create(:session_attendee, tutor_session: session, learner: learner)
+
+      log_in_as(learner)
+      
+      allow_any_instance_of(SessionAttendee).to receive(:update).and_return(false)
+
+      patch confirm_cancel_learner_session_path(booking), params: { decision: 'yes' }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(flash[:alert]).to include("Could not cancel session")
     end
   end
 end
