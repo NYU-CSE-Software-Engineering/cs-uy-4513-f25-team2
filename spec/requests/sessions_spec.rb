@@ -480,7 +480,8 @@ RSpec.describe "Sessions", type: :request do
             tutor_session: {
               subject_id: subject_math.id,
               start_at: '2026-10-15T10:00',
-              capacity: 1
+              capacity: 1,
+              meeting_link: 'https://zoom.us/new'
             },
             duration_hours: 1,
             duration_minutes: 0
@@ -489,6 +490,7 @@ RSpec.describe "Sessions", type: :request do
         
         session = TutorSession.last
         expect(session.end_at).to eq(session.start_at + 1.hour)
+        expect(session.meeting_link).to eq('https://zoom.us/new')
         expect(response).to redirect_to(session_path(session))
       end
     end

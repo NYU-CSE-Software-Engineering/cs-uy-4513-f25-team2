@@ -45,6 +45,11 @@
           </div>
 
           <div class="mb-3">
+            <%= f.label :meeting_link, 'Meeting Link', class: "form-label" %>
+            <%= f.text_field :meeting_link, class: "form-control", placeholder: "https://zoom.us/j/123456789" %>
+          </div>
+
+          <div class="mb-3">
             <%= f.label :capacity, 'Capacity', class: "form-label" %>
             <%= f.number_field :capacity, class: "form-control", placeholder: "e.g., 5", required: true, min: 1 %>
           </div>

@@ -136,6 +136,7 @@ class SessionsController < ApplicationController
     end
 
     @tutor_session.capacity = params[:tutor_session][:capacity]
+    @tutor_session.meeting_link = params[:tutor_session][:meeting_link]
 
     begin
       start_at = params[:tutor_session][:start_at]
@@ -197,7 +198,8 @@ class SessionsController < ApplicationController
   def tutor_session_params
     params.require(:tutor_session).permit(
       :start_at,
-      :capacity
+      :capacity,
+      :meeting_link
     )
   end
 
