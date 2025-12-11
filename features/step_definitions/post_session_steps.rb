@@ -52,6 +52,7 @@ Given('the following session exists:') do |table|
     ) do |s|
       s.capacity = row['capacity'].to_i
       s.status = row['status']
+      s.meeting_link = "https://zoom.us/test-session"
     end
   end  
 end

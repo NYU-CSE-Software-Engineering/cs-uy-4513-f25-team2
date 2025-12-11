@@ -28,7 +28,8 @@ Given('the following session exists for another tutor:') do |table|
       start_at: Time.iso8601(row['start_at']),
       end_at:   Time.iso8601(row['end_at']),
       capacity: row['capacity'].to_i,
-      status:   row['status']
+      status:   row['status'],
+      meeting_link: "https://zoom.us/other-tutor-session"
     )
   end
 end

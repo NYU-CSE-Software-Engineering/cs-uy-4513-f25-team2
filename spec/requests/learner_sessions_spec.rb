@@ -39,7 +39,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 3,
-        status:   'scheduled'
+        status:   'scheduled',
+        meeting_link: 'https://zoom.us/upcoming' 
       )
 
       # Past session: in the past
@@ -49,7 +50,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 2.days.ago,
         end_at:   1.day.ago,
         capacity: 3,
-        status:   'completed'
+        status:   'completed',
+        meeting_link: 'https://zoom.us/past' 
       )
 
       # Bookings for current learner
@@ -114,7 +116,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 5.days.ago,
         end_at:   4.days.ago,
         capacity: 3,
-        status:   'completed'
+        status:   'completed',
+        meeting_link: 'https://zoom.us/present' 
       )
       absent_session = TutorSession.create!(
         tutor: tutor,
@@ -122,7 +125,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 7.days.ago,
         end_at:   6.days.ago,
         capacity: 3,
-        status:   'completed'
+        status:   'completed',
+        meeting_link: 'https://zoom.us/absent' 
       )
       unknown_session = TutorSession.create!(
         tutor: tutor,
@@ -130,7 +134,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 9.days.ago,
         end_at:   8.days.ago,
         capacity: 3,
-        status:   'completed'
+        status:   'completed',
+        meeting_link: 'https://zoom.us/unknown' 
       )
 
       SessionAttendee.create!(
@@ -184,7 +189,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 3,
-        status: 'scheduled'
+        status: 'scheduled',
+        meeting_link: 'https://zoom.us/cancel1' 
       )
       booking = SessionAttendee.create!(
         tutor_session: session,
@@ -208,7 +214,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 3,
-        status: 'scheduled'
+        status: 'scheduled',
+        meeting_link: 'https://zoom.us/cancel2'
       )
       booking = SessionAttendee.create!(
         tutor_session: session,
@@ -237,7 +244,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 3,
-        status: 'scheduled'
+        status: 'scheduled',
+        meeting_link: 'https://zoom.us/other'
       )
 
       other_learner = Learner.create!(
@@ -270,7 +278,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 2.days.ago,
         end_at:   1.day.ago,
         capacity: 3,
-        status: 'completed'
+        status: 'completed',
+        meeting_link: 'https://zoom.us/past'
       )
       booking = SessionAttendee.create!(
         tutor_session: session,
@@ -294,13 +303,15 @@ RSpec.describe 'LearnerSessions', type: :request do
         password: 'password123'
       )
       tutor = Tutor.create!(learner: tutor_learner)
+      
       session = TutorSession.create!(
         tutor: tutor,
         subject: subject,
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 3,
-        status: 'scheduled'
+        status: 'scheduled',
+        meeting_link: 'https://zoom.us/cancel' 
       )
       booking = SessionAttendee.create!(
         tutor_session: session,
@@ -333,7 +344,8 @@ RSpec.describe 'LearnerSessions', type: :request do
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 3,
-        status: 'scheduled'
+        status: 'scheduled',
+        meeting_link: 'https://zoom.us/no_cancel' 
       )
       booking = SessionAttendee.create!(
         tutor_session: session,

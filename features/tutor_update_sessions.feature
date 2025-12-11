@@ -48,7 +48,7 @@ Feature: Tutor updates session link
     When I enter the meeting link "https://zoom.example.us"
     And I cancel the update
     Then I should be on the tutor upcoming sessions page
-    And I should not see "Join Session"
+    And I should see a link with text "Join Session" pointing to "https://zoom.us/test-session"
 
   @edit_unauthorized
   Scenario: Tutor cannot edit someone else's session

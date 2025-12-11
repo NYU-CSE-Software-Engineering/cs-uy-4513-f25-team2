@@ -36,7 +36,7 @@ RSpec.describe 'TutorSessions', type: :request do
         end_at:   3.days.from_now,
         capacity: 1,
         status:   'scheduled',
-        meeting_link: 'https://zoom.us/meeting/biology'
+        meeting_link: 'https://zoom.us/meeting/biology' 
       )
 
       # Past session: in the past
@@ -46,7 +46,8 @@ RSpec.describe 'TutorSessions', type: :request do
         start_at: 5.days.ago,
         end_at:   4.days.ago,
         capacity: 2,
-        status:   'completed'
+        status:   'completed',
+        meeting_link: 'https://zoom.us/meeting/math' 
       )
 
       log_in_as(tutor)
@@ -74,7 +75,8 @@ RSpec.describe 'TutorSessions', type: :request do
         start_at: 4.days.ago,
         end_at:   3.days.ago,
         capacity: 2,
-        status:   'completed'
+        status:   'completed',
+        meeting_link: 'https://zoom.us/meeting/math' 
       )
 
       log_in_as(tutor)
@@ -103,7 +105,8 @@ RSpec.describe 'TutorSessions', type: :request do
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 1,
-        status:   'scheduled'
+        status:   'scheduled',
+        meeting_link: 'https://zoom.us/meeting/bio'
       )
 
       # Past session: in the past
@@ -114,7 +117,7 @@ RSpec.describe 'TutorSessions', type: :request do
         end_at:   4.days.ago,
         capacity: 2,
         status:   'completed',
-        meeting_link: 'https://zoom.us/meeting/math'
+        meeting_link: 'https://zoom.us/meeting/math' 
       )
 
       log_in_as(tutor)
@@ -141,7 +144,8 @@ RSpec.describe 'TutorSessions', type: :request do
         start_at: 2.days.from_now,
         end_at:   3.days.from_now,
         capacity: 1,
-        status:   'scheduled'
+        status:   'scheduled',
+        meeting_link: 'https://zoom.us/meeting/bio' 
       )
 
       log_in_as(tutor)
@@ -287,7 +291,8 @@ RSpec.describe 'TutorSessions', type: :request do
         start_at: 2.days.from_now,
         end_at: 3.days.from_now,
         capacity: 1,
-        status: 'scheduled'
+        status: 'scheduled',
+        meeting_link: 'https://zoom.us/cancel' 
       )
 
       log_in_as(tutor)
@@ -313,7 +318,8 @@ RSpec.describe 'TutorSessions', type: :request do
         start_at: 2.days.from_now,
         end_at: 3.days.from_now,
         capacity: 1,
-        status: "scheduled"
+        status: "scheduled",
+        meeting_link: 'https://zoom.us/other' 
       )
 
       log_in_as(tutor)
@@ -334,7 +340,8 @@ RSpec.describe 'TutorSessions', type: :request do
         start_at: 5.days.ago,
         end_at: 4.days.ago,
         capacity: 1,
-        status: "completed"
+        status: "completed",
+        meeting_link: 'https://zoom.us/past' 
       )
 
       log_in_as(tutor)
