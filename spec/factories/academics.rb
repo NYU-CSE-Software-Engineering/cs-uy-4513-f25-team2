@@ -11,8 +11,6 @@ FactoryBot.define do
   factory :tutor do
     association :learner
     bio { "I am an experienced tutor." }
-    rating_avg { 0.0 }
-    rating_count { 0 }
   end
 
   # Teach Factory (Join table for Tutor and Subject)

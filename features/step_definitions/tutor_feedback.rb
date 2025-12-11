@@ -7,7 +7,7 @@ Given('I am a logged-in tutor') do
     email:      'tutor@example.com',
     password:   'password'
   )
-  @tutor = Tutor.create!(learner: @learner, bio: 'Math & CS', rating_avg: 0, rating_count: 0)
+  @tutor = Tutor.create!(learner: @learner, bio: 'Math & CS')
 
   visit login_path
   fill_in 'Email', with: @learner.email
@@ -82,7 +82,7 @@ Given('I am a tutor with no feedback yet') do
     email:      'empty_tutor@example.com',
     password:   'password'
   )
-  @tutor = Tutor.create!(learner: @learner, bio: 'N/A', rating_avg: 0, rating_count: 0)
+  @tutor = Tutor.create!(learner: @learner, bio: 'N/A')
 
   visit login_path
   fill_in 'Email', with: @learner.email
@@ -101,7 +101,7 @@ Given('another tutor exists') do
     email:      'other_tutor@example.com',
     password:   'password'
   )
-  @other_tutor = Tutor.create!(learner: other_learner, bio: 'Chemistry', rating_avg: 0, rating_count: 0)
+  @other_tutor = Tutor.create!(learner: other_learner, bio: 'Chemistry')
 end
 
 When('I try to access that tutor’s feedback page') do

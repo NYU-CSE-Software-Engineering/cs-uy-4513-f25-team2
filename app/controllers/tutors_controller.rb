@@ -4,16 +4,18 @@ class TutorsController < ApplicationController
   before_action :check_authorization, only: [:edit, :update]
 
   def index
-    if(params[:subject].present?)
+    base_scope = Tutor.includes(:learner, :feedbacks)
+
+    if params[:subject].present?
       subject = Subject.find_by(name: params[:subject])
       if subject
-        @tutors = subject.tutors
+        @tutors = base_scope.joins(:subjects).where(subjects: { id: subject.id })
       else
         flash.now[:alert] = "No subject to filter"
         @tutors = []
       end
     else
-      @tutors = Tutor.all
+      @tutors = base_scope.all
     end
   end
 
