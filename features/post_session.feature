@@ -19,9 +19,8 @@ Feature: Tutor posts a new session
     And I fill in "Meeting Link" with "https://zoom.us/my-session"
     And I select "Math" from the Subject dropdown
     And I press "Create new session"
-    Then I am on the session's show page
+    Then I should be on the tutor upcoming sessions page
     And I should see the message "Session successfully created"
-    And I should see the session on the page
     And I should see a link with text "Join Session" pointing to "https://zoom.us/my-session"
 
   @unknown

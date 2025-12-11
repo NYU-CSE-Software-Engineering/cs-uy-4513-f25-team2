@@ -26,7 +26,8 @@ class SessionsController < ApplicationController
     attendee.attended = (params[:session_attendee][:attended] == "true")
 
     if attendee.save
-      message = attendee.attended ? "Learner marked as present" : "Learner marked as absent"
+      message = attendee.attended ?
+        "Learner marked as present" : "Learner marked as absent"
       redirect_to session_path(@tutor_session), notice: message
     else
       flash.now[:alert] = "Failed to save attendance."
@@ -108,7 +109,7 @@ class SessionsController < ApplicationController
     )
 
     if @attendee.save
-      redirect_to session_path(@tutor_session), notice: "Booking confirmed"
+      redirect_to learner_sessions_path, notice: "Booking confirmed"
     else
       error_message = @attendee.errors.full_messages.first
       redirect_to confirm_session_path(@tutor_session), alert: error_message
@@ -158,7 +159,7 @@ class SessionsController < ApplicationController
     end
 
     if @tutor_session.save
-      redirect_to session_path(@tutor_session), notice: "Session successfully created"
+      redirect_to tutor_sessions_path, notice: "Session successfully created"
     else
       @errors = @tutor_session.errors.full_messages
       render :new, status: :unprocessable_content

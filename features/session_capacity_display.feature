@@ -21,6 +21,7 @@ Feature: Show remaining seats for tutoring sessions
 
     When I select the session for tutor "Alice Wong" from "2035-01-10T10:00:00Z" to "2035-01-10T11:00:00Z"
     And I confirm the booking
+    When I visit the session details page again for tutor "Alice Wong" from "2035-01-10T10:00:00Z" to "2035-01-10T11:00:00Z"
     Then I should see "Seats remaining:" on the session details page
     And I should see "2 of 3 seats available" on the session details page
 
@@ -55,6 +56,7 @@ Feature: Show remaining seats for tutoring sessions
     And I run the search
     And I select the session for tutor "Alice Wong" from "2035-01-10T10:00:00Z" to "2035-01-10T11:00:00Z"
     And I confirm the booking
+    When I visit the session details page again for tutor "Alice Wong" from "2035-01-10T10:00:00Z" to "2035-01-10T11:00:00Z"
     Then I should see "Seats remaining:" on the session details page
     And I should see "1 of 2 seats available" on the session details page
 
