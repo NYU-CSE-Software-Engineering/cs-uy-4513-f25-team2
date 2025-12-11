@@ -11,13 +11,13 @@ RSpec.describe "Logins", type: :request do
 
   describe "POST /login" do
     it "logs in learner and redirects to home on success" do
-      Learner.create!(email: "ok@site.com", password: "secret")
-      post login_path, params: { email: "ok@site.com", password: "secret" }
+      learner = create(:learner)
+      post login_path, params: { email: learner.email, password: learner.password }
       expect(response).to redirect_to(home_path)
     end
 
     it "re-renders login with error on invalid credentials" do
-      Learner.create!(email: "ok@site.com", password: "secret")
+      create(:learner, email: "ok@site.com")
       post login_path, params: { email: "ok@site.com", password: "NOPE" }
       expect(response).to have_http_status(:unauthorized)
       expect(response.body).to include("Invalid email or password")

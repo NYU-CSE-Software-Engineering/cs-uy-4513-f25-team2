@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Learner, type: :model do
   describe "validations" do
     it "is invalid without email" do
-      learner = Learner.new(password: "secret")
+      learner = build(:learner, email: nil)
       expect(learner).not_to be_valid
       expect(learner.errors[:email]).to include("can't be blank")
     end
@@ -15,8 +15,8 @@ RSpec.describe Learner, type: :model do
     end
 
     it "requires email to be unique case-insensitively" do
-      Learner.create!(email: "user@site.com", password: "x")
-      dup = Learner.new(email: "USER@site.com", password: "y")
+      create(:learner, email: "user@site.com")
+      dup = build(:learner, email: "USER@site.com")
       expect(dup).not_to be_valid
       expect(dup.errors[:email]).to include("has already been taken")
     end
