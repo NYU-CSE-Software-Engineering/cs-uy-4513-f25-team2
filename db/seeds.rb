@@ -107,11 +107,11 @@ ApplicationRecord.transaction do
   tutor_applications = []
 
   approved_applicants = [
-    emma, liam, olivia, noah, ava, william, sophia, james
+    emma, liam, olivia, noah, ava, william, sophia, james, isabella, benjamin, mia
   ]
 
   pending_applicants = [
-    isabella, benjamin, mia, lucas, charlotte, henry
+    lucas, charlotte, henry
   ]
 
   approved_applicants.each do |learner|
@@ -374,10 +374,9 @@ ApplicationRecord.transaction do
 
   session_attendees = []
 
-  # S1
   session_attendees << SessionAttendee.create!(
     tutor_session:     s1,
-    learner:           emma,
+    learner:           michael,
     attended:          true,
     cancelled:         false,
     feedback_submitted:true
@@ -401,7 +400,7 @@ ApplicationRecord.transaction do
     learner:           noah,
     attended:          true,
     cancelled:         false,
-    feedback_submitted:false
+    feedback_submitted:true
   )
 
   # S2
@@ -490,7 +489,7 @@ ApplicationRecord.transaction do
     learner:           amelia,
     attended:          true,
     cancelled:         false,
-    feedback_submitted:false
+    feedback_submitted:true
   )
 
   # S9
@@ -541,7 +540,7 @@ ApplicationRecord.transaction do
 
   feedbacks << Feedback.create!(
     tutor_session: s1,
-    learner:       emma,
+    learner:       michael,
     tutor:         tutor_anna,
     rating:        5,
     comment:       "Great explanations of limits and continuity."
