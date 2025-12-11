@@ -23,6 +23,21 @@
               <%= @tutor_session.status %>
             </span>
           </dd>
+
+          <dt class="col-sm-3">Capacity:</dt>
+          <dd class="col-sm-9">
+            <%= @tutor_session.capacity %> learners
+          </dd>
+
+          <dt class="col-sm-3">Seats remaining:</dt>
+          <dd class="col-sm-9">
+            <% if @tutor_session.full? %>
+              <span class="badge bg-danger">Full</span>
+            <% else %>
+              <%= @tutor_session.seats_remaining %> of
+              <%= @tutor_session.capacity %> seats available
+            <% end %>
+          </dd>
           
           <% if @tutor_session.meeting_link.present? %>
             <dt class="col-sm-3">Meeting link:</dt>
