@@ -24,7 +24,7 @@
             <% end_str = session.end_at.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>
 
             <div class="mt-auto pt-3">
-              <%= button_to "Select #{session.tutor.learner.first_name} #{session.tutor.learner.last_name} #{start_str}-#{end_str}",
+              <%= button_to "Select",
                             confirm_session_path(session),
                             method: :get,
                             class: "btn btn-success btn-sm" %>
