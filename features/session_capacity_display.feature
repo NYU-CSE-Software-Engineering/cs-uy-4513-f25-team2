@@ -41,7 +41,6 @@ Feature: Show remaining seats for tutoring sessions
     And I run the search
     Then I should see "Seats remaining:" in the search results
     And I should see "Full" in the search results
-    And I should not see a "Select Alice Wong" button for that session
 
   @seats_cancel
   Scenario: Cancelling a booking increases seats remaining

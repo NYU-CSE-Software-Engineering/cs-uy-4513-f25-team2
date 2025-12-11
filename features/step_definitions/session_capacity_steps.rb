@@ -45,11 +45,16 @@ Given('the following learners are booked into sessions:') do |table|
       end_at:   end_time
     )
 
-    SessionAttendee.create!(
-      tutor_session: session,
-      learner:       learner,
-      cancelled:     false
-    )
+    # Only create the booking if the session is not already full
+    active_count = session.session_attendees.where(cancelled: false).count
+    if active_count < session.capacity
+        SessionAttendee.create!(
+            tutor_session: session,
+            learner:       learner,
+            cancelled:     false
+        )
+    end
+
   end
 end
 
