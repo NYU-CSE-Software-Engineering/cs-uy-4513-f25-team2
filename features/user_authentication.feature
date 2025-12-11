@@ -6,38 +6,45 @@ Feature: User Authentication / Identity
   Background:
     Given I am on the home page
 
-  Scenario: User signs up with valid password
+  Scenario: User signs up with valid details
     Given I am on the sign-up page
-    When I fill in "Email" with "example@gmail.com"
+    When I fill in "First name" with "Example"
+    And I fill in "Last name" with "Student"
+    And I fill in "Email" with "example@gmail.com"
     And I fill in "Password" with "password"
-    And I fill in "Confirm Password" with "password" 
+    And I fill in "Confirm Password" with "password"
     And I press "Sign up"
     Then I should see a message "Account Created!"
     And I should be redirected to login page
 
-  Scenario: User fails to sign up with no password
+  Scenario: User cannot sign up with a missing email
     Given I am on the sign-up page
-    When I fill in "Email" with "example@gmail.com"
+    When I fill in "First name" with "Example"
+    And I fill in "Last name" with "Student"
+    And I fill in "Email" with ""
+    And I fill in "Password" with "password"
+    And I fill in "Confirm Password" with "password"
+    And I press "Sign up"
+    Then I should see an error message "Email can't be blank"
+
+  Scenario: User cannot sign up with a missing password
+    Given I am on the sign-up page
+    When I fill in "First name" with "Example"
+    And I fill in "Last name" with "Student"
+    And I fill in "Email" with "example@gmail.com"
+    And I fill in "Password" with ""
+    And I fill in "Confirm Password" with ""
     And I press "Sign up"
     Then I should see an error message "Password can't be blank"
 
-  Scenario: User fails to sign up with no email
-    Given I am on the sign-up page
-    When I fill in "Password" with "password"
-    And I press "Sign up"
-    Then I should see an error message "Email can't be blank"
-
-  Scenario: User fails to sign up with no email and no password
-    Given I am on the sign-up page
-    And I press "Sign up"
-    Then I should see an error message "Email can't be blank"
-    And I should see an error message "Password can't be blank"
-
-  Scenario: User fails to sign up with an email taken by another user
-    Given I am on the sign-up page
-    And an account exists for "example@gmail.com" with password "password"
-    When I fill in "Email" with "example@gmail.com"
+  Scenario: User cannot sign up with an email that is already taken
+    Given an account exists for "example@gmail.com" with password "password"
+    And I am on the sign-up page
+    When I fill in "First name" with "Example"
+    And I fill in "Last name" with "Student"
+    And I fill in "Email" with "example@gmail.com"
     And I fill in "Password" with "password"
+    And I fill in "Confirm Password" with "password"
     And I press "Sign up"
     Then I should see an error message "Email has already been taken"
 

@@ -59,7 +59,7 @@ class SessionsController < ApplicationController
     # Base scope: this subject, future sessions, valid statuses
     @sessions = TutorSession.where(subject_id: @subject.id)
                             .where("start_at >= ?", Time.current)
-                            .where(status: ["Scheduled", "scheduled", "open"])
+                            .where(status: ["Scheduled", "scheduled"])
 
     # Optional time filtering
     if params[:start_at].present?
@@ -122,13 +122,11 @@ class SessionsController < ApplicationController
   def create
     @tutor_session = TutorSession.new
     @tutor_session.tutor  = current_tutor
-    @tutor_session.status = "open"
+    @tutor_session.status = "scheduled"
 
-    # Prefer subject chosen from dropdown (subject_id)
     if params[:tutor_session][:subject_id].present?
       @tutor_session.subject = Subject.find(params[:tutor_session][:subject_id])
 
-    # Fallback: legacy free-text subject if present
     elsif params[:tutor_session][:subject].present?
       subject_name = params[:tutor_session][:subject]
       subject = Subject.find_or_create_by(name: subject_name) do |s|
@@ -137,9 +135,26 @@ class SessionsController < ApplicationController
       @tutor_session.subject = subject
     end
 
-    @tutor_session.start_at = params[:tutor_session][:start_at]
-    @tutor_session.end_at   = params[:tutor_session][:end_at]
     @tutor_session.capacity = params[:tutor_session][:capacity]
+
+    begin
+      start_at = params[:tutor_session][:start_at]
+      if start_at.present?
+        parsed_start = Time.zone.parse(start_at)
+        @tutor_session.start_at = parsed_start
+
+        hours = params[:duration_hours].to_i
+        minutes = params[:duration_minutes].to_i
+        duration_seconds = hours.hours + minutes.minutes
+
+        if duration_seconds > 0
+          @tutor_session.end_at = parsed_start + duration_seconds
+        else
+          @tutor_session.end_at = parsed_start 
+        end
+      end
+    rescue ArgumentError, TypeError
+    end
 
     if @tutor_session.save
       redirect_to session_path(@tutor_session), notice: "Session successfully created"
@@ -182,7 +197,6 @@ class SessionsController < ApplicationController
   def tutor_session_params
     params.require(:tutor_session).permit(
       :start_at,
-      :end_at,
       :capacity
     )
   end

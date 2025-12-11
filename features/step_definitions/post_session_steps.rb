@@ -3,13 +3,19 @@ Given('I am on new session page,') do
 end
 
 When('I fill in the session start time with {string}') do |datetime_string|
-  fill_in 'Start Time', with: datetime_string
-  @start_time = Time.iso8601(datetime_string)
+  value = datetime_string.chomp("Z") 
+  fill_in 'Start Time', with: value
+  
+  @start_time = Time.zone.parse(datetime_string)
 end
 
-When('I fill in the session end time with {string}') do |datetime_string|
-  fill_in 'End Time', with: datetime_string
-  @end_time = Time.iso8601(datetime_string)
+When('I set the duration to {int} hour and {int} minutes') do |hours, minutes|
+  select hours.to_s, from: 'duration_hours'
+  select minutes.to_s, from: 'duration_minutes'
+  
+  if @start_time
+    @end_time = @start_time + hours.hours + minutes.minutes
+  end
 end
 
 When('I fill in {string} from {string}') do |value, field|
@@ -57,7 +63,6 @@ When('this session overlaps with existing session') do
   expect(overlap.exists?).to be true
 end
 
-
 Then('I should see the message {string}') do |message|
   expect(page).to have_content(message)
 end
@@ -65,4 +70,3 @@ end
 When('I select {string} from the Subject dropdown') do |subject_name|
   select subject_name, from: 'Subject'
 end
-

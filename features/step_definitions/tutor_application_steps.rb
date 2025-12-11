@@ -18,15 +18,13 @@ When('I click the {string} button') do |string|
     click_button(string)
 end
 
-When('I click the {string} link') do |string|
-  # If multiple links exist, prefer the one in card-body (dashboard) over navbar to avoid ambiguity
-  links = page.all('a', text: string)
-  if links.count > 1 && page.has_css?('.card-body')
-    within('.card-body') do
-      click_link(string)
-    end
+When('I click the {string} link') do |string| 
+  dashboard_link = first('.card-body a', text: string)
+
+  if dashboard_link
+    dashboard_link.click
   else
-  click_link(string)
+    click_link(string)
   end
 end
 
@@ -47,7 +45,7 @@ Then('I should see a message that my application was submitted') do
 end
 
 Then('I should not see the {string} button') do |string|
-    expect(page).not_to have_button(string)
+  expect(page).not_to have_button(string)
 end
 
 Then('I should not see the {string} link') do |string|
@@ -55,7 +53,7 @@ Then('I should not see the {string} link') do |string|
 end
 
 Then('I should not see the {string} message') do |string|
-    expect(page).not_to have_content(string)
+  expect(page).not_to have_content(string)
 end
 
 Given('I have a pending application') do

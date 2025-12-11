@@ -78,6 +78,7 @@ RSpec.describe 'LearnerSessions', type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('My Upcoming Sessions')
       expect(response.body).to include('Calculus')
+      expect(response.body).to include('scheduled')
       expect(response.body).not_to include('Biology')
       expect(response.body).to include('View past sessions')
     end
