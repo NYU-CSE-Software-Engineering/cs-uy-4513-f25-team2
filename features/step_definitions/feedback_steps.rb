@@ -1,7 +1,5 @@
 require "securerandom"
 
-
-
 Given("I have a completed session with {string} where I was marked present") do |tutor_name|
   # Use the learner created by "I am a signed-in learner"
   learner = @current_learner || @learner
@@ -28,7 +26,6 @@ Given("I have a completed session with {string} where I was marked present") do 
 
   subject = Subject.first || Subject.create!(name: "Statistics", code: "STAT101")
 
-
   @tutor_session = TutorSession.where(
     tutor:   @tutor,
     subject: subject,
@@ -42,7 +39,8 @@ Given("I have a completed session with {string} where I was marked present") do 
       start_at: 2.days.ago.change(min: 0, sec: 0),
       end_at:   2.days.ago.change(min: 59, sec: 59),
       capacity: 5,
-      status:   "Completed"
+      status:   "Completed",
+      meeting_link: "https://zoom.us/feedback-session"
     )
   end
 
@@ -70,7 +68,6 @@ end
 When("I navigate to the feedback form for {string}") do |_tutor_name|
   # @tutor_session was created in the "I have a completed session..." Given step
   raise "@tutor_session is nil – make sure the Background creates it first" if @tutor_session.nil?
-
   # Use the NESTED route: /sessions/:session_id/feedbacks/new
   visit new_session_feedback_path(@tutor_session)
 end
@@ -86,8 +83,6 @@ When("I select a rating of {string}") do |rating|
   # assumes radio buttons labelled 1..5
   choose(rating)
 end
-
-
 
 Then("I should not see {string}") do |text|
   expect(page).not_to have_content(text)

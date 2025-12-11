@@ -11,6 +11,7 @@ class TutorSession < ApplicationRecord
   validates :end_at, presence: true
   validates :capacity, presence: true, numericality: {greater_than: 0}
   validates :status, presence: true
+  validates :meeting_link, presence: true
   validate :end_at_after_start_at
   validate :no_overlapping_sessions
 
@@ -22,7 +23,7 @@ class TutorSession < ApplicationRecord
     end
   end
 
-    def active_attendee_count
+  def active_attendee_count
     session_attendees.where(cancelled: false).count
   end
 

@@ -27,7 +27,7 @@ RSpec.describe "Sessions", type: :request do
   end
 
   # Helper to create a TutorSession
-  def make_tutor_session(tutor:, subject:, start_at:, end_at:, capacity: 1, status: "Scheduled", meeting_link: nil)
+  def make_tutor_session(tutor:, subject:, start_at:, end_at:, capacity: 1, status: "Scheduled", meeting_link: "https://default.zoom.us")
     TutorSession.find_or_create_by!(
       tutor: tutor,
       subject: subject,
@@ -481,7 +481,7 @@ RSpec.describe "Sessions", type: :request do
               subject_id: subject_math.id,
               start_at: '2026-10-15T10:00',
               capacity: 1,
-              meeting_link: 'https://zoom.us/new'
+              meeting_link: 'https://zoom.us/new' # Added meeting link param
             },
             duration_hours: 1,
             duration_minutes: 0
@@ -490,6 +490,7 @@ RSpec.describe "Sessions", type: :request do
         
         session = TutorSession.last
         expect(session.end_at).to eq(session.start_at + 1.hour)
+        # Verify meeting link was saved
         expect(session.meeting_link).to eq('https://zoom.us/new')
         expect(response).to redirect_to(session_path(session))
       end
@@ -513,6 +514,25 @@ RSpec.describe "Sessions", type: :request do
         body = CGI.unescapeHTML(response.body)
         expect(body).to include("can't be blank")
       end
+
+      it "does not create a session if meeting link is missing" do
+        expect {
+          post "/sessions", params: {
+            tutor_session: {
+              subject_id: subject_math.id,
+              start_at: '2026-10-15T10:00',
+              capacity: 1,
+              meeting_link: "" 
+            },
+            duration_hours: 1,
+            duration_minutes: 0
+          }
+        }.not_to change(TutorSession, :count)
+
+        expect(response).to have_http_status(:unprocessable_content)
+        body = CGI.unescapeHTML(response.body)
+        expect(body).to include("Meeting link can't be blank")
+      end
     end
 
     context "when overlapping with existing session" do
@@ -523,7 +543,8 @@ RSpec.describe "Sessions", type: :request do
           start_at: Time.zone.parse('2026-10-15T11:00'),
           end_at: Time.zone.parse('2026-10-15T12:00'),
           capacity: 1,
-          status: "open"
+          status: "open",
+          meeting_link: "https://zoom.us/existing"
         )
       end
 
@@ -533,7 +554,8 @@ RSpec.describe "Sessions", type: :request do
             tutor_session: {
               subject_id: subject_math.id,
               start_at: '2026-10-15T11:30',
-              capacity: 1
+              capacity: 1,
+              meeting_link: "https://zoom.us/overlap"
             },
             duration_hours: 1,
             duration_minutes: 0

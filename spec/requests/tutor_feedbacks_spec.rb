@@ -35,7 +35,8 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         start_at: 5.days.ago,
         end_at: 4.days.ago,
         capacity: 5,
-        status: 'completed'
+        status: 'completed',
+        meeting_link: 'https://zoom.us/feed1' 
       )
       
       session2 = TutorSession.create!(
@@ -44,7 +45,8 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         start_at: 3.days.ago,
         end_at: 2.days.ago,
         capacity: 5,
-        status: 'completed'
+        status: 'completed',
+        meeting_link: 'https://zoom.us/feed2' 
       )
 
       learner1 = Learner.create!(
@@ -99,7 +101,8 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         start_at: 5.days.ago,
         end_at: 4.days.ago,
         capacity: 5,
-        status: 'completed'
+        status: 'completed',
+        meeting_link: 'https://zoom.us/calc' 
       )
 
       chem_session = TutorSession.create!(
@@ -108,7 +111,8 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         start_at: 3.days.ago,
         end_at: 2.days.ago,
         capacity: 5,
-        status: 'completed'
+        status: 'completed',
+        meeting_link: 'https://zoom.us/chem' 
       )
 
       learner = Learner.create!(
@@ -155,7 +159,8 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
           start_at: start_time,
           end_at: end_time,
           capacity: 5,
-          status: 'completed'
+          status: 'completed',
+          meeting_link: "https://zoom.us/session#{i}" 
         )
 
         learner = Learner.create!(
@@ -198,7 +203,8 @@ RSpec.describe 'Tutor::Feedbacks', type: :request do
         start_at: 5.days.ago,
         end_at: 4.days.ago,
         capacity: 5,
-        status: 'completed'
+        status: 'completed',
+        meeting_link: 'https://zoom.us/other' 
       )
 
       learner = Learner.create!(

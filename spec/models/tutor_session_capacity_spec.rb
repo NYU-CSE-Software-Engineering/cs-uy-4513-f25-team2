@@ -13,7 +13,8 @@ RSpec.describe TutorSession, type: :model do
         start_at: 2.days.from_now.change(hour: 10),
         end_at:   2.days.from_now.change(hour: 11),
         capacity: 3,
-        status:   'scheduled'
+        status:   'scheduled',
+        meeting_link: 'https://zoom.us/capacity'
       )
     end
 

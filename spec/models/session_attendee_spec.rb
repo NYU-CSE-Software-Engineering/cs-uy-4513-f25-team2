@@ -20,7 +20,8 @@ RSpec.describe SessionAttendee, type: :model do
       start_at: Time.zone.parse('2026-03-10T10:00:00Z'),
       end_at: Time.zone.parse('2026-03-10T11:00:00Z'),
       capacity: 2,
-      status: 'scheduled'
+      status: 'scheduled',
+      meeting_link: 'https://zoom.us/session1'
     )
   end
   
@@ -31,7 +32,8 @@ RSpec.describe SessionAttendee, type: :model do
       start_at: Time.zone.parse('2026-03-10T14:00:00Z'),
       end_at: Time.zone.parse('2026-03-10T15:00:00Z'),
       capacity: 3,
-      status: 'scheduled'
+      status: 'scheduled',
+      meeting_link: 'https://zoom.us/session2'
     )
   end 
 
@@ -42,7 +44,8 @@ RSpec.describe SessionAttendee, type: :model do
       start_at: Time.zone.parse('2026-03-10T10:30:00Z'),
       end_at: Time.zone.parse('2026-03-10T11:30:00Z'),
       capacity: 2,
-      status: 'scheduled'
+      status: 'scheduled',
+      meeting_link: 'https://zoom.us/conflict'
     )
   end
 

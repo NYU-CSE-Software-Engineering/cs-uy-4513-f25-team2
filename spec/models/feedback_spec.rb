@@ -34,7 +34,8 @@ RSpec.describe Feedback, type: :model do
       start_at: 5.days.ago,
       end_at: 4.days.ago,
       capacity: 5,
-      status: 'completed'
+      status: 'completed',
+      meeting_link: 'https://zoom.us/test'
     )
   end
 
