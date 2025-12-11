@@ -16,35 +16,6 @@ RSpec.describe Tutor, type: :model do
       expect(dup_tutor.errors[:learner]).to include('has already been taken')
     end
 
-    it 'requires rating_avg to be a number' do
-      t = build(:tutor, rating_avg: 'rating')
-      expect(t).not_to be_valid
-      expect(t.errors[:rating_avg]).to include("is not a number")
-    end
-
-    it 'requires rating_avg to be between 0 and 5' do
-      t1 = build(:tutor, rating_avg: -0.5)
-      t2 = build(:tutor, rating_avg: 7.2)
-      expect(t1).not_to be_valid
-      expect(t2).not_to be_valid
-      expect(t1.errors[:rating_avg]).to include("must be greater than or equal to 0")
-      expect(t2.errors[:rating_avg]).to include("must be less than or equal to 5")
-    end
-
-    it 'requires rating_count to be an integer' do
-      t1 = build(:tutor, rating_count: 'rating')
-      t2 = build(:tutor, rating_count: 9.42)
-      expect(t1).not_to be_valid
-      expect(t2).not_to be_valid
-      expect(t1.errors[:rating_count]).to include("is not a number")
-      expect(t2.errors[:rating_count]).to include("must be an integer")
-    end
-
-    it 'requires rating_count to be non-negative' do
-      t = build(:tutor, rating_count: -5)
-      expect(t).not_to be_valid
-      expect(t.errors[:rating_count]).to include("must be greater than or equal to 0")
-    end
 
     context 'bio validations' do
       it 'allows bio to be nil' do
@@ -77,6 +48,25 @@ RSpec.describe Tutor, type: :model do
         s1 = create(:teach, tutor: t).subject
         s2 = create(:teach, tutor: t).subject
         expect(t.subjects).to include(s1, s2)
+      end
+    end
+
+    context 'rating calculations' do
+      let(:tutor) { create(:tutor) }
+      let(:learner) { create(:learner) }
+      let(:session) { create(:tutor_session, tutor: tutor) }
+
+      it 'calculates average rating correctly' do
+        create(:feedback, tutor: tutor, tutor_session: session, rating: 5, learner: create(:learner))
+        create(:feedback, tutor: tutor, tutor_session: session, rating: 3, learner: create(:learner))
+        
+        expect(tutor.average_rating).to eq(4.0)
+        expect(tutor.reviews_count).to eq(2)
+      end
+
+      it 'returns 0 if no feedbacks' do
+        expect(tutor.average_rating).to eq(0.0)
+        expect(tutor.reviews_count).to eq(0)
       end
     end
   end

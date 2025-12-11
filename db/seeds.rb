@@ -39,7 +39,7 @@ ApplicationRecord.transaction do
     password_confirmation: "AdminPass2!"
   )
 
-  # Learners (20) – unique names/emails/passwords
+  # Learners (20)
   puts "Creating learners..."
 
   learner_data = [
@@ -107,23 +107,11 @@ ApplicationRecord.transaction do
   tutor_applications = []
 
   approved_applicants = [
-    emma,
-    liam,
-    olivia,
-    noah,
-    ava,
-    william,
-    sophia,
-    james
+    emma, liam, olivia, noah, ava, william, sophia, james
   ]
 
   pending_applicants = [
-    isabella,
-    benjamin,
-    mia,
-    lucas,
-    charlotte,
-    henry
+    isabella, benjamin, mia, lucas, charlotte, henry
   ]
 
   approved_applicants.each do |learner|
@@ -242,12 +230,12 @@ ApplicationRecord.transaction do
   teaches << Teach.create!(tutor: tutors[:benjamin_econ], subject: economics)
   teaches << Teach.create!(tutor: tutors[:mia_english],   subject: english_comp)
 
-  # Tutor sessions (>10) – past, future, open, scheduled, cancelled
+  # Tutor sessions (>10)
   puts "Creating tutor sessions..."
 
   tutor_sessions = []
 
-  # S1 – Past completed
+  # S1 - Past completed
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_anna,
     subject:      calc1,
@@ -258,7 +246,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/calc1-limits-review"
   )
 
-  # S2 – Past cancelled by tutor
+  # S2 - Past cancelled by tutor
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_anna,
     subject:      calc2,
@@ -269,7 +257,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/calc2-series-clinic"
   )
 
-  # S3 – Future scheduled
+  # S3 - Future scheduled
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_anna,
     subject:      lin_alg,
@@ -280,7 +268,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/linear-algebra-review"
   )
 
-  # S4 – Past completed
+  # S4 - Past completed
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_brian,
     subject:      data_structures,
@@ -291,7 +279,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/data-structures-lists-stacks"
   )
 
-  # S5 – Future scheduled
+  # S5 - Future scheduled
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_brian,
     subject:      algorithms,
@@ -302,7 +290,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/algorithms-graphs-session"
   )
 
-  # S6 – Future open
+  # S6 - Future open
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_brian,
     subject:      intro_cs,
@@ -313,7 +301,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/introcs-debugging-clinic"
   )
 
-  # S7 – Past completed
+  # S7 - Past completed
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_claire,
     subject:      statistics,
@@ -324,7 +312,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/statistics-confidence-intervals"
   )
 
-  # S8 – Past completed
+  # S8 - Past completed
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_claire,
     subject:      economics,
@@ -335,7 +323,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/econ-midterm-review"
   )
 
-  # S9 – Future cancelled (tutor cancels)
+  # S9 - Future cancelled (tutor cancels)
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_claire,
     subject:      chem1,
@@ -346,7 +334,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/chemistry-stoichiometry"
   )
 
-  # S10 – Past completed
+  # S10 - Past completed
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_david,
     subject:      physics1,
@@ -357,7 +345,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/physics1-newtons-laws"
   )
 
-  # S11 – Future scheduled
+  # S11 - Future scheduled
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_david,
     subject:      english_comp,
@@ -368,7 +356,7 @@ ApplicationRecord.transaction do
     meeting_link: "https://tutoring.example.com/english-essay-clinic"
   )
 
-  # S12 – Future open
+  # S12 - Future open
   tutor_sessions << TutorSession.create!(
     tutor:        tutor_david,
     subject:      calc1,
@@ -386,7 +374,7 @@ ApplicationRecord.transaction do
 
   session_attendees = []
 
-  # S1 – past completed, full: 4 learners, 3 feedback, 1 no-feedback
+  # S1
   session_attendees << SessionAttendee.create!(
     tutor_session:     s1,
     learner:           emma,
@@ -416,7 +404,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S2 – past cancelled by tutor: one learner cancelled themselves, one remained booked
+  # S2
   session_attendees << SessionAttendee.create!(
     tutor_session:     s2,
     learner:           ava,
@@ -432,7 +420,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S3 – future scheduled Linear Algebra: single upcoming booking
+  # S3
   session_attendees << SessionAttendee.create!(
     tutor_session:     s3,
     learner:           sophia,
@@ -441,7 +429,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S4 – past completed Data Structures: 3 learners
+  # S4
   session_attendees << SessionAttendee.create!(
     tutor_session:     s4,
     learner:           james,
@@ -464,7 +452,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S5 – future scheduled Algorithms session: learner cancels booking
+  # S5
   session_attendees << SessionAttendee.create!(
     tutor_session:     s5,
     learner:           mia,
@@ -473,7 +461,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S7 – past completed Statistics session: 2 learners, both leave feedback
+  # S7
   session_attendees << SessionAttendee.create!(
     tutor_session:     s7,
     learner:           lucas,
@@ -489,7 +477,7 @@ ApplicationRecord.transaction do
     feedback_submitted:true
   )
 
-  # S8 – past completed Economics review: 2 learners, one with feedback
+  # S8
   session_attendees << SessionAttendee.create!(
     tutor_session:     s8,
     learner:           henry,
@@ -505,7 +493,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S9 – future cancelled Chemistry session: learner still marked as booked
+  # S9
   session_attendees << SessionAttendee.create!(
     tutor_session:     s9,
     learner:           alexander,
@@ -514,7 +502,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S10 – past completed Physics I session: 3 learners
+  # S10
   session_attendees << SessionAttendee.create!(
     tutor_session:     s10,
     learner:           harper,
@@ -537,7 +525,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # S11 – future scheduled English clinic: 1 upcoming booking
+  # S11
   session_attendees << SessionAttendee.create!(
     tutor_session:     s11,
     learner:           michael,
@@ -546,7 +534,7 @@ ApplicationRecord.transaction do
     feedback_submitted:false
   )
 
-  # Feedbacks (11) – only for attended sessions with feedback_submitted: true
+  # Feedbacks (11)
   puts "Creating feedback..."
 
   feedbacks = []

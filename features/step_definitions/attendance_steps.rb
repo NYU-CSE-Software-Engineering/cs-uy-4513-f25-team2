@@ -9,9 +9,7 @@ Given('I am a signed-in tutor') do
   end
 
   tutor = Tutor.find_or_create_by!(learner: learner) do |t|
-    t.bio          = nil
-    t.rating_avg   = 0
-    t.rating_count = 0
+    t.bio = nil
   end
 
   visit new_login_path
@@ -75,5 +73,5 @@ Then('the learner\'s attendance for the session should be set to {string}') do |
 end
 
 Then('I should not see the {string} option') do |radio|
-    expect(page).not_to have_field(radio)
+  expect(page).not_to have_field(radio)
 end

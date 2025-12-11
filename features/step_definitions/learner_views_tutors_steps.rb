@@ -13,9 +13,7 @@ Given('the following tutors exist:') do |table|
     end
 
     tutor = Tutor.find_or_create_by!(learner: tutor_learner) do |t|
-      t.bio          = row['bio']
-      t.rating_avg   = row['rating_avg']
-      t.rating_count = row['rating_count']
+      t.bio = row['bio']
     end
 
     row['subjects'].to_s.split(',').map(&:strip).each do |subject_name|
@@ -23,6 +21,52 @@ Given('the following tutors exist:') do |table|
         s.code = subject_name.parameterize.upcase.first(6)
       end
       Teach.find_or_create_by!(tutor: tutor, subject: subject)
+    end
+
+    target_count = row['rating_count'].to_i
+    target_avg   = row['rating_avg'].to_f
+
+    if target_count > 0
+      subject = Subject.first || FactoryBot.create(:subject)
+      session = TutorSession.create!(
+        tutor: tutor,
+        subject: subject,
+        start_at: 1.day.ago,
+        end_at: 1.day.ago + 1.hour,
+        capacity: 100,
+        status: 'completed',
+        meeting_link: 'https://example.com'
+      )
+
+      total_score = (target_avg * target_count).round
+      base_rating = total_score / target_count
+      remainder   = total_score % target_count
+      
+      remainder.times do |i|
+        learner = FactoryBot.create(:learner)
+        SessionAttendee.create!(tutor_session: session, learner: learner, attended: true, feedback_submitted: true)
+        
+        Feedback.create!(
+          tutor_session: session,
+          learner: learner,
+          tutor: tutor,
+          rating: base_rating + 1,
+          comment: "Test feedback high #{i}"
+        )
+      end
+
+      (target_count - remainder).times do |i|
+        learner = FactoryBot.create(:learner)
+        SessionAttendee.create!(tutor_session: session, learner: learner, attended: true, feedback_submitted: true)
+        
+        Feedback.create!(
+          tutor_session: session,
+          learner: learner,
+          tutor: tutor,
+          rating: base_rating,
+          comment: "Test feedback base #{i}"
+        )
+      end
     end
   end
 end

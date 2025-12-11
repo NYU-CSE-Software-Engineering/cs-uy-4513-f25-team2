@@ -34,12 +34,14 @@
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">
             <%= link_to(full_name.presence || 'Tutor', tutor_path(t), class: "text-decoration-none") %>
-            <% if t.rating_avg.present? %>
+            
+            <% avg = t.average_rating %>
+            <% count = t.reviews_count %>
+            
+            <% if count > 0 %>
               <span class="badge bg-warning text-dark ms-2">
-                ⭐ <%= sprintf("%.1f", t.rating_avg) %>
-                <% if t.rating_count.present? && t.rating_count > 0 %>
-                  <small>(<%= t.rating_count %> reviews)</small>
-                <% end %>
+                ⭐ <%= sprintf("%.1f", avg) %>
+                <small>(<%= count %> reviews)</small>
               </span>
             <% end %>
           </h5>

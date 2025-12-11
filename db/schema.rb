@@ -102,8 +102,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_06_102917) do
 
   create_table "tutors", force: :cascade do |t|
     t.text "bio"
-    t.decimal "rating_avg", precision: 3, scale: 2
-    t.integer "rating_count"
     t.bigint "learner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

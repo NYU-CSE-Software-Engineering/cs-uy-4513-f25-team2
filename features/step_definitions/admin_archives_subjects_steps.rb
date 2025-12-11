@@ -87,9 +87,7 @@ Given('a tutor session exists with subject {string}') do |subject_name|
   end
 
   tutor = Tutor.find_or_create_by!(learner: tutor_learner) do |t|
-    t.bio          = 'Archive test tutor'
-    t.rating_avg   = 0
-    t.rating_count = 0
+    t.bio = 'Archive test tutor'
   end
 
 

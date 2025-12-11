@@ -1,8 +1,6 @@
 Given('I am a Tutor') do
   @current_tutor ||= Tutor.find_or_create_by!(learner_id: @current_learner.id) do |t|
-    t.bio          = nil
-    t.rating_avg   = 0
-    t.rating_count = 0
+    t.bio = nil
   end
 end
 
@@ -18,7 +16,7 @@ When('I click the {string} button') do |string|
     click_button(string)
 end
 
-When('I click the {string} link') do |string| 
+When('I click the {string} link') do |string|
   dashboard_link = first('.card-body a', text: string)
 
   if dashboard_link
@@ -69,9 +67,7 @@ Given('an admin has approved my application') do
   end
 
   @current_tutor ||= Tutor.find_or_create_by!(learner_id: @current_learner.id) do |t|
-    t.bio          = nil
-    t.rating_avg   = 0
-    t.rating_count = 0
+    t.bio = nil
   end
 
   TutorApplication.find_by(learner: @current_learner)&.destroy

@@ -19,9 +19,7 @@ Given("I have a completed session with {string} where I was marked present") do 
   end
 
   @tutor = Tutor.find_or_create_by!(learner: tutor_learner) do |t|
-    t.bio          ||= "Test tutor"
-    t.rating_avg   ||= 4.1
-    t.rating_count ||= 45
+    t.bio ||= "Test tutor"
   end
 
   subject = Subject.first || Subject.create!(name: "Statistics", code: "STAT101")
