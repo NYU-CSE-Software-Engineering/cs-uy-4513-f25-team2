@@ -37,7 +37,10 @@
     <div class="card">
       <div class="card-body">
         <h2 class="card-title h4 mb-3">Attendees</h2>
-        <% learners = @tutor_session.learners.where.not(id: @tutor_session.tutor.learner.id) %>
+        <% learners = @tutor_session.learners
+               .joins(:session_attendees)
+               .where(session_attendees: { cancelled: false })
+               .where.not(id: @tutor_session.tutor.learner.id) %>
         <% learners.each do |learner| %>
           <% attendee = SessionAttendee.find_by(tutor_session: @tutor_session, learner: learner) %>
           <% attended_status = attendee&.attended %>
