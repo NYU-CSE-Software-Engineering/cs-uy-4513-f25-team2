@@ -140,26 +140,13 @@ When('I run the search') do
   expect(page).to have_content("Search Results")
 end
 
-# CHANGED TIME FORMATING FOR
-# When('I select the session for tutor {string} from {string} to {string}') do |tutor_name, start_iso, end_iso|
-  # label = "Select #{tutor_name} #{Time.iso8601(start_iso).utc.iso8601}-#{Time.iso8601(end_iso).utc.iso8601}"
-  # expect(page).to have_button(label)
-  # click_button(label)
-  # expect(page).to have_content("Booking")
-# end
-
 When('I select the session for tutor {string} from {string} to {string}') do |tutor_name, start_iso, end_iso|
-  start_time = Time.zone.parse(start_iso)
-  end_time = Time.zone.parse(end_iso)
-  start_str = start_time.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
-  end_str = end_time.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
-  label = "Select #{tutor_name} #{start_str}-#{end_str}"
-  # Debugging
-  # puts "Expected Button Label: #{label}"
-  # puts page.all('button').map(&:text)
-  # puts page.body
-  expect(page).to have_button(label)
-  click_button(label)
+  session_card = page.find('.card', text: tutor_name)
+  
+  within(session_card) do
+    click_button 'Select'
+  end
+  
   expect(page).to have_content("Booking")
 end
 
@@ -193,6 +180,9 @@ Given('I find and select my own session') do
   fill_in 'start_at', with: start_at
   fill_in 'end_at',   with: end_at
   click_button 'Search'
-  label = "Select #{'Mia Patel'} #{'2026-03-10T11:00:00Z'}-#{'2026-03-10T12:00:00Z'}"
-  click_button(label)
+  
+  session_card = page.find('.card', text: 'Mia Patel')
+  within(session_card) do
+    click_button 'Select'
+  end
 end
