@@ -15,11 +15,19 @@
             <p class="card-text">
               <strong>Time:</strong><br>
               <small class="text-muted">
-                <%= session.start_at.strftime('%B %d, %Y at %I:%M %p') %> –
+                <%= session.start_at.strftime('%B %d, %Y at %I:%M %p') %>
                 <%= session.end_at.strftime('%I:%M %p') %>
-              </small>
-            </p>
+                </small>
+              </p>
 
+              <p class="card-text">
+              <strong>Seats remaining:</strong>
+              <% if session.full? %>
+                <span class="badge bg-danger">Full</span>
+              <% else %>
+              <%= session.seats_remaining %> / <%= session.capacity %>
+              <% end %>
+            </p>
             <% start_str = session.start_at.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>
             <% end_str = session.end_at.utc.strftime('%Y-%m-%dT%H:%M:%SZ') %>
 
