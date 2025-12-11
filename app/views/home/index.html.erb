@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12">
     <h1 class="display-4 mb-4">Welcome to Tutoring Platform</h1>
-    
+   
     <% if current_admin %>
       <div class="card mb-4">
         <div class="card-body">
@@ -14,10 +14,12 @@
           </div>
         </div>
       </div>
+
     <% elsif current_learner %>
-      <div class="card mb-4">
+      
+      <div class="card mb-4" id="learner-dashboard">
         <div class="card-body">
-          <h2 class="card-title"><%= current_tutor ? "Tutor Dashboard" : "Learner Dashboard" %></h2>
+          <h2 class="card-title">Learner Dashboard</h2>
           <p class="card-text">Signed in as: <strong><%= current_learner.email %></strong></p>
 
           <div class="btn-group-custom mt-3">
@@ -25,12 +27,7 @@
             <%= link_to 'Find a Session', search_sessions_path, class: "btn btn-success" %>
             <%= link_to 'View My Sessions', learner_sessions_path, class: "btn btn-info" %>
 
-            <% if current_tutor %>
-              <%= link_to 'Create Session', new_session_path, class: "btn btn-primary" %>
-              <%= link_to 'View My Sessions (Tutor)', tutor_sessions_path, class: "btn btn-secondary" %>
-              <%= link_to 'My Feedback', tutor_feedbacks_path, class: "btn btn-warning" %>
-              <%= link_to 'Update my Profile', edit_tutor_path(current_tutor), class: "btn btn-outline-primary" %>
-            <% else %>
+            <% unless current_tutor %>
               <% case @tutor_application_status %>
               <% when :none %>
                 <%= link_to 'Apply to be a Tutor', new_tutor_application_path, class: "btn btn-outline-primary" %>
@@ -43,6 +40,23 @@
           </div>
         </div>
       </div>
+
+      <% if current_tutor %>
+        <div class="card mb-4" id="tutor-dashboard">
+          <div class="card-body">
+            <h2 class="card-title">Tutor Dashboard</h2>
+            <p class="card-text text-muted">Manage your tutoring sessions and profile.</p>
+            
+            <div class="btn-group-custom mt-3">
+              <%= link_to 'Create Session', new_session_path, class: "btn btn-primary" %>
+              <%= link_to 'View My Sessions (Tutor)', tutor_sessions_path, class: "btn btn-secondary" %>
+              <%= link_to 'My Feedback', tutor_feedbacks_path, class: "btn btn-warning" %>
+              <%= link_to 'Update my Profile', edit_tutor_path(current_tutor), class: "btn btn-outline-primary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
     <% else %>
       <div class="card mb-4">
         <div class="card-body text-center">
