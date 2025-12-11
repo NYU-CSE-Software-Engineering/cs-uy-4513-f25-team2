@@ -186,7 +186,7 @@ RSpec.describe "Sessions", type: :request do
           post book_session_path(session)
         }.to change(SessionAttendee, :count).by(1)
 
-        expect(response).to redirect_to(session_path(session))
+        expect(response).to redirect_to(learner_sessions_path)
         expect(flash[:notice]).to eq("Booking confirmed")
 
         follow_redirect!
@@ -492,7 +492,7 @@ RSpec.describe "Sessions", type: :request do
         expect(session.end_at).to eq(session.start_at + 1.hour)
         # Verify meeting link was saved
         expect(session.meeting_link).to eq('https://zoom.us/new')
-        expect(response).to redirect_to(session_path(session))
+        expect(response).to redirect_to(tutor_sessions_path)
       end
     end
 
