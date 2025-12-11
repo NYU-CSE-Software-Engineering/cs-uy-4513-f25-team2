@@ -22,6 +22,19 @@ class TutorSession < ApplicationRecord
     end
   end
 
+    def active_attendee_count
+    session_attendees.where(cancelled: false).count
+  end
+
+  def seats_remaining
+    capacity - active_attendee_count
+  end
+
+  def full?
+    seats_remaining <= 0
+  end
+
+
   def no_overlapping_sessions
     return if tutor.blank? || end_at.blank? || start_at.blank?
     overlapping = TutorSession
